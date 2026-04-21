@@ -1,111 +1,169 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>AnakRantau</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anak Rantau</title>
 
-    <style>
-        body {
-            font-family: Arial;
-            margin: 0;
-            background: #eaf6fb;
-        }
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #e6f7ff;
+}
 
-        .header {
-            background: linear-gradient(135deg, #4facfe, #00c6ff);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
+header {
+  background: linear-gradient(135deg, #00aaff, #0077cc);
+  color: white;
+  text-align: center;
+  padding: 25px;
+}
 
-        .container {
-            padding: 15px;
-        }
+.container {
+  padding: 20px;
+}
 
-        .card {
-            background: white;
-            margin: 15px 0;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+.card {
+  background: white;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
 
-        h2 {
-            color: #0077b6;
-        }
+h2 {
+  margin-top: 0;
+}
 
-        .btn {
-            display: inline-block;
-            background: #00b4d8;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            margin-top: 10px;
-        }
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 
-        .btn:hover {
-            background: #0077b6;
-        }
+.gallery img {
+  width: 100%;
+  max-width: 180px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
 
-        .footer {
-            text-align: center;
-            padding: 15px;
-            color: gray;
-        }
-    </style>
+.gallery img:hover {
+  transform: scale(1.05);
+}
+
+/* Modal Zoom */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  padding-top: 50px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.9);
+}
+
+.modal img {
+  margin: auto;
+  display: block;
+  max-width: 90%;
+  max-height: 80%;
+  border-radius: 10px;
+}
+
+.close {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  color: white;
+  font-size: 40px;
+  cursor: pointer;
+}
+
+.btn {
+  display: block;
+  text-align: center;
+  background: #25D366;
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+.btn:hover {
+  background: #1ebe5d;
+}
+</style>
 </head>
 
 <body>
 
-<div class="header">
-    <h1>AnakRantau</h1>
-    <p>Kost & Hotspot Murah & Cepat</p>
-</div>
+<header>
+  <h1>Anak Rantau</h1>
+  <p>Kost & Hotspot Murah Berkualitas</p>
+</header>
 
 <div class="container">
 
-    <div class="card">
-        <h2>🏠 Harga Kost</h2>
-        <p>1 Orang Non AC: <b>500.000 / bulan</b></p>
-        <p>2 Orang Non AC: <b>600.000 / bulan</b></p>
-        <p>1 Orang AC: <b>700.000 / bulan</b></p>
-        <p>2 Orang AC: <b>800.000 / bulan</b></p>
-        <p><b>✔ Wifi 2 user per kamar: <b>50.000 / bulan </b></p>
-    </div>
+  <div class="card">
+    <h2>Paket Hotspot</h2>
+    <p>2 Jam : Rp 3.000</p>
+    <p>1 Hari : Rp 7.000</p>
+  </div>
 
-    <div class="card">
-        <h2>📶 Paket Wifi</h2>
-        <p>2 Jam: <b>3.000</b></p>
-        <p>1 Hari: <b>7.000</b></p>
-    </div>
+  <div class="card">
+    <h2>Harga Kost</h2>
+    <p>1 Orang Non AC : Rp 500.000 / bulan</p>
+    <p>2 Orang Non AC : Rp 600.000 / bulan</p>
+    <p>1 Orang AC : Rp 700.000 / bulan</p>
+    <p>2 Orang AC : Rp 800.000 / bulan</p>
+    <p><b>WiFi 2 user per kamar</b></p>
+  </div>
 
-    <div class="card" style="text-align:center;">
-        <h2>📲 Pesan Sekarang</h2>
-        <p>Klik tombol di bawah untuk pesan langsung</p>
-        <a class="btn" href="https://wa.me/6282162115149?text=Halo%20saya%20ingin%20pesan%20kost%20atau%20wifi">
-            Chat WhatsApp
-        </a>
+  <div class="card">
+    <h2>Galeri Kost</h2>
+    <div class="gallery">
+      <img src="1767137825568.jpg" onclick="openModal(this)">
+      <img src="IMG-20260107-WA0010.jpg" onclick="openModal(this)">
+      <img src="IMG_20251223_173451_930.jpg" onclick="openModal(this)">
+      <img src="IMG_20251223_173505_522.jpg" onclick="openModal(this)">
+      <img src="IMG_20251223_173528_816.jpg" onclick="openModal(this)">
+      <img src="IMG_20251223_200328_892.jpg" onclick="openModal(this)">
+      <img src="IMG_20251223_212917_879.jpg" onclick="openModal(this)">
+      <img src="file_0000000052e472079e5f9784352cc88b.png" onclick="openModal(this)">
     </div>
+  </div>
+
+  <div class="card">
+    <h2>Hubungi Kami</h2>
+    <a class="btn" href="https://wa.me/6282162115149">
+      Chat WhatsApp Sekarang
+    </a>
+  </div>
 
 </div>
 
-<div class="footer">
-    <p>© 2026 AnakRantau</p>
+<!-- Modal Zoom -->
+<div id="myModal" class="modal">
+  <span class="close" onclick="closeModal()">&times;</span>
+  <img id="modalImg">
 </div>
+
+<script>
+function openModal(img) {
+  document.getElementById("myModal").style.display = "block";
+  document.getElementById("modalImg").src = img.src;
+}
+
+function closeModal() {
+  document.getElementById("myModal").style.display = "none";
+}
+</script>
 
 </body>
 </html>
-<h2>Galeri Kost Anak Rantau</h2>
-
-<div style="display:flex; flex-wrap:wrap; gap:10px;">
-
-  <img src="1767137825568.jpg" style="width:200px; border-radius:10px;">
-  <img src="IMG-20260107-WA0010.jpg" style="width:200px; border-radius:10px;">
-  <img src="IMG_20251223_173451_930.jpg" style="width:200px; border-radius:10px;">
-  <img src="IMG_20251223_173505_522.jpg" style="width:200px; border-radius:10px;">
-  <img src="IMG_20251223_173528_816.jpg" style="width:200px; border-radius:10px;">
-  <img src="IMG_20251223_200328_892.jpg" style="width:200px; border-radius:10px;">
-  <img src="IMG_20251223_212917_879.jpg" style="width:200px; border-radius:10px;">
-  <img src="file_0000000052e472079e5f9784352cc88b.png" style="width:200px; border-radius:10px;">
-</div>
