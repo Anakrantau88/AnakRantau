@@ -282,7 +282,7 @@ function toggleMenu() {
 </section>
 
 <script>
-fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vS4EyKh97tJQV2vHX7Z6jk_IBzsuZp0Bjc4FrMRD0pD_tMT-wvlT3tvnMy6oUw24eSBByDiNQL38_xO/pub?gid=37506333&single=true&output=csv")
+fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vS4EyKh97tJQV2vHX7Z6jk_IBzsuZp0Bjc4FrMRD0pD_tMT-wvlT3tvnMy6oUw24eSBByDiNQL38_xO/pub?output=csv")
   .then(res => res.text())
   .then(data => {
     const rows = data.split("\n").slice(1);
