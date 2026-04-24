@@ -237,13 +237,6 @@ function toggleMenu() {
 </script>
 
 <div class="card" id="qris">
-  </div> <!-- tutup qris -->
-
-<!-- ===== TESTIMONI ===== -->
-<div class="card">
-  <h2>Testimoni Pelanggan</h2>
-  <div id="testimoni-list"></div>
-</div>
   <h2>Pembayaran QRIS</h2>
 
   <img src="qris.png" style="width:200px; border-radius:10px;">
@@ -258,6 +251,7 @@ function toggleMenu() {
     Kirim Bukti Pembayaran
   </a>
 <script>
+  <div id="testimoni-list"></div>
 fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vS4EyKh97tJQV2vHX7Z6jk_IBzsuZp0Bjc4FrMRD0pD_tMT-wvlT3tvnMy6oUw24eSBByDiNQL38_xO/pub?gid=37506333&single=true&output=csv")
 .then(res => res.text())
 .then(data => {
