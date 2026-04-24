@@ -274,35 +274,20 @@ function toggleMenu() {
 
 
 <!-- ===== TAMPILAN TESTIMONI ===== -->
-<section style="padding:40px;">
-  <h2 style="text-align:center;">Testimoni Pelanggan</h2>
+<section style="padding:40px;background:#f9f9f9;">
+  <h2 style="text-align:center;">Kirim Testimoni</h2>
 
-  <div id="testimoni-list" 
-       style="display:flex;flex-wrap:wrap;gap:20px;justify-content:center;"></div>
+  <form action="https://docs.google.com/forms/d/e/1FAIpQLSfRkHxsbcZf0o6arK0fEmkCygMapy6_qmt8NAGJ20oEFWTs0w/formResponse" 
+        method="POST" target="_blank"
+        style="max-width:400px;margin:auto;background:white;padding:20px;border-radius:10px;">
+    
+    <!-- Nama -->
+    <input type="text" name="entry.2005620554" placeholder="Nama Anda" required>
+    
+    <!-- Testimoni -->
+    <textarea name="entry.839337160" placeholder="Tulis testimoni..." required></textarea>
+    
+    <button type="submit">Kirim</button>
+
+  </form>
 </section>
-
-<script>
-fetch("https://docs.google.com/spreadsheets/d/10HZcDS5WloSKsblxGIY-b2Er-XVzvZ8anY4OOOGBCXQ/edit?usp=sharing")
-  .then(res => res.text())
-  .then(data => {
-    const rows = data.split("\n").slice(1);
-    let html = "";
-
-    rows.forEach(row => {
-      const cols = row.split(",");
-      const nama = cols[1];
-      const testimoni = cols[2];
-
-      if(nama && testimoni){
-        html += `
-          <div style="background:#fff;padding:15px;border-radius:10px;width:250px;">
-            <p>"${testimoni}"</p>
-            <strong>- ${nama}</strong>
-          </div>
-        `;
-      }
-    });
-
-    document.getElementById("testimoni-list").innerHTML = html;
-  });
-</script>
