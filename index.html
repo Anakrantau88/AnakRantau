@@ -255,5 +255,86 @@ function toggleMenu() {
 
   <ul id="playlist"></ul>
 </div>
+   <script>
+const songs = [
+  { title: "musik 1", src: "musik1.mp3" },
+  { title: "musik 2", src: "musik2.mp3" },
+  { title: "musik 3", src: "musik3.mp3" },
+  { title: "musik 4", src: "musik4.mp3" },
+  { title: "musik 5", src: "musik5.mp3" },
+  { title: "musik 6", src: "musik6.mp3" }
+];
+
+let currentSong = 0;
+
+const audio = document.getElementById("audio");
+const playBtn = document.getElementById("playBtn");
+const progress = document.getElementById("progress");
+const volume = document.getElementById("volume");
+const playlist = document.getElementById("playlist");
+
+// buat playlist
+songs.forEach((song, index) => {
+  const li = document.createElement("li");
+  li.textContent = song.title;
+  li.onclick = () => loadSong(index);
+  playlist.appendChild(li);
+});
+
+function loadSong(index) {
+  currentSong = index;
+  audio.src = songs[index].src;
+  audio.play();
+  playBtn.textContent = "⏸";
+  updateActive();
+}
+
+function togglePlay() {
+  if (audio.paused) {
+    audio.play();
+    playBtn.textContent = "⏸";
+  } else {
+    audio.pause();
+    playBtn.textContent = "▶";
+  }
+}
+
+function nextSong() {
+  currentSong = (currentSong + 1) % songs.length;
+  loadSong(currentSong);
+}
+
+function prevSong() {
+  currentSong = (currentSong - 1 + songs.length) % songs.length;
+  loadSong(currentSong);
+}
+
+// progress bar
+audio.addEventListener("timeupdate", () => {
+  progress.value = (audio.currentTime / audio.duration) * 100 || 0;
+});
+
+progress.addEventListener("input", () => {
+  audio.currentTime = (progress.value / 100) * audio.duration;
+});
+
+// volume
+volume.addEventListener("input", () => {
+  audio.volume = volume.value;
+});
+
+// auto next
+audio.addEventListener("ended", nextSong);
+
+// highlight lagu aktif
+function updateActive() {
+  document.querySelectorAll("#playlist li").forEach((li, i) => {
+    li.classList.toggle("active", i === currentSong);
+  });
+}
+
+// load pertama
+loadSong(0);
+</script> 
   </body>
 </html>
