@@ -336,5 +336,10 @@ function updateActive() {
 // load pertama
 loadSong(0);
 </script> 
+  <script>
+document.body.addEventListener("click", function () {
+  audio.play();
+}, { once: true });
+</script>
   </body>
 </html>
