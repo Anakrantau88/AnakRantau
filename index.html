@@ -251,36 +251,6 @@ function toggleMenu() {
     Kirim Bukti Pembayaran
   </a>
 <script>
- 
-fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vTJDV1edw1EX3YX5TYeSPF5Ouye0yWJuPVFXJrUIjq8pjCo1GLZeQNlsKrhgIq3IrYXIjEfudwTWOjp/pub?output=csv
-")
-  .then(res => res.text())
-  .then(data => {
-    const rows = data.split("\n").slice(1);
-    const container = document.getElementById("testimoni-list");
-
-    rows.forEach(row => {
-      const cols = row.split(",");
-
-      const nama = cols[0];
-      const komentar = cols[1];
-      const rating = parseInt(cols[2]);
-
-      let bintang = "⭐".repeat(rating);
-
-      const div = document.createElement("div");
-      div.classList.add("testimoni");
-
-      div.innerHTML = `
-        <h4>${nama}</h4>
-        <div class="bintang">${bintang}</div>
-        <p>${komentar}</p>
-      `;
-
-      container.appendChild(div);
-    });
-  });
-</script>
- 
+  
   </body>
 </html>
