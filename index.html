@@ -236,6 +236,24 @@ function toggleMenu() {
     Kirim Bukti Pembayaran
   </a>
 <script>
-  
+  <div class="music-player">
+  <h3>🎵 Musik Anak Rantau</h3>
+
+  <audio id="audio"></audio>
+
+  <div class="controls">
+    <button onclick="prevSong()">⏮</button>
+    <button onclick="togglePlay()" id="playBtn">▶</button>
+    <button onclick="nextSong()">⏭</button>
+  </div>
+
+  <input type="range" id="progress" value="0">
+
+  <div class="volume">
+    🔊 <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
+  </div>
+
+  <ul id="playlist"></ul>
+</div>
   </body>
 </html>
