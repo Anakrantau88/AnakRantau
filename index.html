@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Anak Rantau - Kost & Hotspot</title>
+<title>Anak Rantau - Kost, Hotspot & Travel</title>
  
 <style>
 .hamburger {
@@ -302,7 +302,7 @@ body {
   color: #0077cc;
 }
 
-/* Tombol hotspot - Style baru untuk QRIS */
+/* Tombol hotspot */
 .btn-bayar-qris {
   display: block;
   width: 100%;
@@ -388,6 +388,99 @@ body {
   font-size: 13px;
   color: #006644;
 }
+
+/* Layanan Travel */
+.layanan-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 15px;
+  justify-content: center;
+}
+
+.layanan-card {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 15px;
+  padding: 20px;
+  flex: 1;
+  min-width: 200px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid #ddd;
+}
+
+.layanan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  border-color: #0077cc;
+}
+
+.layanan-icon {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.layanan-card h3 {
+  margin: 10px 0;
+  color: #0077cc;
+}
+
+.layanan-card p {
+  color: #666;
+  font-size: 14px;
+  margin: 0;
+}
+
+.layanan-wa-btn {
+  background: #25D366;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  margin-top: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.layanan-wa-btn:hover {
+  background: #128C7E;
+}
+
+/* Peringatan Pembayaran Resmi - Bank Mandiri */
+.peringatan-bayar {
+  background: #fff3cd;
+  border-left: 6px solid #ffc107;
+  padding: 15px;
+  margin-top: 15px;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #856404;
+}
+
+.peringatan-bayar strong {
+  color: #b94a00;
+}
+
+.rekening-info {
+  background: #e8f0fe;
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 10px;
+  font-family: monospace;
+  font-size: 15px;
+  text-align: center;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #0077cc;
+  border-bottom: 3px solid #0077cc;
+  display: inline-block;
+  padding-bottom: 5px;
+}
 </style>
 </head>
 
@@ -400,6 +493,7 @@ body {
     <b>Anak Rantau</b>
   </div>
   <div class="menu" id="menu">
+    <a href="#layanan">Layanan Travel</a>
     <a href="#hotspot">Hotspot</a>
     <a href="#kost">Kost</a>
     <a href="#galeri">Galeri</a>
@@ -430,16 +524,57 @@ body {
   </audio>
 </div>
 
-<!-- PAKET HOTSPOT -->
+<!-- ============ LAYANAN TRAVEL ============ -->
+<div class="card" id="layanan">
+  <h2 style="text-align: center;">✈️ Layanan Travel & Transportasi 🚗</h2>
+  <div class="layanan-grid">
+    <!-- Tiket Pesawat -->
+    <div class="layanan-card" onclick="waPesanTiketPesawat()">
+      <div class="layanan-icon">✈️</div>
+      <h3>Tiket Pesawat</h3>
+      <p>Pesan tiket pesawat domestik & internasional</p>
+      <button class="layanan-wa-btn" onclick="event.stopPropagation(); waPesanTiketPesawat()">📱 Pesan via WA</button>
+    </div>
+    
+    <!-- Sewa Mobil Harian -->
+    <div class="layanan-card" onclick="waSewaMobil()">
+      <div class="layanan-icon">🚙</div>
+      <h3>Sewa Mobil Harian</h3>
+      <p>Mobil bersih, supir berpengalaman, harga bersahabat</p>
+      <button class="layanan-wa-btn" onclick="event.stopPropagation(); waSewaMobil()">📱 Pesan via WA</button>
+    </div>
+    
+    <!-- Antar Jemput Bandara Kualanamu -->
+    <div class="layanan-card" onclick="waAntarJemputBandara()">
+      <div class="layanan-icon">🚐</div>
+      <h3>Antar Jemput Bandara Kualanamu</h3>
+      <p>Drop off & pick up dari/ke bandara KNO</p>
+      <button class="layanan-wa-btn" onclick="event.stopPropagation(); waAntarJemputBandara()">📱 Pesan via WA</button>
+    </div>
+  </div>
+
+  <!-- ============ PERINGATAN PEMBAYARAN RESMI (HANYA UNTUK LAYANAN TRAVEL) ============ -->
+  <div class="peringatan-bayar">
+    <strong>⚠️ PERINGATAN PENTING ⚠️</strong><br>
+    Pembayaran yang sah dan diakui <strong>HANYA</strong> melalui rekening bank Mandiri:<br>
+    <div class="rekening-info">
+      🏦 <strong>Bank Mandiri</strong><br>
+      📌 No. Rekening: <strong>1050014328318</strong><br>
+      👤 Atas nama: <strong>Erikson Sibagariang</strong>
+    </div>
+    Pembayaran diluar dari no rekening ini dianggap <strong>TIDAK SAH</strong> dan tidak kami akui.<br>
+    ✅ Segala pemesanan tiket pesawat, sewa mobil, dan antar jemput bandara <strong>WAJIB</strong> melakukan pembayaran ke rekening resmi di atas.
+  </div>
+</div>
+
+<!-- PAKET HOTSPOT (TANPA PERINGATAN BANK) -->
 <div id="hotspot">
   <h2>🔥 Pilih Paket Hotspot</h2>
   
-  <!-- Info paket terpilih -->
   <div id="paketTerpilihInfo" class="paket-terpilih-info" style="display:none;">
     ✅ Paket terpilih: <span id="namaPaketTerpilih">-</span> | Rp<span id="hargaPaketTerpilih">0</span>
   </div>
   
-  <!-- Tombol pilih paket -->
   <div style="text-align: center;">
     <button class="paket-btn" onclick="pilihPaket(3000, '2 Jam')">🎯 2 Jam (Rp3.000)</button>
     <button class="paket-btn" onclick="pilihPaket(7000, '1 Hari')">🎯 1 Hari (Rp7.000)</button>
@@ -447,24 +582,22 @@ body {
     <button class="paket-btn" onclick="pilihPaket(60000, '30 Hari')">🎯 30 Hari (Rp60.000)</button>
   </div>
   
-  <!-- TOMBOL BAYAR VIA QRIS GOPAY MERCHANT -->
   <button class="btn-bayar-qris" id="btnBayarQRIS" onclick="tampilkanQRIS()">
     💳 Bayar dengan QRIS (GoPay Merchant)
     <span class="badge-gratis">MDR 0%</span>
   </button>
   
   <div class="info-bayar">
-    💡 <strong>Cara Bayar:</strong><br>
+    💡 <strong>Cara Bayar Hotspot:</strong><br>
     1. Pilih paket di atas<br>
     2. Klik tombol "Bayar dengan QRIS"<br>
     3. Scan QR Code yang muncul<br>
     4. Bayar pakai GoPay, DANA, OVO, atau ShopeePay<br>
-    5. Kirim bukti ke WhatsApp Admin<br><br>
-    ✅ <strong>Keuntungan:</strong> Bebas biaya transaksi (MDR 0%) untukmu!
+    5. Kirim bukti ke WhatsApp Admin
   </div>
 </div>
 
-<!-- QRIS GO PAY MERCHANT (Akan Muncul Setelah Klik Tombol) -->
+<!-- QRIS -->
 <div id="qrisSection" style="display:none;">
   <div class="qris-container">
     <h3>💚 Scan QRIS GoPay Merchant</h3>
@@ -481,15 +614,17 @@ body {
 </div>
 
 <div class="card" id="kost">
-  <h2>Harga Kost</h2>
-  <p>1 Orang Non AC : Rp 500.000</p>
-  <p>2 Orang Non AC : Rp 600.000</p>
-  <p>1 Orang AC : Rp 700.000</p>
-  <p>2 Orang AC : Rp 800.000</p>
+  <h2>🏠 Harga Kost</h2>
+  <p>📍 Kost Eksklusif Anak Rantau - Nyaman & Strategis</p>
+  <p>👤 1 Orang Non AC : Rp 500.000 / bulan</p>
+  <p>👥 2 Orang Non AC : Rp 600.000 / bulan</p>
+  <p>👤 1 Orang AC : Rp 700.000 / bulan</p>
+  <p>👥 2 Orang AC : Rp 800.000 / bulan</p>
+  <a class="btn" href="https://wa.me/6282162115149?text=Halo%20Admin%20Anak%20Rantau,%20saya%20mau%20tanya%20ketersediaan%20kost">🏠 Tanya Ketersediaan Kost</a>
 </div>
 
 <div class="card" id="galeri">
-  <h2>Galeri</h2>
+  <h2>📸 Galeri</h2>
   <div class="gallery">
     <img src="1767137825568.jpg" onclick="zoom(this)">
     <img src="IMG-20260107-WA0010.jpg" onclick="zoom(this)">
@@ -532,8 +667,9 @@ body {
 
 <!-- KONTAK -->
 <div class="card" id="kontak">
-  <h2>Kontak</h2>
-  <a class="btn" href="https://wa.me/6282162115149">Chat WhatsApp</a>
+  <h2>📞 Kontak Kami</h2>
+  <p>Admin siap membantu 24 jam</p>
+  <a class="btn" href="https://wa.me/6282162115149">💬 Chat WhatsApp Admin</a>
 </div>
 
 <!-- QR CODE WEBSITE -->
@@ -553,11 +689,44 @@ body {
 </div>
 
 <script>
-// ========== VARIABEL UNTUK PAKET ==========
+// ========== NOMOR WHATSAPP ADMIN ==========
+const NOMOR_WA_ADMIN = "6282162115149";
+
+// ========== FUNGSI UNTUK LAYANAN TRAVEL ==========
+function waPesanTiketPesawat() {
+    let pesan = "Halo Admin Anak Rantau! Saya ingin *memesan tiket pesawat*.%0A%0A" +
+                "📍 Rute keberangkatan: %0A📍 Rute tujuan: %0A📅 Tanggal berangkat: %0A👤 Jumlah penumpang: %0A✈️ Maskapai: %0A%0A" +
+                "⚠️ Saya akan melakukan pembayaran ke rekening resmi Bank Mandiri 1050014328318 a.n. Erikson Sibagariang.%0A%0A" +
+                "Terima kasih!";
+    
+    let url = `https://wa.me/${NOMOR_WA_ADMIN}?text=${pesan}`;
+    window.open(url, '_blank');
+}
+
+function waSewaMobil() {
+    let pesan = "Halo Admin Anak Rantau! Saya ingin *menyewa mobil harian*.%0A%0A" +
+                "🚗 Jenis mobil: %0A📅 Tanggal sewa: %0A🕐 Lama sewa: %0A👤 Dengan supir / lepas kunci: %0A📍 Lokasi: %0A%0A" +
+                "⚠️ Saya akan melakukan pembayaran ke rekening resmi Bank Mandiri 1050014328318 a.n. Erikson Sibagariang.%0A%0A" +
+                "Terima kasih!";
+    
+    let url = `https://wa.me/${NOMOR_WA_ADMIN}?text=${pesan}`;
+    window.open(url, '_blank');
+}
+
+function waAntarJemputBandara() {
+    let pesan = "Halo Admin Anak Rantau! Saya ingin *layanan antar jemput Bandara Kualanamu (KNO)*.%0A%0A" +
+                "🚐 Layanan: (Antar ke bandara / Jemput dari bandara)%0A📅 Tanggal: %0A⏰ Jam: %0A📍 Lokasi: %0A👤 Jumlah penumpang: %0A✈️ No. Penerbangan: %0A%0A" +
+                "⚠️ Saya akan melakukan pembayaran ke rekening resmi Bank Mandiri 1050014328318 a.n. Erikson Sibagariang.%0A%0A" +
+                "Terima kasih!";
+    
+    let url = `https://wa.me/${NOMOR_WA_ADMIN}?text=${pesan}`;
+    window.open(url, '_blank');
+}
+
+// ========== HOTSPOT (TANPA PERINGATAN BANK) ==========
 let paketTerpilih_harga = 0;
 let paketTerpilih_nama = "";
 
-// ========== FUNGSI PILIH PAKET ==========
 function pilihPaket(harga, namaPaket) {
     paketTerpilih_harga = harga;
     paketTerpilih_nama = namaPaket;
@@ -570,7 +739,6 @@ function pilihPaket(harga, namaPaket) {
     alert(`✅ Paket ${namaPaket} (Rp${harga.toLocaleString()}) dipilih!\nSilakan klik tombol "Bayar dengan QRIS" untuk melanjutkan pembayaran.`);
 }
 
-// ========== FUNGSI TAMPILKAN QRIS ==========
 function tampilkanQRIS() {
     if (paketTerpilih_harga === 0) {
         alert("⚠️ Silakan pilih paket terlebih dahulu!");
@@ -578,28 +746,26 @@ function tampilkanQRIS() {
     }
     
     let konfirmasi = confirm(
-        `💚 Konfirmasi Pembayaran 💚\n\n` +
+        `💚 Konfirmasi Pembayaran Hotspot 💚\n\n` +
         `Paket: ${paketTerpilih_nama}\n` +
         `Harga: Rp${paketTerpilih_harga.toLocaleString()}\n\n` +
-        `Klik OK untuk menampilkan QRIS GoPay Merchant`
+        `Klik OK untuk menampilkan QRIS`
     );
     
     if (konfirmasi) {
         document.getElementById("qrisSection").style.display = "block";
-        // Scroll ke QRIS
         document.getElementById("qrisSection").scrollIntoView({ behavior: "smooth" });
     }
 }
 
-// ========== FUNGSI TUTUP QRIS ==========
 function tutupQRIS() {
     document.getElementById("qrisSection").style.display = "none";
 }
 
-// ========== GOOGLE SHEETS CONFIGURATION ==========
+// ========== GOOGLE SHEETS TESTIMONI ==========
 const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycby4SfrF6QKzx0WuY-Qj0t-MNGVaq7lWuss1cLw7f1D0mqbtkXK80mR0yPeG_QKlq-Bh/exec";
 
-// ========== FUNGSI PEMUTAR MUSIK ==========
+// ========== PEMUTAR MUSIK ==========
 let audioPlayer = document.getElementById('audioPlayer');
 let currentButton = null;
 
@@ -652,7 +818,7 @@ audioPlayer.addEventListener('ended', function() {
     }
 });
 
-// ========== FUNGSI GALERI ==========
+// ========== GALERI ==========
 function zoom(img){
   document.getElementById("modal").style.display = "block";
   document.getElementById("modalImg").src = img.src;
@@ -671,7 +837,7 @@ function toggleMenu() {
   }
 }
 
-// ========== FUNGSI TESTIMONI ==========
+// ========== TESTIMONI ==========
 async function loadTestimoni() {
     let container = document.getElementById("listTestimoni");
     container.innerHTML = '<div class="loading">⏳ Memuat testimoni...</div>';
