@@ -102,6 +102,43 @@ body {
   border-radius: 10px;
   text-decoration: none;
 }
+ /* Style pemutar musik */
+        .music-player {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .music-list {
+            list-style: none;
+            padding: 0;
+        }
+        .music-list li {
+            margin: 10px 0;
+            padding: 8px;
+            background: #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .music-list li:hover {
+            background: #ccc;
+        }
+        .play-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+    </style>
 
 /* MODAL */
 .modal {
@@ -202,6 +239,24 @@ button:hover {
     
     </div>
   </div>
+<!-- ========== PEMUTAR MUSIK (6 LAGU) ========== -->
+    <div class="musik">
+        <h2>🎵 Musik Pengiring 🎵</h2>
+        <div class="music-player">
+            <ul class="music-list" id="daftarLagu">
+                <li>musik1.mp3 <button class="play-btn" data-src="musik1.mp3">Play</button></li>
+                <li>musik2.mp3 <button class="play-btn" data-src="musik2.mp3">Play</button></li>
+                <li>musik3.mp3 <button class="play-btn" data-src="musik3.mp3">Play</button></li>
+                <li>musik4.mp3 <button class="play-btn" data-src="musik4.mp3">Play</button></li>
+                <li>musik5.mp3 <button class="play-btn" data-src="musik5.mp3">Play</button></li>
+                <li>musik6.mp3 <button class="play-btn" data-src="musik6.mp3">Play</button></li>
+            </ul>
+            <audio id="playerAudio" controls>
+                <source src="" type="audio/mpeg">
+                Browser Anda tidak mendukung audio.
+            </audio>
+            </div>
+         </div>
 
   <div class="card" id="kontak">
     <h2>Kontak</h2>
@@ -252,3 +307,24 @@ function toggleMenu() {
     Kirim Bukti Pembayaran
   </a>
 </div>
+</div>
+
+<script>
+    // Ambil semua tombol play
+    const buttons = document.querySelectorAll('.play-btn');
+    const audioPlayer = document.getElementById('playerAudio');
+
+    // Untuk setiap tombol, tambahkan event click
+    buttons.forEach(button => {
+        button.addEventListener('click', function() {
+            const laguUrl = this.getAttribute('data-src');
+            // Set sumber audio ke file MP3 yang dipilih
+            audioPlayer.src = laguUrl;
+            // Mainkan
+            audioPlayer.play();
+        });
+    });
+</script>
+
+</body>
+</html>
