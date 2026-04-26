@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Anak Rantau - Kost & Hotspot</title>
  
 <style>
@@ -316,6 +316,71 @@ button {
 button:hover {
     background: #1ebe5d;
 }
+
+/* ========== STYLE BARU UNTUK METODE PEMBAYARAN ========== */
+.metode-pembayaran {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 2px dashed #ddd;
+}
+
+.metode-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.metode-grid {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.metode-btn {
+    flex: 1;
+    min-width: 90px;
+    background: #f1f3f5;
+    border: 2px solid #dee2e6;
+    border-radius: 50px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.metode-btn.dana { color: #0086ff; border-color: #0086ff; background: #e6f2ff; }
+.metode-btn.gopay { color: #00aa6c; border-color: #00aa6c; background: #e6f7f0; }
+.metode-btn.shopeepay { color: #ee4d2d; border-color: #ee4d2d; background: #feeae5; }
+
+.metode-btn:hover {
+    transform: scale(1.02);
+    filter: brightness(0.98);
+}
+
+.paket-terpilih-info {
+    background: #e8f4fd;
+    padding: 10px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-size: 14px;
+    text-align: center;
+    color: #0077cc;
+}
+
+.info-bayar {
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 15px;
+    font-size: 12px;
+    color: #856404;
+}
 </style>
 </head>
 
@@ -358,21 +423,41 @@ button:hover {
   </audio>
 </div>
 
-<!-- PAKET HOTSPOT -->
+<!-- PAKET HOTSPOT (TAMBAHAN FITUR BAYAR OTOMATIS) -->
 <div id="hotspot">
-  <h2>Pilih Paket Hotspot</h2>
-  <a href="https://wa.me/6282162115149?text=Halo%20saya%20ingin%20beli%20Paket%202%20Jam%20(Rp3.000)" target="_blank">
-    <button>Beli 2 Jam (Rp3.000)</button>
-  </a>
-  <a href="https://wa.me/6282162115149?text=Halo%20saya%20ingin%20beli%20Paket%201%20Hari%20(Rp7.000)" target="_blank">
-    <button>Beli 1 Hari (Rp7.000)</button>
-  </a>
-  <a href="https://wa.me/6282162115149?text=Halo%20saya%20ingin%20beli%20Paket%207%20Hari" target="_blank">
-    <button>Beli 7 Hari  (Rp20.000)</button>
-  </a>
-  <a href="https://wa.me/6282162115149?text=Halo%20saya%20ingin%20beli%20Paket%2030%20Hari" target="_blank">
-    <button>Beli 30 Hari  (Rp.60.000)</button>
-  </a>
+  <h2>🔥 Pilih Paket Hotspot</h2>
+  
+  <!-- Info paket terpilih -->
+  <div id="paketTerpilihInfo" class="paket-terpilih-info" style="display:none;">
+    ✅ Paket terpilih: <span id="namaPaketTerpilih">-</span> | Rp<span id="hargaPaketTerpilih">0</span>
+  </div>
+  
+  <!-- Tombol paket -->
+  <button onclick="pilihPaket(3000, '2 Jam')">🎯 Paket 2 Jam (Rp3.000)</button>
+  <button onclick="pilihPaket(7000, '1 Hari')">🎯 Paket 1 Hari (Rp7.000)</button>
+  <button onclick="pilihPaket(20000, '7 Hari')">🎯 Paket 7 Hari (Rp20.000)</button>
+  <button onclick="pilihPaket(60000, '30 Hari')">🎯 Paket 30 Hari (Rp60.000)</button>
+  
+  <!-- Metode Pembayaran Otomatis -->
+  <div class="metode-pembayaran">
+    <div class="metode-title">💳 Klik logo untuk bayar otomatis ke aplikasi:</div>
+    <div class="metode-grid">
+      <div class="metode-btn dana" onclick="bayarViaDANA()">💙 DANA</div>
+      <div class="metode-btn gopay" onclick="bayarViaGoPay()">💚 GoPay</div>
+      <div class="metode-btn shopeepay" onclick="bayarViaShopeePay()">🧡 ShopeePay</div>
+    </div>
+  </div>
+  
+  <!-- Info cara pakai -->
+  <div class="info-bayar">
+    💡 <strong>Cara Pakai Bayar Otomatis:</strong><br>
+    1. Klik salah satu paket di atas (contoh: Paket 2 Jam)<br>
+    2. Klik logo DANA / GoPay / ShopeePay<br>
+    3. Aplikasi akan terbuka otomatis<br>
+    4. Selesaikan pembayaran di aplikasi<br>
+    5. Kirim bukti ke WhatsApp Admin<br><br>
+    ⚠️ Pastikan aplikasi sudah terinstal di HP kamu!
+  </div>
 </div>
 
 <div class="card" id="kost">
@@ -457,8 +542,95 @@ button:hover {
 </div>
 
 <script>
+// ========== VARIABEL UNTUK FITUR BAYAR OTOMATIS ==========
+let paketTerpilih_harga = 0;
+let paketTerpilih_nama = "";
+
+// ========== FUNGSI PILIH PAKET (BARU) ==========
+function pilihPaket(harga, namaPaket) {
+    paketTerpilih_harga = harga;
+    paketTerpilih_nama = namaPaket;
+    
+    // Tampilkan info paket terpilih
+    let infoDiv = document.getElementById("paketTerpilihInfo");
+    infoDiv.style.display = "block";
+    document.getElementById("namaPaketTerpilih").innerText = namaPaket;
+    document.getElementById("hargaPaketTerpilih").innerText = harga.toLocaleString();
+    
+    alert(`✅ Paket ${namaPaket} (Rp${harga.toLocaleString()}) dipilih!\nSilakan klik logo DANA / GoPay / ShopeePay untuk membayar otomatis.`);
+}
+
+// ========== FUNGSI BAYAR VIA DANA ==========
+function bayarViaDANA() {
+    if (paketTerpilih_harga === 0) {
+        alert("⚠️ Silakan pilih paket terlebih dahulu!");
+        return;
+    }
+    
+    let konfirmasi = confirm(
+        `💙 Konfirmasi Pembayaran via DANA 💙\n\n` +
+        `Paket: ${paketTerpilih_nama}\n` +
+        `Harga: Rp${paketTerpilih_harga.toLocaleString()}\n\n` +
+        `Klik OK untuk membuka aplikasi DANA`
+    );
+    
+    if (konfirmasi) {
+        window.location.href = "dana://";
+        
+        // Pesan jika gagal terbuka
+        setTimeout(() => {
+            alert("Jika DANA tidak terbuka, pastikan:\n1. Aplikasi DANA sudah terinstal\n2. Coba buka manual dari HP Anda\n\nSetelah bayar, kirim bukti ke WhatsApp Admin.");
+        }, 1500);
+    }
+}
+
+// ========== FUNGSI BAYAR VIA GOPAY ==========
+function bayarViaGoPay() {
+    if (paketTerpilih_harga === 0) {
+        alert("⚠️ Silakan pilih paket terlebih dahulu!");
+        return;
+    }
+    
+    let konfirmasi = confirm(
+        `💚 Konfirmasi Pembayaran via GoPay 💚\n\n` +
+        `Paket: ${paketTerpilih_nama}\n` +
+        `Harga: Rp${paketTerpilih_harga.toLocaleString()}\n\n` +
+        `Klik OK untuk membuka aplikasi GoPay`
+    );
+    
+    if (konfirmasi) {
+        window.location.href = "gopay://";
+        
+        setTimeout(() => {
+            alert("Jika GoPay tidak terbuka, pastikan:\n1. Aplikasi GoPay/Gojek sudah terinstal\n2. Coba buka manual dari HP Anda\n\nSetelah bayar, kirim bukti ke WhatsApp Admin.");
+        }, 1500);
+    }
+}
+
+// ========== FUNGSI BAYAR VIA SHOPEEPAY ==========
+function bayarViaShopeePay() {
+    if (paketTerpilih_harga === 0) {
+        alert("⚠️ Silakan pilih paket terlebih dahulu!");
+        return;
+    }
+    
+    let konfirmasi = confirm(
+        `🧡 Konfirmasi Pembayaran via ShopeePay 🧡\n\n` +
+        `Paket: ${paketTerpilih_nama}\n` +
+        `Harga: Rp${paketTerpilih_harga.toLocaleString()}\n\n` +
+        `Klik OK untuk membuka aplikasi ShopeePay`
+    );
+    
+    if (konfirmasi) {
+        window.location.href = "shopeepayid://";
+        
+        setTimeout(() => {
+            alert("Jika ShopeePay tidak terbuka, pastikan:\n1. Aplikasi Shopee sudah terinstal\n2. Coba buka manual dari HP Anda\n\nSetelah bayar, kirim bukti ke WhatsApp Admin.");
+        }, 1500);
+    }
+}
+
 // ========== GOOGLE SHEETS CONFIGURATION ==========
-// ✅ URL Google Apps Script Anda (SUDAH BENAR DENGAN TANDA KUTIP)
 const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycby4SfrF6QKzx0WuY-Qj0t-MNGVaq7lWuss1cLw7f1D0mqbtkXK80mR0yPeG_QKlq-Bh/exec";
 
 // ========== FUNGSI PEMUTAR MUSIK ==========
@@ -548,7 +720,6 @@ async function loadTestimoni() {
         }
         
         let html = '';
-        // Tampilkan terbalik (terbaru di atas)
         for (let i = testimoniData.length - 1; i >= 0; i--) {
             let t = testimoniData[i];
             let bintang = '';
@@ -598,7 +769,6 @@ async function tambahTestimoni() {
     btnKirim.textContent = "Mengirim...";
     
     try {
-        // Gunakan mode 'no-cors' untuk mengatasi CORS
         await fetch(GOOGLE_SHEETS_URL, {
             method: "POST",
             mode: "no-cors",
@@ -614,12 +784,10 @@ async function tambahTestimoni() {
         
         alert("✅ Terima kasih! Testimoni Anda telah disimpan.");
         
-        // Reset form
         document.getElementById("namaPelanggan").value = "";
         document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
         document.getElementById("pesanTestimoni").value = "";
         
-        // Reload testimoni setelah 1.5 detik
         setTimeout(() => loadTestimoni(), 1500);
         
     } catch (error) {
