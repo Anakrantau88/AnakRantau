@@ -349,6 +349,7 @@ button:hover {
     <button onclick="playLagu('musik4.mp3', this)">🎵 Musik 4</button>
     <button onclick="playLagu('musik5.mp3', this)">🎵 Musik 5</button>
     <button onclick="playLagu('musik6.mp3', this)">🎵 Musik 6</button>
+    <button onclick="playLagu('musik7.mp3', this)">🎵 Musik 7</button>
   </div>
   <div class="now-playing" id="nowPlaying">🎤 Sedang diputar: -</div>
   <audio id="audioPlayer" controls style="width:100%; margin-top:10px; border-radius:10px;">
@@ -367,10 +368,10 @@ button:hover {
     <button>Beli 1 Hari (Rp7.000)</button>
   </a>
   <a href="https://wa.me/6282162115149?text=Halo%20saya%20ingin%20beli%20Paket%207%20Hari" target="_blank">
-    <button>Beli 7 Hari</button>
+    <button>Beli 7 Hari  (Rp20.000)</button>
   </a>
   <a href="https://wa.me/6282162115149?text=Halo%20saya%20ingin%20beli%20Paket%2030%20Hari" target="_blank">
-    <button>Beli 30 Hari</button>
+    <button>Beli 30 Hari  (Rp.60.000)</button>
   </a>
 </div>
 
@@ -504,7 +505,8 @@ audioPlayer.addEventListener('ended', function() {
             'musik 3': 'musik3.mp3',
             'musik 4': 'musik4.mp3',
             'musik 5': 'musik5.mp3',
-            'musik 6': 'musik6.mp3'
+            'musik 6': 'musik6.mp3',
+            'musik 7': 'musik7.mp3'
         };
         let btnText = nextButton.innerText.replace('🎵', '').trim();
         let nextFileFixed = laguMap[btnText.toLowerCase()] || 'musik' + (currentIndex+2) + '.mp3';
