@@ -1,20 +1,776 @@
-1. Pelanggan klik pilih paket (2 Jam / 1 Hari / 7 Hari / 30 Hari)
-                    ↓
-2. Muncul info paket terpilih
-                    ↓
-3. Klik tombol "Bayar dengan QRIS (GoPay Merchant)"
-                    ↓
-4. Muncul QR Code GoPay Merchant
-                    ↓
-5. Pelanggan scan QRIS dengan:
-   • GoPay
-   • DANA  
-   • OVO
-   • ShopeePay
-   • LinkAja
-                    ↓
-6. Bayar sesuai nominal paket
-                    ↓
-7. Kirim bukti ke WhatsApp Admin
-                    ↓
-8. Admin aktivasi hotspot ✅
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Anak Rantau - Kost & Hotspot</title>
+ 
+<style>
+.hamburger {
+  display: none;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+/* MODE HP */
+@media (max-width: 768px) {
+  .menu {
+    display: none;
+    flex-direction: column;
+    background: #0077cc;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 200px;
+    padding: 10px;
+    z-index: 100;
+  }
+  .menu a {
+    margin: 10px 0;
+    display: block;
+  }
+  .hamburger {
+    display: block;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #e6f7ff;
+}
+
+/* NAVBAR */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0077cc;
+  padding: 10px 20px;
+  color: white;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo img {
+  width: 40px;
+  border-radius: 50%;
+}
+
+.menu a {
+  color: white;
+  text-decoration: none;
+  margin-left: 15px;
+}
+
+/* CONTENT */
+.container {
+  padding: 20px;
+}
+
+.card {
+  background: white;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* GALERI */
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.gallery img {
+  width: 150px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* BUTTON */
+.btn {
+  display: block;
+  text-align: center;
+  background: #25D366;
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  text-decoration: none;
+}
+
+/* MODAL */
+.modal {
+  display: none;
+  position: fixed;
+  background: rgba(0,0,0,0.8);
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.modal img {
+  display: block;
+  margin: 50px auto;
+  max-width: 90%;
+}
+
+/* PEMUTAR MUSIK */
+.music-player {
+  background: linear-gradient(135deg, #0077cc, #0055aa);
+  padding: 15px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.music-player h3 {
+  margin: 0 0 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.music-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.music-list button {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid white;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 14px;
+}
+
+.music-list button:hover {
+  background: white;
+  color: #0077cc;
+  transform: scale(1.02);
+}
+
+.music-list button.active {
+  background: #25D366;
+  border-color: #25D366;
+  color: white;
+}
+
+.now-playing {
+  font-size: 12px;
+  margin-top: 10px;
+  padding: 8px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* TESTIMONI & RATING */
+.testimoni-form {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.testimoni-form input, 
+.testimoni-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.testimoni-form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.rating {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 5px;
+  margin: 10px 0;
+}
+
+.rating input {
+  display: none;
+}
+
+.rating label {
+  font-size: 30px;
+  color: #ddd;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.rating label:hover,
+.rating label:hover ~ label,
+.rating input:checked ~ label {
+  color: #ffc107;
+}
+
+.btn-submit {
+  background: #0077cc;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+}
+
+.btn-submit:hover {
+  background: #005fa3;
+}
+
+.btn-submit:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+.list-testimoni {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.testimoni-item {
+  background: #f0f8ff;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  border-left: 4px solid #ffc107;
+}
+
+.testimoni-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.testimoni-nama {
+  font-weight: bold;
+  color: #0077cc;
+}
+
+.testimoni-rating {
+  color: #ffc107;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
+.testimoni-tanggal {
+  font-size: 11px;
+  color: gray;
+}
+
+.testimoni-pesan {
+  margin: 8px 0;
+  color: #333;
+  line-height: 1.4;
+}
+
+.testimoni-kosong {
+  text-align: center;
+  color: gray;
+  padding: 20px;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: #0077cc;
+}
+
+/* Tombol hotspot - Style baru untuk QRIS */
+.btn-bayar-qris {
+  display: block;
+  width: 100%;
+  background: linear-gradient(135deg, #00aa6c, #008844);
+  color: white;
+  padding: 14px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.btn-bayar-qris:hover {
+  transform: scale(1.02);
+  background: linear-gradient(135deg, #008844, #006633);
+}
+
+.paket-btn {
+  display: inline-block;
+  background: #0077cc;
+  color: white;
+  padding: 12px 20px;
+  margin: 8px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.paket-btn:hover {
+  background: #005fa3;
+  transform: scale(1.02);
+}
+
+.paket-terpilih-info {
+  background: #e8f4fd;
+  padding: 12px;
+  border-radius: 10px;
+  margin: 15px 0;
+  text-align: center;
+  font-size: 14px;
+  color: #0077cc;
+  font-weight: bold;
+}
+
+.qris-container {
+  text-align: center;
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  margin-top: 20px;
+  border: 2px dashed #00aa6c;
+}
+
+.qris-container img {
+  width: 250px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.badge-gratis {
+  display: inline-block;
+  background: #00aa6c;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-left: 8px;
+}
+
+.info-bayar {
+  background: #e6f7f0;
+  border-left: 4px solid #00aa6c;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 15px;
+  font-size: 13px;
+  color: #006644;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="logo">
+    <img src="logo.png" onerror="this.src='https://via.placeholder.com/40'">
+    <b>Anak Rantau</b>
+  </div>
+  <div class="menu" id="menu">
+    <a href="#hotspot">Hotspot</a>
+    <a href="#kost">Kost</a>
+    <a href="#galeri">Galeri</a>
+    <a href="#testimoni">Testimoni</a>
+    <a href="#kontak">Kontak</a>
+  </div>
+  <div class="hamburger" onclick="toggleMenu()">☰</div>
+</div>
+
+<div class="container">
+
+<!-- PEMUTAR MUSIK -->
+<div class="music-player" id="musik">
+  <h3>🎵 Musik Pengiring 🎧</h3>
+  <div class="music-list">
+    <button onclick="playLagu('musik1.mp3', this)">🎵 Musik 1</button>
+    <button onclick="playLagu('musik2.mp3', this)">🎵 Musik 2</button>
+    <button onclick="playLagu('musik3.mp3', this)">🎵 Musik 3</button>
+    <button onclick="playLagu('musik4.mp3', this)">🎵 Musik 4</button>
+    <button onclick="playLagu('musik5.mp3', this)">🎵 Musik 5</button>
+    <button onclick="playLagu('musik6.mp3', this)">🎵 Musik 6</button>
+    <button onclick="playLagu('musik7.mp3', this)">🎵 Musik 7</button>
+  </div>
+  <div class="now-playing" id="nowPlaying">🎤 Sedang diputar: -</div>
+  <audio id="audioPlayer" controls style="width:100%; margin-top:10px; border-radius:10px;">
+    <source src="" type="audio/mpeg">
+    Browser tidak mendukung audio.
+  </audio>
+</div>
+
+<!-- PAKET HOTSPOT -->
+<div id="hotspot">
+  <h2>🔥 Pilih Paket Hotspot</h2>
+  
+  <!-- Info paket terpilih -->
+  <div id="paketTerpilihInfo" class="paket-terpilih-info" style="display:none;">
+    ✅ Paket terpilih: <span id="namaPaketTerpilih">-</span> | Rp<span id="hargaPaketTerpilih">0</span>
+  </div>
+  
+  <!-- Tombol pilih paket -->
+  <div style="text-align: center;">
+    <button class="paket-btn" onclick="pilihPaket(3000, '2 Jam')">🎯 2 Jam (Rp3.000)</button>
+    <button class="paket-btn" onclick="pilihPaket(7000, '1 Hari')">🎯 1 Hari (Rp7.000)</button>
+    <button class="paket-btn" onclick="pilihPaket(20000, '7 Hari')">🎯 7 Hari (Rp20.000)</button>
+    <button class="paket-btn" onclick="pilihPaket(60000, '30 Hari')">🎯 30 Hari (Rp60.000)</button>
+  </div>
+  
+  <!-- TOMBOL BAYAR VIA QRIS GOPAY MERCHANT -->
+  <button class="btn-bayar-qris" id="btnBayarQRIS" onclick="tampilkanQRIS()">
+    💳 Bayar dengan QRIS (GoPay Merchant)
+    <span class="badge-gratis">MDR 0%</span>
+  </button>
+  
+  <div class="info-bayar">
+    💡 <strong>Cara Bayar:</strong><br>
+    1. Pilih paket di atas<br>
+    2. Klik tombol "Bayar dengan QRIS"<br>
+    3. Scan QR Code yang muncul<br>
+    4. Bayar pakai GoPay, DANA, OVO, atau ShopeePay<br>
+    5. Kirim bukti ke WhatsApp Admin<br><br>
+    ✅ <strong>Keuntungan:</strong> Bebas biaya transaksi (MDR 0%) untukmu!
+  </div>
+</div>
+
+<!-- QRIS GO PAY MERCHANT (Akan Muncul Setelah Klik Tombol) -->
+<div id="qrisSection" style="display:none;">
+  <div class="qris-container">
+    <h3>💚 Scan QRIS GoPay Merchant</h3>
+    <img id="gambarQRIS" src="qris_gopay.png" onerror="this.src='https://via.placeholder.com/250?text=QRIS+GoPay+Merchant'">
+    <p style="margin-top: 10px;">
+      📱 Bisa discan dengan:<br>
+      <strong>GoPay • DANA • OVO • ShopeePay • LinkAja</strong>
+    </p>
+    <p style="color: #00aa6c; font-weight: bold;">✅ MDR 0% (Tidak ada potongan biaya)</p>
+    <p style="color: red;">Setelah bayar, kirim bukti ke WhatsApp Admin</p>
+    <a class="btn" href="https://wa.me/6282162115149">📤 Kirim Bukti Pembayaran</a>
+    <button onclick="tutupQRIS()" style="background: #999; margin-top: 10px;">✖ Tutup</button>
+  </div>
+</div>
+
+<div class="card" id="kost">
+  <h2>Harga Kost</h2>
+  <p>1 Orang Non AC : Rp 500.000</p>
+  <p>2 Orang Non AC : Rp 600.000</p>
+  <p>1 Orang AC : Rp 700.000</p>
+  <p>2 Orang AC : Rp 800.000</p>
+</div>
+
+<div class="card" id="galeri">
+  <h2>Galeri</h2>
+  <div class="gallery">
+    <img src="1767137825568.jpg" onclick="zoom(this)">
+    <img src="IMG-20260107-WA0010.jpg" onclick="zoom(this)">
+    <img src="IMG_20251223_173451_930.jpg" onclick="zoom(this)">
+    <img src="IMG_20251223_173505_522.jpg" onclick="zoom(this)">
+    <img src="IMG_20251223_173528_816.jpg" onclick="zoom(this)">
+    <img src="IMG_20251223_200328_892.jpg" onclick="zoom(this)">
+    <img src="IMG_20251223_212917_879.jpg" onclick="zoom(this)">
+    <img src="file_0000000052e472079e5f9784352cc88b.png" onclick="zoom(this)">
+    <img src="Lemari.jpg" onclick="zoom(this)">
+    <img src="Kasur.jpg" onclick="zoom(this)">
+  </div>
+</div>
+
+<!-- TESTIMONI -->
+<div class="card" id="testimoni">
+  <h2>⭐ Testimoni Pelanggan ⭐</h2>
+  
+  <div class="testimoni-form">
+    <h3>Tulis Pengalaman Anda</h3>
+    <input type="text" id="namaPelanggan" placeholder="Nama Anda" maxlength="50">
+    
+    <div class="rating">
+      <input type="radio" name="rating" value="5" id="star5"><label for="star5">★</label>
+      <input type="radio" name="rating" value="4" id="star4"><label for="star4">★</label>
+      <input type="radio" name="rating" value="3" id="star3"><label for="star3">★</label>
+      <input type="radio" name="rating" value="2" id="star2"><label for="star2">★</label>
+      <input type="radio" name="rating" value="1" id="star1"><label for="star1">★</label>
+    </div>
+    
+    <textarea id="pesanTestimoni" placeholder="Tulis testimoni Anda di sini..."></textarea>
+    <button class="btn-submit" id="btnKirim" onclick="tambahTestimoni()">Kirim Testimoni</button>
+  </div>
+  
+  <h3>📝 Semua Testimoni</h3>
+  <div class="list-testimoni" id="listTestimoni">
+    <div class="loading">⏳ Memuat testimoni...</div>
+  </div>
+</div>
+
+<!-- KONTAK -->
+<div class="card" id="kontak">
+  <h2>Kontak</h2>
+  <a class="btn" href="https://wa.me/6282162115149">Chat WhatsApp</a>
+</div>
+
+<!-- QR CODE WEBSITE -->
+<div class="card" style="text-align: center; background: #f0f8ff;">
+  <h2>🌐 Scan QR Website Kami</h2>
+  <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://anakrantau88.github.io/AnakRantau/" 
+       style="width: 180px; margin: 10px auto; border-radius: 15px;">
+  <p>Scan untuk mengunjungi <strong>Anak Rantau</strong> langsung dari HP</p>
+  <small>https://anakrantau88.github.io/AnakRantau/</small>
+</div>
+
+</div>
+
+<!-- MODAL ZOOM -->
+<div id="modal" class="modal" onclick="closeZoom()">
+  <img id="modalImg">
+</div>
+
+<script>
+// ========== VARIABEL UNTUK PAKET ==========
+let paketTerpilih_harga = 0;
+let paketTerpilih_nama = "";
+
+// ========== FUNGSI PILIH PAKET ==========
+function pilihPaket(harga, namaPaket) {
+    paketTerpilih_harga = harga;
+    paketTerpilih_nama = namaPaket;
+    
+    let infoDiv = document.getElementById("paketTerpilihInfo");
+    infoDiv.style.display = "block";
+    document.getElementById("namaPaketTerpilih").innerText = namaPaket;
+    document.getElementById("hargaPaketTerpilih").innerText = harga.toLocaleString();
+    
+    alert(`✅ Paket ${namaPaket} (Rp${harga.toLocaleString()}) dipilih!\nSilakan klik tombol "Bayar dengan QRIS" untuk melanjutkan pembayaran.`);
+}
+
+// ========== FUNGSI TAMPILKAN QRIS ==========
+function tampilkanQRIS() {
+    if (paketTerpilih_harga === 0) {
+        alert("⚠️ Silakan pilih paket terlebih dahulu!");
+        return;
+    }
+    
+    let konfirmasi = confirm(
+        `💚 Konfirmasi Pembayaran 💚\n\n` +
+        `Paket: ${paketTerpilih_nama}\n` +
+        `Harga: Rp${paketTerpilih_harga.toLocaleString()}\n\n` +
+        `Klik OK untuk menampilkan QRIS GoPay Merchant`
+    );
+    
+    if (konfirmasi) {
+        document.getElementById("qrisSection").style.display = "block";
+        // Scroll ke QRIS
+        document.getElementById("qrisSection").scrollIntoView({ behavior: "smooth" });
+    }
+}
+
+// ========== FUNGSI TUTUP QRIS ==========
+function tutupQRIS() {
+    document.getElementById("qrisSection").style.display = "none";
+}
+
+// ========== GOOGLE SHEETS CONFIGURATION ==========
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycby4SfrF6QKzx0WuY-Qj0t-MNGVaq7lWuss1cLw7f1D0mqbtkXK80mR0yPeG_QKlq-Bh/exec";
+
+// ========== FUNGSI PEMUTAR MUSIK ==========
+let audioPlayer = document.getElementById('audioPlayer');
+let currentButton = null;
+
+function playLagu(file, btnElement) {
+    audioPlayer.src = file;
+    let allButtons = document.querySelectorAll('.music-list button');
+    allButtons.forEach(btn => btn.classList.remove('active'));
+    btnElement.classList.add('active');
+    currentButton = btnElement;
+    let laguName = file.replace('.mp3', '');
+    document.getElementById('nowPlaying').innerHTML = `🎤 Sedang diputar: ${laguName}`;
+    audioPlayer.play().catch(error => {
+        document.getElementById('nowPlaying').innerHTML = `⏸️ ${laguName} (klik play untuk memutar)`;
+    });
+}
+
+window.addEventListener('load', function() {
+    let firstButton = document.querySelector('.music-list button');
+    if (firstButton) {
+        setTimeout(function() {
+            playLagu('musik1.mp3', firstButton);
+        }, 500);
+    }
+    loadTestimoni();
+});
+
+audioPlayer.addEventListener('ended', function() {
+    let allButtons = document.querySelectorAll('.music-list button');
+    let currentIndex = -1;
+    for (let i = 0; i < allButtons.length; i++) {
+        if (allButtons[i].classList.contains('active')) {
+            currentIndex = i;
+            break;
+        }
+    }
+    if (currentIndex >= 0 && currentIndex < allButtons.length - 1) {
+        let nextButton = allButtons[currentIndex + 1];
+        let laguMap = {
+            'musik 1': 'musik1.mp3',
+            'musik 2': 'musik2.mp3',
+            'musik 3': 'musik3.mp3',
+            'musik 4': 'musik4.mp3',
+            'musik 5': 'musik5.mp3',
+            'musik 6': 'musik6.mp3',
+            'musik 7': 'musik7.mp3'
+        };
+        let btnText = nextButton.innerText.replace('🎵', '').trim();
+        let nextFileFixed = laguMap[btnText.toLowerCase()] || 'musik' + (currentIndex+2) + '.mp3';
+        playLagu(nextFileFixed, nextButton);
+    }
+});
+
+// ========== FUNGSI GALERI ==========
+function zoom(img){
+  document.getElementById("modal").style.display = "block";
+  document.getElementById("modalImg").src = img.src;
+}
+
+function closeZoom(){
+  document.getElementById("modal").style.display = "none";
+}
+
+function toggleMenu() {
+  var menu = document.getElementById("menu");
+  if (menu.style.display === "flex") {
+    menu.style.display = "none";
+  } else {
+    menu.style.display = "flex";
+  }
+}
+
+// ========== FUNGSI TESTIMONI ==========
+async function loadTestimoni() {
+    let container = document.getElementById("listTestimoni");
+    container.innerHTML = '<div class="loading">⏳ Memuat testimoni...</div>';
+    
+    try {
+        const response = await fetch(GOOGLE_SHEETS_URL);
+        const testimoniData = await response.json();
+        
+        if (testimoniData.length === 0) {
+            container.innerHTML = '<div class="testimoni-kosong">✨ Belum ada testimoni. Jadilah yang pertama! ✨</div>';
+            return;
+        }
+        
+        let html = '';
+        for (let i = testimoniData.length - 1; i >= 0; i--) {
+            let t = testimoniData[i];
+            let bintang = '';
+            let rating = parseInt(t.rating) || 0;
+            for (let s = 1; s <= 5; s++) {
+                bintang += s <= rating ? '★' : '☆';
+            }
+            let tanggal = t.tanggal || t.Tanggal || '-';
+            html += `
+                <div class="testimoni-item">
+                    <div class="testimoni-header">
+                        <span class="testimoni-nama">👤 ${escapeHtml(t.nama || t.Nama || 'Anonim')}</span>
+                        <span class="testimoni-rating">${bintang}</span>
+                        <span class="testimoni-tanggal">📅 ${tanggal}</span>
+                    </div>
+                    <div class="testimoni-pesan">💬 ${escapeHtml(t.pesan || t.Testimoni || '')}</div>
+                </div>
+            `;
+        }
+        container.innerHTML = html;
+    } catch (error) {
+        console.error("Error loading testimoni:", error);
+        container.innerHTML = '<div class="testimoni-kosong">⚠️ Gagal memuat testimoni. Periksa koneksi internet Anda.</div>';
+    }
+}
+
+async function tambahTestimoni() {
+    let nama = document.getElementById("namaPelanggan").value.trim();
+    let rating = document.querySelector('input[name="rating"]:checked');
+    let pesan = document.getElementById("pesanTestimoni").value.trim();
+    
+    if (nama === "") {
+        alert("Silakan isi nama Anda!");
+        return;
+    }
+    if (!rating) {
+        alert("Silakan pilih rating bintang 1-5!");
+        return;
+    }
+    if (pesan === "") {
+        alert("Silakan tulis testimoni Anda!");
+        return;
+    }
+    
+    let btnKirim = document.getElementById("btnKirim");
+    btnKirim.disabled = true;
+    btnKirim.textContent = "Mengirim...";
+    
+    try {
+        await fetch(GOOGLE_SHEETS_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                nama: nama,
+                rating: parseInt(rating.value),
+                pesan: pesan
+            })
+        });
+        
+        alert("✅ Terima kasih! Testimoni Anda telah disimpan.");
+        document.getElementById("namaPelanggan").value = "";
+        document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
+        document.getElementById("pesanTestimoni").value = "";
+        setTimeout(() => loadTestimoni(), 1500);
+        
+    } catch (error) {
+        console.error("Error:", error);
+        alert("❌ Gagal mengirim testimoni. Silakan coba lagi.");
+    } finally {
+        btnKirim.disabled = false;
+        btnKirim.textContent = "Kirim Testimoni";
+    }
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    return text.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
+</script>
+
+</body>
+</html>
