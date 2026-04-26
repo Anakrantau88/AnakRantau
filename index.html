@@ -448,7 +448,7 @@ body {
   background: #128C7E;
 }
 
-/* Peringatan Pembayaran Resmi - Bank Mandiri */
+/* Peringatan Pembayaran Resmi */
 .peringatan-bayar {
   background: #fff3cd;
   border-left: 6px solid #ffc107;
@@ -471,6 +471,70 @@ body {
   font-family: monospace;
   font-size: 15px;
   text-align: center;
+}
+
+/* ============ STYLE DOWNLOAD APK ============ */
+.download-card {
+  background: linear-gradient(135deg, #0077cc, #0055aa);
+  color: white;
+  text-align: center;
+  border-radius: 15px;
+}
+
+.download-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+
+.btn-download {
+  background: #25D366;
+  color: white;
+  padding: 14px 28px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: transform 0.2s;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-download:hover {
+  transform: scale(1.05);
+  background: #128C7E;
+}
+
+.btn-download-android {
+  background: #3DDC84;
+  color: #000;
+}
+
+.btn-download-android:hover {
+  background: #2BB673;
+}
+
+.install-guide {
+  background: rgba(255,255,255,0.15);
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 15px;
+  font-size: 13px;
+  text-align: left;
+}
+
+.install-guide ol {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.install-guide li {
+  margin: 5px 0;
 }
 
 .section-title {
@@ -499,6 +563,7 @@ body {
     <a href="#galeri">Galeri</a>
     <a href="#testimoni">Testimoni</a>
     <a href="#kontak">Kontak</a>
+    <a href="#download">Download App</a>
   </div>
   <div class="hamburger" onclick="toggleMenu()">☰</div>
 </div>
@@ -528,7 +593,6 @@ body {
 <div class="card" id="layanan">
   <h2 style="text-align: center;">✈️ Layanan Travel & Transportasi 🚗</h2>
   <div class="layanan-grid">
-    <!-- Tiket Pesawat -->
     <div class="layanan-card" onclick="waPesanTiketPesawat()">
       <div class="layanan-icon">✈️</div>
       <h3>Tiket Pesawat</h3>
@@ -536,15 +600,13 @@ body {
       <button class="layanan-wa-btn" onclick="event.stopPropagation(); waPesanTiketPesawat()">📱 Pesan via WA</button>
     </div>
     
-    <!-- Sewa Mobil Harian -->
     <div class="layanan-card" onclick="waSewaMobil()">
       <div class="layanan-icon">🚙</div>
       <h3>Sewa Mobil Harian</h3>
-      <p>Mobil bersih, supir berpengalaman, harga bersahabat</p>
+      <p>Mobil bersih, supir berpengalaman</p>
       <button class="layanan-wa-btn" onclick="event.stopPropagation(); waSewaMobil()">📱 Pesan via WA</button>
     </div>
     
-    <!-- Antar Jemput Bandara Kualanamu -->
     <div class="layanan-card" onclick="waAntarJemputBandara()">
       <div class="layanan-icon">🚐</div>
       <h3>Antar Jemput Bandara Kualanamu</h3>
@@ -553,7 +615,6 @@ body {
     </div>
   </div>
 
-  <!-- ============ PERINGATAN PEMBAYARAN RESMI (HANYA UNTUK LAYANAN TRAVEL) ============ -->
   <div class="peringatan-bayar">
     <strong>⚠️ PERINGATAN PENTING ⚠️</strong><br>
     Pembayaran yang sah dan diakui <strong>HANYA</strong> melalui rekening bank Mandiri:<br>
@@ -562,12 +623,11 @@ body {
       📌 No. Rekening: <strong>1050014328318</strong><br>
       👤 Atas nama: <strong>Erikson Sibagariang</strong>
     </div>
-    Pembayaran diluar dari no rekening ini dianggap <strong>TIDAK SAH</strong> dan tidak kami akui.<br>
-    ✅ Segala pemesanan tiket pesawat, sewa mobil, dan antar jemput bandara <strong>WAJIB</strong> melakukan pembayaran ke rekening resmi di atas.
+    Pembayaran diluar dari no rekening ini dianggap <strong>TIDAK SAH</strong> dan tidak kami akui.
   </div>
 </div>
 
-<!-- PAKET HOTSPOT (TANPA PERINGATAN BANK) -->
+<!-- PAKET HOTSPOT -->
 <div id="hotspot">
   <h2>🔥 Pilih Paket Hotspot</h2>
   
@@ -602,10 +662,7 @@ body {
   <div class="qris-container">
     <h3>💚 Scan QRIS GoPay Merchant</h3>
     <img id="gambarQRIS" src="qris_gopay.png" onerror="this.src='https://via.placeholder.com/250?text=QRIS+GoPay+Merchant'">
-    <p style="margin-top: 10px;">
-      📱 Bisa discan dengan:<br>
-      <strong>GoPay • DANA • OVO • ShopeePay • LinkAja</strong>
-    </p>
+    <p style="margin-top: 10px;">📱 Bisa discan dengan: <strong>GoPay • DANA • OVO • ShopeePay • LinkAja</strong></p>
     <p style="color: #00aa6c; font-weight: bold;">✅ MDR 0% (Tidak ada potongan biaya)</p>
     <p style="color: red;">Setelah bayar, kirim bukti ke WhatsApp Admin</p>
     <a class="btn" href="https://wa.me/6282162115149">📤 Kirim Bukti Pembayaran</a>
@@ -665,6 +722,40 @@ body {
   </div>
 </div>
 
+<!-- ============ MENU DOWNLOAD APK ============ -->
+<div class="card download-card" id="download">
+  <h2>📱 Download Aplikasi Android</h2>
+  <p style="font-size: 16px;">Install aplikasi <strong>Anak Rantau</strong> langsung di HP Android Anda!</p>
+  
+  <div class="download-buttons">
+    <a href="AnakRantau-App.apk" download class="btn-download btn-download-android">
+      ⬇️ Download APK (Android)
+    </a>
+    <button class="btn-download" id="shareApkBtn" onclick="shareApkLink()">
+      📤 Share Link APK
+    </button>
+  </div>
+  
+  <div class="install-guide">
+    <strong>📖 Cara Install Aplikasi:</strong>
+    <ol>
+      <li>Klik tombol <strong>"Download APK"</strong> di atas</li>
+      <li>Setelah selesai download, buka file APK tersebut</li>
+      <li>Jika muncul peringatan, izinkan <strong>"Install dari sumber tidak dikenal"</strong></li>
+      <li>Klik <strong>"Install"</strong> dan tunggu hingga selesai</li>
+      <li>Aplikasi <strong>Anak Rantau</strong> siap digunakan!</li>
+    </ol>
+    <p style="margin-top: 10px; font-size: 12px;">✅ Aplikasi ringan & gratis | ✅ Bisa digunakan offline | ✅ Update otomatis</p>
+  </div>
+  
+  <p style="margin-top: 15px; font-size: 12px;">
+    📱 <strong>QR Code Download:</strong>
+  </p>
+  <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://anakrantau88.github.io/AnakRantau/AnakRantau-App.apk" 
+       style="width: 100px; margin: 5px auto; border-radius: 15px;">
+  <p style="font-size: 11px;">Scan QR untuk download APK langsung ke HP</p>
+</div>
+
 <!-- KONTAK -->
 <div class="card" id="kontak">
   <h2>📞 Kontak Kami</h2>
@@ -692,15 +783,36 @@ body {
 // ========== NOMOR WHATSAPP ADMIN ==========
 const NOMOR_WA_ADMIN = "6282162115149";
 
+// ========== FUNGSI SHARE LINK APK ==========
+function shareApkLink() {
+  const apkUrl = "https://anakrantau88.github.io/AnakRantau/AnakRantau-App.apk";
+  const pesan = `Halo! Download aplikasi Anak Rantau di sini: ${apkUrl}`;
+  
+  if (navigator.share) {
+    navigator.share({
+      title: 'Anak Rantau App',
+      text: 'Download aplikasi Anak Rantau untuk Kost, Hotspot, dan Travel!',
+      url: apkUrl
+    }).catch(() => {
+      alert(`Download APK: ${apkUrl}`);
+    });
+  } else {
+    // Copy ke clipboard
+    navigator.clipboard.writeText(apkUrl).then(() => {
+      alert("✅ Link APK sudah disalin! Bisa dibagikan ke teman-teman.");
+    }).catch(() => {
+      alert(`Download APK: ${apkUrl}`);
+    });
+  }
+}
+
 // ========== FUNGSI UNTUK LAYANAN TRAVEL ==========
 function waPesanTiketPesawat() {
     let pesan = "Halo Admin Anak Rantau! Saya ingin *memesan tiket pesawat*.%0A%0A" +
                 "📍 Rute keberangkatan: %0A📍 Rute tujuan: %0A📅 Tanggal berangkat: %0A👤 Jumlah penumpang: %0A✈️ Maskapai: %0A%0A" +
                 "⚠️ Saya akan melakukan pembayaran ke rekening resmi Bank Mandiri 1050014328318 a.n. Erikson Sibagariang.%0A%0A" +
                 "Terima kasih!";
-    
-    let url = `https://wa.me/${NOMOR_WA_ADMIN}?text=${pesan}`;
-    window.open(url, '_blank');
+    window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=${pesan}`, '_blank');
 }
 
 function waSewaMobil() {
@@ -708,9 +820,7 @@ function waSewaMobil() {
                 "🚗 Jenis mobil: %0A📅 Tanggal sewa: %0A🕐 Lama sewa: %0A👤 Dengan supir / lepas kunci: %0A📍 Lokasi: %0A%0A" +
                 "⚠️ Saya akan melakukan pembayaran ke rekening resmi Bank Mandiri 1050014328318 a.n. Erikson Sibagariang.%0A%0A" +
                 "Terima kasih!";
-    
-    let url = `https://wa.me/${NOMOR_WA_ADMIN}?text=${pesan}`;
-    window.open(url, '_blank');
+    window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=${pesan}`, '_blank');
 }
 
 function waAntarJemputBandara() {
@@ -718,12 +828,10 @@ function waAntarJemputBandara() {
                 "🚐 Layanan: (Antar ke bandara / Jemput dari bandara)%0A📅 Tanggal: %0A⏰ Jam: %0A📍 Lokasi: %0A👤 Jumlah penumpang: %0A✈️ No. Penerbangan: %0A%0A" +
                 "⚠️ Saya akan melakukan pembayaran ke rekening resmi Bank Mandiri 1050014328318 a.n. Erikson Sibagariang.%0A%0A" +
                 "Terima kasih!";
-    
-    let url = `https://wa.me/${NOMOR_WA_ADMIN}?text=${pesan}`;
-    window.open(url, '_blank');
+    window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=${pesan}`, '_blank');
 }
 
-// ========== HOTSPOT (TANPA PERINGATAN BANK) ==========
+// ========== HOTSPOT ==========
 let paketTerpilih_harga = 0;
 let paketTerpilih_nama = "";
 
@@ -745,12 +853,7 @@ function tampilkanQRIS() {
         return;
     }
     
-    let konfirmasi = confirm(
-        `💚 Konfirmasi Pembayaran Hotspot 💚\n\n` +
-        `Paket: ${paketTerpilih_nama}\n` +
-        `Harga: Rp${paketTerpilih_harga.toLocaleString()}\n\n` +
-        `Klik OK untuk menampilkan QRIS`
-    );
+    let konfirmasi = confirm(`💚 Konfirmasi Pembayaran Hotspot 💚\n\nPaket: ${paketTerpilih_nama}\nHarga: Rp${paketTerpilih_harga.toLocaleString()}\n\nKlik OK untuk menampilkan QRIS`);
     
     if (konfirmasi) {
         document.getElementById("qrisSection").style.display = "block";
@@ -762,60 +865,24 @@ function tutupQRIS() {
     document.getElementById("qrisSection").style.display = "none";
 }
 
-// ========== GOOGLE SHEETS TESTIMONI ==========
+// ========== GOOGLE SHEETS ==========
 const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycby4SfrF6QKzx0WuY-Qj0t-MNGVaq7lWuss1cLw7f1D0mqbtkXK80mR0yPeG_QKlq-Bh/exec";
 
 // ========== PEMUTAR MUSIK ==========
 let audioPlayer = document.getElementById('audioPlayer');
-let currentButton = null;
 
 function playLagu(file, btnElement) {
     audioPlayer.src = file;
-    let allButtons = document.querySelectorAll('.music-list button');
-    allButtons.forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.music-list button').forEach(btn => btn.classList.remove('active'));
     btnElement.classList.add('active');
-    currentButton = btnElement;
-    let laguName = file.replace('.mp3', '');
-    document.getElementById('nowPlaying').innerHTML = `🎤 Sedang diputar: ${laguName}`;
-    audioPlayer.play().catch(error => {
-        document.getElementById('nowPlaying').innerHTML = `⏸️ ${laguName} (klik play untuk memutar)`;
-    });
+    document.getElementById('nowPlaying').innerHTML = `🎤 Sedang diputar: ${file.replace('.mp3', '')}`;
+    audioPlayer.play().catch(() => {});
 }
 
 window.addEventListener('load', function() {
     let firstButton = document.querySelector('.music-list button');
-    if (firstButton) {
-        setTimeout(function() {
-            playLagu('musik1.mp3', firstButton);
-        }, 500);
-    }
+    if (firstButton) setTimeout(() => playLagu('musik1.mp3', firstButton), 500);
     loadTestimoni();
-});
-
-audioPlayer.addEventListener('ended', function() {
-    let allButtons = document.querySelectorAll('.music-list button');
-    let currentIndex = -1;
-    for (let i = 0; i < allButtons.length; i++) {
-        if (allButtons[i].classList.contains('active')) {
-            currentIndex = i;
-            break;
-        }
-    }
-    if (currentIndex >= 0 && currentIndex < allButtons.length - 1) {
-        let nextButton = allButtons[currentIndex + 1];
-        let laguMap = {
-            'musik 1': 'musik1.mp3',
-            'musik 2': 'musik2.mp3',
-            'musik 3': 'musik3.mp3',
-            'musik 4': 'musik4.mp3',
-            'musik 5': 'musik5.mp3',
-            'musik 6': 'musik6.mp3',
-            'musik 7': 'musik7.mp3'
-        };
-        let btnText = nextButton.innerText.replace('🎵', '').trim();
-        let nextFileFixed = laguMap[btnText.toLowerCase()] || 'musik' + (currentIndex+2) + '.mp3';
-        playLagu(nextFileFixed, nextButton);
-    }
 });
 
 // ========== GALERI ==========
@@ -830,51 +897,30 @@ function closeZoom(){
 
 function toggleMenu() {
   var menu = document.getElementById("menu");
-  if (menu.style.display === "flex") {
-    menu.style.display = "none";
-  } else {
-    menu.style.display = "flex";
-  }
+  menu.style.display = menu.style.display === "flex" ? "none" : "flex";
 }
 
 // ========== TESTIMONI ==========
 async function loadTestimoni() {
     let container = document.getElementById("listTestimoni");
     container.innerHTML = '<div class="loading">⏳ Memuat testimoni...</div>';
-    
     try {
         const response = await fetch(GOOGLE_SHEETS_URL);
-        const testimoniData = await response.json();
-        
-        if (testimoniData.length === 0) {
+        const data = await response.json();
+        if (data.length === 0) {
             container.innerHTML = '<div class="testimoni-kosong">✨ Belum ada testimoni. Jadilah yang pertama! ✨</div>';
             return;
         }
-        
         let html = '';
-        for (let i = testimoniData.length - 1; i >= 0; i--) {
-            let t = testimoniData[i];
+        for (let i = data.length-1; i >= 0; i--) {
+            let t = data[i];
             let bintang = '';
-            let rating = parseInt(t.rating) || 0;
-            for (let s = 1; s <= 5; s++) {
-                bintang += s <= rating ? '★' : '☆';
-            }
-            let tanggal = t.tanggal || t.Tanggal || '-';
-            html += `
-                <div class="testimoni-item">
-                    <div class="testimoni-header">
-                        <span class="testimoni-nama">👤 ${escapeHtml(t.nama || t.Nama || 'Anonim')}</span>
-                        <span class="testimoni-rating">${bintang}</span>
-                        <span class="testimoni-tanggal">📅 ${tanggal}</span>
-                    </div>
-                    <div class="testimoni-pesan">💬 ${escapeHtml(t.pesan || t.Testimoni || '')}</div>
-                </div>
-            `;
+            for (let s=1; s<=5; s++) bintang += s <= (parseInt(t.rating)||0) ? '★' : '☆';
+            html += `<div class="testimoni-item"><div class="testimoni-header"><span class="testimoni-nama">👤 ${escapeHtml(t.nama||'Anonim')}</span><span class="testimoni-rating">${bintang}</span><span class="testimoni-tanggal">📅 ${t.tanggal||'-'}</span></div><div class="testimoni-pesan">💬 ${escapeHtml(t.pesan||'')}</div></div>`;
         }
         container.innerHTML = html;
-    } catch (error) {
-        console.error("Error loading testimoni:", error);
-        container.innerHTML = '<div class="testimoni-kosong">⚠️ Gagal memuat testimoni. Periksa koneksi internet Anda.</div>';
+    } catch(e) {
+        container.innerHTML = '<div class="testimoni-kosong">⚠️ Gagal memuat testimoni.</div>';
     }
 }
 
@@ -882,59 +928,24 @@ async function tambahTestimoni() {
     let nama = document.getElementById("namaPelanggan").value.trim();
     let rating = document.querySelector('input[name="rating"]:checked');
     let pesan = document.getElementById("pesanTestimoni").value.trim();
-    
-    if (nama === "") {
-        alert("Silakan isi nama Anda!");
-        return;
-    }
-    if (!rating) {
-        alert("Silakan pilih rating bintang 1-5!");
-        return;
-    }
-    if (pesan === "") {
-        alert("Silakan tulis testimoni Anda!");
-        return;
-    }
-    
-    let btnKirim = document.getElementById("btnKirim");
-    btnKirim.disabled = true;
-    btnKirim.textContent = "Mengirim...";
-    
+    if (!nama || !rating || !pesan) return alert("Isi semua field!");
+    let btn = document.getElementById("btnKirim");
+    btn.disabled = true;
+    btn.textContent = "Mengirim...";
     try {
-        await fetch(GOOGLE_SHEETS_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                nama: nama,
-                rating: parseInt(rating.value),
-                pesan: pesan
-            })
-        });
-        
-        alert("✅ Terima kasih! Testimoni Anda telah disimpan.");
+        await fetch(GOOGLE_SHEETS_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ nama, rating: parseInt(rating.value), pesan }) });
+        alert("✅ Testimoni terkirim!");
         document.getElementById("namaPelanggan").value = "";
         document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
         document.getElementById("pesanTestimoni").value = "";
-        setTimeout(() => loadTestimoni(), 1500);
-        
-    } catch (error) {
-        console.error("Error:", error);
-        alert("❌ Gagal mengirim testimoni. Silakan coba lagi.");
-    } finally {
-        btnKirim.disabled = false;
-        btnKirim.textContent = "Kirim Testimoni";
-    }
+        setTimeout(loadTestimoni, 1500);
+    } catch(e) { alert("❌ Gagal kirim."); }
+    finally { btn.disabled = false; btn.textContent = "Kirim Testimoni"; }
 }
 
 function escapeHtml(text) {
     if (!text) return '';
-    return text.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-    });
+    return text.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
 }
 </script>
 
