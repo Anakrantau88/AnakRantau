@@ -457,8 +457,8 @@ button:hover {
 
 <script>
 // ========== GOOGLE SHEETS CONFIGURATION ==========
-// ⚠️ GANTI URL_INI dengan URL Web App Google Apps Script Anda!
-const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbzR7T3x_Contoh_Ganti_Dengan_URL_Anda/exec";
+// ✅ URL Google Apps Script Anda (SUDAH BENAR DENGAN TANDA KUTIP)
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycby4SfrF6QKzx0WuY-Qj0t-MNGVaq7lWuss1cLw7f1D0mqbtkXK80mR0yPeG_QKlq-Bh/exec";
 
 // ========== FUNGSI PEMUTAR MUSIK ==========
 let audioPlayer = document.getElementById('audioPlayer');
@@ -537,7 +537,7 @@ async function loadTestimoni() {
     container.innerHTML = '<div class="loading">⏳ Memuat testimoni...</div>';
     
     try {
-        const response = await fetch(https://script.google.com/macros/s/AKfycby4SfrF6QKzx0WuY-Qj0t-MNGVaq7lWuss1cLw7f1D0mqbtkXK80mR0yPeG_QKlq-Bh/exec);
+        const response = await fetch(GOOGLE_SHEETS_URL);
         const testimoniData = await response.json();
         
         if (testimoniData.length === 0) {
@@ -569,7 +569,7 @@ async function loadTestimoni() {
         container.innerHTML = html;
     } catch (error) {
         console.error("Error loading testimoni:", error);
-        container.innerHTML = '<div class="testimoni-kosong">⚠️ Gagal memuat testimoni. Periksa koneksi internet Anda.</div>';
+        container.innerHTML = '<div class="testimoni-kosong">⚠️ Gagal memuat testimoni. Periksa koneksi internet Anda. Pastikan Google Apps Script sudah di-deploy dengan akses "Anyone".</div>';
     }
 }
 
@@ -596,7 +596,8 @@ async function tambahTestimoni() {
     btnKirim.textContent = "Mengirim...";
     
     try {
-        const response = await fetch(https://script.google.com/macros/s/AKfycby4SfrF6QKzx0WuY-Qj0t-MNGVaq7lWuss1cLw7f1D0mqbtkXK80mR0yPeG_QKlq-Bh/exec, {
+        // Gunakan mode 'no-cors' untuk mengatasi CORS
+        await fetch(GOOGLE_SHEETS_URL, {
             method: "POST",
             mode: "no-cors",
             headers: {
@@ -616,12 +617,12 @@ async function tambahTestimoni() {
         document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
         document.getElementById("pesanTestimoni").value = "";
         
-        // Reload testimoni
-        setTimeout(() => loadTestimoni(), 1000);
+        // Reload testimoni setelah 1.5 detik
+        setTimeout(() => loadTestimoni(), 1500);
         
     } catch (error) {
         console.error("Error:", error);
-        alert("❌ Gagal mengirim testimoni. Silakan coba lagi.");
+        alert("❌ Gagal mengirim testimoni. Silakan coba lagi.\n\nPastikan Google Apps Script sudah di-deploy dengan benar.");
     } finally {
         btnKirim.disabled = false;
         btnKirim.textContent = "Kirim Testimoni";
