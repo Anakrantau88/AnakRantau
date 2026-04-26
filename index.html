@@ -1,189 +1,221 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anak Rantau</title>
-
-<style>.hamburger {
-  display: none;
-  font-size: 25px;
-  cursor: pointer;
-}
-
-/* MODE HP */
-@media (max-width: 768px) {
-
-  .menu {
-    display: none;
-    flex-direction: column;
-    background: #0077cc;
-    position: absolute;
-    top: 60px;
-    right: 0;
-    width: 200px;
-    padding: 10px;
-  }
-
-  .menu a {
-    margin: 10px 0;
-    display: block;
-  }
-
-  .hamburger {
-    display: block;
-  }
-}
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #e6f7ff;
-}
-
-/* NAVBAR */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #0077cc;
-  padding: 10px 20px;
-  color: white;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.logo img {
-  width: 40px;
-  border-radius: 50%;
-}
-
-.menu a {
-  color: white;
-  text-decoration: none;
-  margin-left: 15px;
-}
-
-/* CONTENT */
-.container {
-  padding: 20px;
-}
-
-.card {
-  background: white;
-  padding: 15px;
-  margin-bottom: 20px;
-  border-radius: 10px;
-}
-
-/* GALERI */
-.gallery {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.gallery img {
-  width: 150px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-/* BUTTON */
-.btn {
-  display: block;
-  text-align: center;
-  background: #25D366;
-  color: white;
-  padding: 15px;
-  border-radius: 10px;
-  text-decoration: none;
-}
- /* Style pemutar musik */
-        .music-player {
-            background: #f0f0f0;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anak Rantau - Kost & Hotspot | Blue Ice Theme</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .music-list {
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a0c4ff 0%, #cae9ff 50%, #e0f2fe 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(135, 206, 250, 0.5);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e3a8a;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #0c4a6e;
+            border-left: 5px solid #3b82f6;
+            padding-left: 15px;
+            margin: 20px 0 15px 0;
+            font-size: 1.5em;
+        }
+
+        .paket {
+            background: #e6f2ff;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .harga ul {
             list-style: none;
             padding: 0;
         }
-        .music-list li {
+
+        .harga li {
+            background: linear-gradient(90deg, #d9efff 0%, #f0f8ff 100%);
             margin: 10px 0;
-            padding: 8px;
-            background: #ddd;
-            border-radius: 5px;
-            cursor: pointer;
+            padding: 12px 15px;
+            border-radius: 12px;
+            font-weight: 500;
+            color: #1e3a8a;
+            border: 1px solid #b9d9ff;
+            transition: all 0.3s ease;
+        }
+
+        .harga li:hover {
+            transform: translateX(5px);
+            background: linear-gradient(90deg, #c2e0ff 0%, #e6f4ff 100%);
+            box-shadow: 0 2px 8px rgba(59,130,246,0.2);
+        }
+
+        .galeri {
+            text-align: center;
+            background: #e6f2ff;
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .galeri-placeholder {
+            background: #cfe3ff;
+            padding: 30px;
+            border-radius: 12px;
+            color: #1e40af;
+            font-style: italic;
+            margin: 10px 0;
+        }
+
+        /* ========== PEMUTAR MUSIK GAYA BLUE ICE ========== */
+        .musik {
+            margin: 30px 0;
+        }
+
+        .music-player {
+            background: linear-gradient(145deg, #d4eaff, #bbd9ff);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: inset 0 1px 3px rgba(255,255,255,0.8), 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .music-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+
+        .music-list li {
+            background: white;
+            margin: 10px 0;
+            padding: 12px 18px;
+            border-radius: 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border: 1px solid #6ea8fe;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
+
         .music-list li:hover {
-            background: #ccc;
+            background: #eef5ff;
+            transform: scale(1.01);
+            border-color: #3b82f6;
         }
+
+        .music-list li span {
+            font-weight: 600;
+            color: #0c4a6e;
+        }
+
         .play-btn {
-            background: #007bff;
+            background: #1e88e5;
             color: white;
             border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
+            padding: 8px 20px;
+            border-radius: 30px;
             cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
+
+        .play-btn:hover {
+            background: #0b5e9e;
+            transform: scale(1.03);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
         audio {
             width: 100%;
+            margin-top: 15px;
+            border-radius: 30px;
+            outline: none;
+        }
+
+        /* QRIS & WA */
+        .qris {
+            background: linear-gradient(145deg, #e0f0ff, #cde5ff);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .qris img {
+            width: 180px;
+            background: white;
+            padding: 15px;
+            border-radius: 20px;
+            margin: 10px auto;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn-wa {
+            display: inline-block;
+            background: #25D366;
+            color: white;
+            padding: 12px 28px;
+            text-decoration: none;
+            border-radius: 40px;
+            font-weight: bold;
+            margin: 15px 0 5px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn-wa:hover {
+            background: #128C7E;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+
+        .nomor-wa {
+            font-size: 1.2em;
+            color: #075e54;
+            font-weight: bold;
             margin-top: 10px;
         }
+
+        footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #1e3a8a;
+            font-size: 0.85em;
+        }
     </style>
-
-/* MODAL */
-.modal {
-  display: none;
-  position: fixed;
-  background: rgba(0,0,0,0.8);
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-}
-
-.modal img {
-  display: block;
-  margin: 50px auto;
-  max-width: 90%;
-}
-</style>
 </head>
-
 <body>
-
-<!-- NAVBAR -->
-<div class="navbar">
-  <div class="logo">
-    <img src="logo.png">
-    <b>Anak Rantau</b>
-  </div>
-
-  <div class="menu" id="menu">
-    <a href="#hotspot">Hotspot</a>
-    <a href="#kost">Kost</a>
-    <a href="#galeri">Galeri</a>
-    <a href="#kontak">Kontak</a>
-  </div>
-
-  <div class="hamburger" onclick="toggleMenu()">
-    ☰
-  </div>
-</div>
-
 <div class="container">
-  
-<h2>Pilih Paket Hotspot</h2>
+    <h1>🏠 ANAK RANTAU</h1>
 
+    <!-- PAKET HOTSPOT -->
+    <div class="paket">
+        <h2>📡 Pilih Paket Hotspot</h2>
 <a href="https://wa.me/6282162115149?text=Halo%20saya%20ingin%20beli%20Paket%202%20Jam%20(Rp3.000)" target="_blank">
     <button>Beli 2 Jam</button>
 </a>
@@ -214,19 +246,26 @@ button:hover {
     background: #1ebe5d;
 }
 </style>
+        <p>Hubungi kami untuk paket hotspot terbaik sesuai kebutuhan Anda.</p>
+    </div>
 
-  <div class="card" id="kost">
-    <h2>Harga Kost</h2>
-    <p>1 Orang Non AC : Rp 500.000</p>
-    <p>2 Orang Non AC : Rp 600.000</p>
-    <p>1 Orang AC : Rp 700.000</p>
-    <p>2 Orang AC : Rp 800.000</p>
-  </div>
+    <!-- HARGA KOST -->
+    <div class="harga">
+        <h2>🏷️ Harga Kost</h2>
+        <ul>
+            <li>👤 1 Orang (Non AC) : Rp 500.000 / bulan</li>
+            <li>👥 2 Orang (Non AC) : Rp 600.000 / bulan</li>
+            <li>👤 1 Orang (AC) : Rp 700.000 / bulan</li>
+            <li>👥 2 Orang (AC) : Rp 800.000 / bulan</li>
+        </ul>
+    </div>
 
-  <div class="card" id="galeri">
-    <h2>Galeri</h2>
-    <div class="gallery">
-      <img src="1767137825568.jpg" onclick="zoom(this)">
+    <!-- GALERI -->
+    <div class="galeri">
+        <h2>📸 Galeri</h2>
+        <div class="galeri-placeholder">
+            🖼️ Foto-foto kost segera hadir<br>
+             <img src="1767137825568.jpg" onclick="zoom(this)">
       <img src="IMG-20260107-WA0010.jpg" onclick="zoom(this)">
       <img src="IMG_20251223_173451_930.jpg" onclick="zoom(this)">
       <img src="IMG_20251223_173505_522.jpg" onclick="zoom(this)">
@@ -236,95 +275,64 @@ button:hover {
       <img src="file_0000000052e472079e5f9784352cc88b.png" onclick="zoom(this)">
       <img src="Lemari.jpg" onclick="zoom(this)">
       <img src="Kasur.jpg" onclick="zoom(this)">
-    
+        </div>
     </div>
-  </div>
-<!-- ========== PEMUTAR MUSIK (6 LAGU) ========== -->
+
+    <!-- ========== PEMUTAR MUSIK 6 LAGU ========== -->
     <div class="musik">
-        <h2>🎵 Musik Pengiring 🎵</h2>
+        <h2>🎵 Musik Pengiring 🎧</h2>
         <div class="music-player">
             <ul class="music-list" id="daftarLagu">
-                <li>musik1.mp3 <button class="play-btn" data-src="musik1.mp3">Play</button></li>
-                <li>musik2.mp3 <button class="play-btn" data-src="musik2.mp3">Play</button></li>
-                <li>musik3.mp3 <button class="play-btn" data-src="musik3.mp3">Play</button></li>
-                <li>musik4.mp3 <button class="play-btn" data-src="musik4.mp3">Play</button></li>
-                <li>musik5.mp3 <button class="play-btn" data-src="musik5.mp3">Play</button></li>
-                <li>musik6.mp3 <button class="play-btn" data-src="musik6.mp3">Play</button></li>
+                <li><span>🎵 musik1.mp3</span> <button class="play-btn" data-src="musik1.mp3">▶ Play</button></li>
+                <li><span>🎵 musik2.mp3</span> <button class="play-btn" data-src="musik2.mp3">▶ Play</button></li>
+                <li><span>🎵 musik3.mp3</span> <button class="play-btn" data-src="musik3.mp3">▶ Play</button></li>
+                <li><span>🎵 musik4.mp3</span> <button class="play-btn" data-src="musik4.mp3">▶ Play</button></li>
+                <li><span>🎵 musik5.mp3</span> <button class="play-btn" data-src="musik5.mp3">▶ Play</button></li>
+                <li><span>🎵 musik6.mp3</span> <button class="play-btn" data-src="musik6.mp3">▶ Play</button></li>
             </ul>
             <audio id="playerAudio" controls>
                 <source src="" type="audio/mpeg">
                 Browser Anda tidak mendukung audio.
             </audio>
+            <div style="font-size: 12px; margin-top: 8px; color: #1e3a8a; text-align: center;">
+                ⚡ Klik Play pada lagu yang ingin didengarkan
             </div>
-         </div>
+        </div>
+    </div>
 
-  <div class="card" id="kontak">
-    <h2>Kontak</h2>
-    <a class="btn" href="https://wa.me/6282162115149">Chat WhatsApp</a>
-  </div>
+    <!-- QRIS & PEMBAYARAN -->
+    <div class="qris">
+        <h2>💳 Pembayaran QRIS</h2>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=QRIS%20AnakRantau" alt="QRIS Code">
+        <p>Scan QRIS di atas untuk pembayaran kost / hotspot</p>
+        <p><strong>Setelah bayar, kirim bukti ke WhatsApp:</strong></p>
+        <a href="https://wa.me/6282162115149?text=Saya%20sudah%20melakukan%20pembayaran%20kost/hotspot%20Anak%20Rantau.%20Mohon%20dikonfirmasi." class="btn-wa">
+            📲 Kirim Bukti Pembayaran
+        </a>
+        <div class="nomor-wa">
+            📞 WA: 0821-6211-5149
+        </div>
+    </div>
 
-</div>
-
-<!-- MODAL -->
-<div id="modal" class="modal" onclick="closeZoom()">
-  <img id="modalImg">
-</div>
-
-<script>
-function zoom(img){
-  document.getElementById("modal").style.display = "block";
-  document.getElementById("modalImg").src = img.src;
-}
-
-function closeZoom(){
-  document.getElementById("modal").style.display = "none";
-}
-</script>
-<script>
-function toggleMenu() {
-  var menu = document.getElementById("menu");
-  if (menu.style.display === "flex") {
-    menu.style.display = "none";
-  } else {
-    menu.style.display = "flex";
-  }
-}
-</script>
-</body>
-</html>
-<div class="card" id="qris">
-  <h2>Pembayaran QRIS</h2>
-
-  <img src="qris.png" style="width:200px; border-radius:10px;">
-
-  <p>Scan QRIS untuk pembayaran</p>
-
-  <p style="color:red;">
-    Setelah bayar, kirim bukti ke WhatsApp
-  </p>
-
-  <a class="btn" href="https://wa.me/6282162115149">
-    Kirim Bukti Pembayaran
-  </a>
-</div>
+    <footer>
+        © 2025 Anak Rantau Kost & Hotspot | Blue Ice Theme
+    </footer>
 </div>
 
 <script>
-    // Ambil semua tombol play
+    // SCRIPT PEMUTAR MUSIK
     const buttons = document.querySelectorAll('.play-btn');
     const audioPlayer = document.getElementById('playerAudio');
 
-    // Untuk setiap tombol, tambahkan event click
     buttons.forEach(button => {
         button.addEventListener('click', function() {
             const laguUrl = this.getAttribute('data-src');
-            // Set sumber audio ke file MP3 yang dipilih
             audioPlayer.src = laguUrl;
-            // Mainkan
-            audioPlayer.play();
+            audioPlayer.play().catch(error => {
+                console.log("Autoplay dicegah browser, tapi tetap bisa diputar manual.");
+            });
         });
     });
 </script>
-
 </body>
 </html>
