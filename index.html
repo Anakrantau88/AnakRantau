@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Anak Rantau - Kost, Hotspot & Travel</title>
+<title>Anak Rantau - Kost, Hotspot, Travel & Tiket Pesawat</title>
  
 <style>
 .hamburger {
@@ -389,7 +389,7 @@ body {
   color: #006644;
 }
 
-/* Layanan Travel */
+/* Layanan Travel & Tiket Pesawat */
 .layanan-grid {
   display: flex;
   flex-wrap: wrap;
@@ -446,6 +446,27 @@ body {
 
 .layanan-wa-btn:hover {
   background: #128C7E;
+}
+
+/* Tombol khusus untuk beli tiket pesawat langsung ke MMBC */
+.btn-beli-tiket-mmbc {
+  display: inline-block;
+  background: #ff6b6b;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  margin-top: 12px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: bold;
+  transition: 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-beli-tiket-mmbc:hover {
+  background: #ff4757;
+  transform: scale(1.02);
 }
 
 /* Peringatan Pembayaran Resmi */
@@ -589,17 +610,27 @@ body {
   </audio>
 </div>
 
-<!-- ============ LAYANAN TRAVEL ============ -->
+<!-- ============ LAYANAN TRAVEL & TIKET PESAWAT (INTEGRASI MMBC) ============ -->
 <div class="card" id="layanan">
-  <h2 style="text-align: center;">✈️ Layanan Travel & Transportasi 🚗</h2>
+  <h2 style="text-align: center;">✈️ Layanan Travel & Tiket Pesawat 🚗</h2>
+  
+  <!-- Grid Layanan: sekarang dengan fitur BELI TIKET PESAWAT langsung ke MMBC -->
   <div class="layanan-grid">
-    <div class="layanan-card" onclick="waPesanTiketPesawat()">
+    
+    <!-- CARD 1: TIKET PESAWAT (Integrasi MMBC) -->
+    <div class="layanan-card">
       <div class="layanan-icon">✈️</div>
-      <h3>Tiket Pesawat</h3>
-      <p>Pesan tiket pesawat domestik & internasional</p>
-      <button class="layanan-wa-btn" onclick="event.stopPropagation(); waPesanTiketPesawat()">📱 Pesan via WA</button>
+      <h3>Tiket Pesawat (MMBC Tour)</h3>
+      <p>Pesan tiket pesawat langsung via MMBC – harga bersaing, mudah & cepat</p>
+      <!-- Tombol khusus yang membuka link MMBC Anda di tab baru -->
+      <a href="https://klikmbc.biz/v2/main-tpl?i=1#" target="_blank" rel="noopener noreferrer" class="btn-beli-tiket-mmbc">
+        🛒 Beli Tiket Pesawat Sekarang
+      </a>
+      <!-- Tombol WA untuk konsultasi tiket (opsional) tetap disediakan -->
+      <button class="layanan-wa-btn" onclick="waPesanTiketPesawat()">💬 Konsultasi via WA</button>
     </div>
     
+    <!-- CARD 2: SEWA MOBIL -->
     <div class="layanan-card" onclick="waSewaMobil()">
       <div class="layanan-icon">🚙</div>
       <h3>Sewa Mobil Harian</h3>
@@ -607,6 +638,7 @@ body {
       <button class="layanan-wa-btn" onclick="event.stopPropagation(); waSewaMobil()">📱 Pesan via WA</button>
     </div>
     
+    <!-- CARD 3: ANTAR JEMPUT BANDARA -->
     <div class="layanan-card" onclick="waAntarJemputBandara()">
       <div class="layanan-icon">🚐</div>
       <h3>Antar Jemput Bandara Kualanamu</h3>
@@ -615,15 +647,17 @@ body {
     </div>
   </div>
 
+  <!-- PERINGATAN PEMBAYARAN RESMI (berlaku untuk semua layanan termasuk tiket pesawat via WA) -->
   <div class="peringatan-bayar">
     <strong>⚠️ PERINGATAN PENTING ⚠️</strong><br>
-    Pembayaran yang sah dan diakui <strong>HANYA</strong> melalui rekening bank Mandiri:<br>
+    Untuk pembayaran <strong>tiket pesawat melalui konsultasi WA</strong> maupun layanan lainnya, pembayaran yang sah dan diakui <strong>HANYA</strong> melalui rekening bank Mandiri:<br>
     <div class="rekening-info">
       🏦 <strong>Bank Mandiri</strong><br>
       📌 No. Rekening: <strong>1050014328318</strong><br>
       👤 Atas nama: <strong>Erikson Sibagariang</strong>
     </div>
-    Pembayaran diluar dari no rekening ini dianggap <strong>TIDAK SAH</strong> dan tidak kami akui.
+    Pembayaran diluar dari no rekening ini dianggap <strong>TIDAK SAH</strong> dan tidak kami akui.<br>
+    <span style="font-size: 13px;">✅ Untuk pemesanan tiket pesawat via sistem MMBC (klik tombol "Beli Tiket Pesawat Sekarang"), proses pembayaran akan dipandu langsung oleh platform MMBC.</span>
   </div>
 </div>
 
@@ -756,11 +790,13 @@ body {
   <p style="font-size: 11px;">Scan QR untuk download APK langsung ke HP</p>
 </div>
 
-<!-- KONTAK -->
+<!-- KONTAK (WA menggunakan NOMOR BARU 082162115149) -->
 <div class="card" id="kontak">
   <h2>📞 Kontak Kami</h2>
-  <p>Admin siap membantu 24 jam</p>
-  <a class="btn" href="https://wa.me/6282162115149">💬 Chat WhatsApp Admin</a>
+  <p>Admin siap membantu 24 jam via WhatsApp</p>
+  <!-- TOMBOL CHAT WA menggunakan NOMOR 082162115149 (format internasional 6282162115149) -->
+  <a class="btn" href="https://wa.me/6282162115149">💬 Chat WhatsApp Admin (082162115149)</a>
+  <p style="margin-top: 10px; font-size: 14px; color:#25D366;">✅ Resmi & Cepat Respon</p>
 </div>
 
 <!-- QR CODE WEBSITE -->
@@ -781,7 +817,8 @@ body {
 
 <script>
 // ========== NOMOR WHATSAPP ADMIN ==========
-const NOMOR_WA_ADMIN = "6282162115149";
+// Menggunakan nomor baru yang Anda berikan: 082162115149
+const NOMOR_WA_ADMIN = "6282162115149";  // format internasional tanpa 0
 
 // ========== FUNGSI SHARE LINK APK ==========
 function shareApkLink() {
@@ -797,7 +834,6 @@ function shareApkLink() {
       alert(`Download APK: ${apkUrl}`);
     });
   } else {
-    // Copy ke clipboard
     navigator.clipboard.writeText(apkUrl).then(() => {
       alert("✅ Link APK sudah disalin! Bisa dibagikan ke teman-teman.");
     }).catch(() => {
@@ -806,9 +842,9 @@ function shareApkLink() {
   }
 }
 
-// ========== FUNGSI UNTUK LAYANAN TRAVEL ==========
+// ========== FUNGSI UNTUK LAYANAN TRAVEL (WA integration dengan nomor baru) ==========
 function waPesanTiketPesawat() {
-    let pesan = "Halo Admin Anak Rantau! Saya ingin *memesan tiket pesawat*.%0A%0A" +
+    let pesan = "Halo Admin Anak Rantau! Saya ingin *memesan tiket pesawat* (konsultasi via WA).%0A%0A" +
                 "📍 Rute keberangkatan: %0A📍 Rute tujuan: %0A📅 Tanggal berangkat: %0A👤 Jumlah penumpang: %0A✈️ Maskapai: %0A%0A" +
                 "⚠️ Saya akan melakukan pembayaran ke rekening resmi Bank Mandiri 1050014328318 a.n. Erikson Sibagariang.%0A%0A" +
                 "Terima kasih!";
