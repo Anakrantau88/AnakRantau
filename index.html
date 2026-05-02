@@ -566,6 +566,47 @@ body {
   display: inline-block;
   padding-bottom: 5px;
 }
+
+/* ----- STYLE KHUSUS MAU GABUNG AGEN MMBC ----- */
+.agen-mmbc-card {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: #333;
+  text-align: center;
+  border-radius: 15px;
+}
+
+.agen-mmbc-card h2, .agen-mmbc-card h3 {
+  color: #222;
+}
+
+.btn-gabung-agen {
+  display: inline-block;
+  background: #25D366;
+  color: white;
+  padding: 14px 28px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 15px;
+  transition: transform 0.2s;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-gabung-agen:hover {
+  transform: scale(1.05);
+  background: #128C7E;
+}
+
+.keuntungan-agen {
+  text-align: left;
+  background: rgba(255,255,255,0.5);
+  border-radius: 15px;
+  padding: 15px;
+  margin-top: 15px;
+  font-size: 14px;
+}
 </style>
 </head>
 
@@ -585,6 +626,7 @@ body {
     <a href="#testimoni">Testimoni</a>
     <a href="#kontak">Kontak</a>
     <a href="#download">Download App</a>
+    <a href="#mauGabung" style="background:#FFA500; padding:5px 12px; border-radius:20px;">✨ Mau Gabung</a>
   </div>
   <div class="hamburger" onclick="toggleMenu()">☰</div>
 </div>
@@ -659,6 +701,30 @@ body {
     Pembayaran diluar dari no rekening ini dianggap <strong>TIDAK SAH</strong> dan tidak kami akui.<br>
     <span style="font-size: 13px;">✅ Untuk pemesanan tiket pesawat via sistem MMBC (klik tombol "Beli Tiket Pesawat Sekarang"), proses pembayaran akan dipandu langsung oleh platform MMBC.</span>
   </div>
+</div>
+
+<!-- ============ MAU GABUNG AGEN MMBC ============ -->
+<div class="card agen-mmbc-card" id="mauGabung">
+  <h2>🤝 Mau Gabung? 🚀</h2>
+  <h3>✨ Jadi Agen MMBC Sekarang! ✨</h3>
+  <p style="font-size:16px; font-weight:500;">Dapatkan keuntungan sampingan dengan berjualan tiket pesawat, tiket bus, tiket kereta, topup pulsa, paket data, dan berbagai produk digital lainnya.</p>
+  
+  <div class="keuntungan-agen">
+    <strong>💎 Keuntungan menjadi Agen MMBC:</strong>
+    <ul>
+      <li>✅ Modal kecil, komisi menarik</li>
+      <li>✅ Bisa jual tiket pesawat, bus, kereta api</li>
+      <li>✅ Melayani topup pulsa, paket internet, token listrik</li>
+      <li>✅ Sistem mudah, transaksi via WA & website</li>
+      <li>✅ Bimbingan dari tim MMBC profesional</li>
+      <li>✅ Pendaftaran GRATIS</li>
+    </ul>
+  </div>
+  
+  <button class="btn-gabung-agen" onclick="gabungAgenMMBC()">
+    💬 Daftar Jadi Agen Sekarang via WhatsApp
+  </button>
+  <p style="margin-top:15px; font-size:12px;">Klik tombol di atas, maka Anda akan terhubung ke Admin kami di WhatsApp <strong>082162115149</strong> untuk registrasi agen MMBC.</p>
 </div>
 
 <!-- PAKET HOTSPOT -->
@@ -819,6 +885,14 @@ body {
 // ========== NOMOR WHATSAPP ADMIN ==========
 // Menggunakan nomor baru yang Anda berikan: 082162115149
 const NOMOR_WA_ADMIN = "6282162115149";  // format internasional tanpa 0
+
+// ========== FUNGSI GABUNG AGEN MMBC ==========
+function gabungAgenMMBC() {
+    let pesan = "Halo Admin Anak Rantau! Saya tertarik untuk menjadi AGEN MMBC.%0A%0A" +
+                "Saya ingin bergabung dan mendapatkan keuntungan sampingan dari penjualan tiket pesawat, tiket bus, kereta, topup pulsa, dan produk digital lainnya.%0A%0A" +
+                "Mohon info syarat dan cara daftarnya. Terima kasih!";
+    window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=${pesan}`, '_blank');
+}
 
 // ========== FUNGSI SHARE LINK APK ==========
 function shareApkLink() {
