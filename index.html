@@ -650,11 +650,11 @@ body {
   display: none;
 }
 
-/* INVOICE HEADER DENGAN LOGO DI KIRI */
+/* INVOICE HEADER - JUDUL DI TENGAH, LOGO DI KIRI */
 .invoice-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   border-bottom: 3px solid #667eea;
   padding-bottom: 15px;
   margin-bottom: 20px;
@@ -666,6 +666,7 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  flex: 1;
 }
 
 .invoice-logo-img {
@@ -673,28 +674,41 @@ body {
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
-.invoice-logo-left h3 {
-  margin: 0;
+.invoice-logo-left span {
+  font-size: 12px;
   color: #667eea;
-  font-size: 14px;
+  font-weight: bold;
 }
 
-.invoice-company-right {
-  text-align: right;
+.invoice-title-center {
+  flex: 2;
+  text-align: center;
 }
 
-.invoice-company-right h2 {
+.invoice-title-center h2 {
   color: #667eea;
   margin: 0 0 5px 0;
+  font-size: 20px;
 }
 
-.invoice-company-right p {
+.invoice-title-center p {
   margin: 3px 0;
   font-size: 12px;
   color: #666;
+}
+
+.invoice-contact-right {
+  flex: 1;
+  text-align: right;
+  font-size: 11px;
+  color: #666;
+}
+
+.invoice-contact-right p {
+  margin: 3px 0;
 }
 
 .invoice-details {
@@ -810,6 +824,23 @@ body {
   font-size: 12px;
   display: inline-block;
 }
+
+.password-wrapper {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  user-select: none;
+  color: #667eea;
+  font-size: 14px;
+  background: white;
+  padding: 0 5px;
+}
 </style>
 </head>
 
@@ -860,13 +891,16 @@ body {
 <div class="card invoice-admin-card" id="invoiceAdmin">
   <h2 style="text-align: center;">🧾 Panel Invoice Admin</h2>
   
-  <!-- FORM LOGIN -->
+  <!-- FORM LOGIN - KOSONG, ADMIN HARUS ISI MANUAL -->
   <div id="loginForm" class="login-container">
     <h3>🔐 Login Admin</h3>
-    <input type="text" id="loginUsername" placeholder="Username" value="Syalom">
-    <input type="password" id="loginPassword" placeholder="Password" value="Debat4">
+    <input type="text" id="loginUsername" placeholder="Username" autocomplete="off">
+    <div class="password-wrapper">
+      <input type="password" id="loginPassword" placeholder="Password" autocomplete="off">
+      <span class="toggle-password" onclick="togglePassword()">👁️</span>
+    </div>
     <button onclick="adminLogin()">Login</button>
-    <p style="text-align: center; font-size: 12px; margin-top: 15px;">🔑 Username: Syalom | Password: Debat4</p>
+    <p style="text-align: center; font-size: 12px; margin-top: 15px; color: #999;">🔒 Masukkan username dan password admin</p>
   </div>
   
   <!-- PANEL ADMIN -->
@@ -916,16 +950,18 @@ body {
       </div>
     </div>
     
-    <!-- PREVIEW INVOICE dengan LOGO DI KIRI ATAS -->
+    <!-- PREVIEW INVOICE dengan LOGO DI KIRI, JUDUL DI TENGAH -->
     <div id="adminInvoicePreview" class="invoice-preview-admin">
       <div class="invoice-header">
         <div class="invoice-logo-left">
           <img src="logo.png" class="invoice-logo-img" onerror="this.src='https://via.placeholder.com/120?text=AR'">
-          <h3>Anak Rantau</h3>
+          <span>Anak Rantau</span>
         </div>
-        <div class="invoice-company-right">
+        <div class="invoice-title-center">
           <h2>ANAK RANTAU LUBUK PAKAM</h2>
           <p>Kost, Hotspot & Travel</p>
+        </div>
+        <div class="invoice-contact-right">
           <p>📞 082162115149</p>
           <p>✉️ anakrantaulubukpakam@gmail.com</p>
         </div>
@@ -1173,9 +1209,22 @@ const NOMOR_WA_ADMIN = "6282162115149";
 let currentAdminInvoiceData = null;
 let savedInvoices = JSON.parse(localStorage.getItem('anakRantauInvoices') || '[]');
 
+// Fungsi toggle password
+function togglePassword() {
+    const passwordInput = document.getElementById('loginPassword');
+    const toggleBtn = document.querySelector('.toggle-password');
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleBtn.textContent = '🙈';
+    } else {
+        passwordInput.type = 'password';
+        toggleBtn.textContent = '👁️';
+    }
+}
+
 // Fungsi Login Admin (Username: Syalom, Password: Debat4)
 function adminLogin() {
-    const username = document.getElementById('loginUsername').value;
+    const username = document.getElementById('loginUsername').value.trim();
     const password = document.getElementById('loginPassword').value;
     
     const validUsername = "Syalom";
@@ -1189,6 +1238,10 @@ function adminLogin() {
         
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('adminInvoiceTanggal').value = today;
+        
+        // Reset form login
+        document.getElementById('loginUsername').value = '';
+        document.getElementById('loginPassword').value = '';
     } else {
         alert('❌ Username atau password salah!');
     }
@@ -1340,11 +1393,12 @@ function downloadInvoiceAdminPDF() {
             <style>
                 body { font-family: Arial, sans-serif; padding: 40px; margin: 0; }
                 .invoice-preview-admin { max-width: 800px; margin: 0 auto; border: 1px solid #ddd; padding: 30px; border-radius: 10px; }
-                .invoice-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #667eea; padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; }
-                .invoice-logo-left { display: flex; flex-direction: column; align-items: center; text-align: center; }
-                .invoice-logo-img { width: 120px; height: 120px; border-radius: 50%; margin-bottom: 10px; }
-                .invoice-company-right { text-align: right; }
-                .invoice-company-right h2 { color: #667eea; margin: 0; }
+                .invoice-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #667eea; padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+                .invoice-logo-left { display: flex; flex-direction: column; align-items: center; text-align: center; flex: 1; }
+                .invoice-logo-img { width: 120px; height: 120px; border-radius: 50%; margin-bottom: 5px; }
+                .invoice-title-center { flex: 2; text-align: center; }
+                .invoice-title-center h2 { color: #667eea; margin: 0; }
+                .invoice-contact-right { flex: 1; text-align: right; font-size: 11px; }
                 .invoice-details { margin: 20px 0; }
                 .invoice-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #ddd; }
                 .invoice-row.total { border-top: 3px solid #667eea; border-bottom: none; margin-top: 10px; padding-top: 15px; font-weight: bold; font-size: 18px; color: #667eea; }
