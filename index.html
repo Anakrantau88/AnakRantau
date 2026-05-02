@@ -650,7 +650,7 @@ body {
   display: none;
 }
 
-/* INVOICE HEADER - UKURAN TEKS DIPERBESAR */
+/* INVOICE HEADER */
 .invoice-header {
   display: flex;
   justify-content: space-between;
@@ -856,6 +856,20 @@ body {
   background: #3182ce;
 }
 
+.btn-send-invoice {
+  background: #25D366;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.btn-send-invoice:hover {
+  background: #128C7E;
+}
+
 .admin-header {
   display: flex;
   justify-content: space-between;
@@ -948,7 +962,7 @@ body {
 <div class="card invoice-admin-card" id="invoiceAdmin">
   <h2 style="text-align: center;">🧾 Panel Invoice Admin</h2>
   
-  <!-- FORM LOGIN - KOSONG -->
+  <!-- FORM LOGIN -->
   <div id="loginForm" class="login-container">
     <h3>🔐 Login Admin</h3>
     <input type="text" id="loginUsername" placeholder="Username" autocomplete="off">
@@ -982,7 +996,7 @@ body {
       <label>👤 Nama Pelanggan</label>
       <input type="text" id="adminInvoiceNama" placeholder="Nama lengkap pelanggan" required>
       
-      <label>📞 Nomor WhatsApp</label>
+      <label>📞 Nomor WhatsApp Pelanggan</label>
       <input type="tel" id="adminInvoiceNoWA" placeholder="Contoh: 081234567890" required>
       
       <label>💰 Jumlah Pembayaran (Rp)</label>
@@ -1045,7 +1059,7 @@ body {
       </div>
     </div>
     
-    <!-- DAFTAR INVOICE DENGAN TOMBOL HAPUS -->
+    <!-- DAFTAR INVOICE DENGAN TOMBOL KIRIM WA -->
     <div class="list-invoice">
       <h3>📋 Daftar Invoice Tersimpan</h3>
       <div id="savedInvoicesList">
@@ -1422,6 +1436,7 @@ function loadSavedInvoicesList() {
                 </div>
                 <div class="inv-actions">
                     <button class="btn-view-invoice" onclick="event.stopPropagation(); viewSavedInvoice(${i})">👁️ Lihat</button>
+                    <button class="btn-send-invoice" onclick="event.stopPropagation(); kirimInvoiceKeWA(${i})">💬 Kirim WA</button>
                     <button class="btn-delete-invoice" onclick="event.stopPropagation(); deleteInvoice(${i})">🗑️ Hapus</button>
                 </div>
             </div>
@@ -1437,8 +1452,51 @@ function viewSavedInvoice(index) {
     document.getElementById('adminBtnDownloadPDF').style.display = 'inline-block';
     currentAdminInvoiceData = inv;
     
-    // Scroll ke preview
     document.getElementById('adminInvoicePreview').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Fungsi Kirim Invoice ke WhatsApp Pelanggan
+function kirimInvoiceKeWA(index) {
+    const inv = savedInvoices[index];
+    
+    // Format nomor WhatsApp pelanggan (pastikan dimulai dengan 62)
+    let noPelanggan = inv.nowa.replace(/\D/g, ''); // Hanya angka
+    if (noPelanggan.startsWith('0')) {
+        noPelanggan = '62' + noPelanggan.substring(1);
+    }
+    if (!noPelanggan.startsWith('62')) {
+        noPelanggan = '62' + noPelanggan;
+    }
+    
+    // Format pesan invoice
+    const statusText = inv.status === 'Sudah Dibayar' ? '✅ LUNAS' : (inv.status === 'Pending' ? '🔄 PENDING' : '⏳ BELUM DIBAYAR');
+    
+    const pesan = `*🧾 INVOICE ANAK RANTAU LUBUK PAKAM*%0A%0A` +
+                  `*No. Invoice:* ${inv.no}%0A` +
+                  `*Tanggal:* ${inv.tanggal}%0A` +
+                  `*Layanan:* ${inv.layanan}%0A` +
+                  `*Pelanggan:* ${inv.nama}%0A` +
+                  `*Detail Transaksi:* ${inv.keterangan}%0A` +
+                  `*Total Pembayaran:* Rp ${inv.jumlahFormatted}%0A` +
+                  `*Status:* ${statusText}%0A%0A` +
+                  `━━━━━━━━━━━━━━━━━━━━%0A` +
+                  `*⚠️ PENTING!*%0A` +
+                  `Pembayaran resmi hanya melalui rekening:%0A` +
+                  `🏦 *Bank Mandiri*%0A` +
+                  `📌 *1050014328318*%0A` +
+                  `👤 a.n. *Erikson Sibagariang*%0A%0A` +
+                  `Setelah melakukan pembayaran, harap kirimkan bukti transfer ke nomor ini.%0A%0A` +
+                  `Terima kasih telah menggunakan layanan kami 🙏%0A` +
+                  `━━━━━━━━━━━━━━━━━━━━%0A` +
+                  `Anak Rantau Lubuk Pakam%0A` +
+                  `📞 082162115149 | ✉️ anakrantaulubukpakam@gmail.com`;
+    
+    // Buka WhatsApp dengan pesan terformat
+    const waUrl = `https://wa.me/${noPelanggan}?text=${pesan}`;
+    window.open(waUrl, '_blank');
+    
+    // Optional: Tampilkan notifikasi
+    alert(`✅ Invoice akan dikirim ke nomor: ${inv.nowa}\n\nPastikan nomor WhatsApp pelanggan benar!`);
 }
 
 function deleteInvoice(index) {
@@ -1451,7 +1509,6 @@ function deleteInvoice(index) {
         localStorage.setItem('anakRantauInvoices', JSON.stringify(savedInvoices));
         loadSavedInvoicesList();
         
-        // Jika invoice yang sedang dilihat dihapus, sembunyikan preview
         if (currentAdminInvoiceData && savedInvoices.indexOf(currentAdminInvoiceData) === -1) {
             document.getElementById('adminInvoicePreview').style.display = 'none';
             document.getElementById('adminBtnDownloadPDF').style.display = 'none';
