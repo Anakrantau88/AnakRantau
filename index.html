@@ -105,14 +105,6 @@ body {
   margin: 5px 0;
 }
 
-.btn-primary {
-  background: #0077cc;
-}
-
-.btn-primary:hover {
-  background: #005fa3;
-}
-
 /* MODAL */
 .modal {
   display: none;
@@ -351,6 +343,14 @@ body {
   transform: scale(1.02);
 }
 
+.paket-btn-bulanan {
+  background: linear-gradient(135deg, #ff9800, #f44336);
+}
+
+.paket-btn-bulanan:hover {
+  background: linear-gradient(135deg, #f57c00, #d32f2f);
+}
+
 .paket-terpilih-info {
   background: #e8f4fd;
   padding: 12px;
@@ -384,6 +384,17 @@ body {
   padding: 5px 12px;
   border-radius: 20px;
   font-size: 12px;
+  font-weight: bold;
+  margin-left: 8px;
+}
+
+.badge-populer {
+  display: inline-block;
+  background: #ff9800;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
   font-weight: bold;
   margin-left: 8px;
 }
@@ -477,6 +488,7 @@ body {
   transform: scale(1.02);
 }
 
+/* Peringatan Pembayaran Resmi dengan Barcode */
 .peringatan-bayar {
   background: #fff3cd;
   border-left: 6px solid #ffc107;
@@ -485,10 +497,33 @@ body {
   border-radius: 10px;
   font-size: 14px;
   color: #856404;
+  position: relative;
+  min-height: 130px;
 }
 
 .peringatan-bayar strong {
   color: #b94a00;
+}
+
+.barcode-corner {
+  position: absolute;
+  bottom: 10px;
+  right: 15px;
+  text-align: center;
+}
+
+.barcode-corner img {
+  width: 100px;
+  height: auto;
+  border-radius: 8px;
+  background: white;
+  padding: 5px;
+}
+
+.barcode-corner p {
+  font-size: 8px;
+  margin: 3px 0 0 0;
+  color: #856404;
 }
 
 .rekening-info {
@@ -499,6 +534,7 @@ body {
   font-family: monospace;
   font-size: 15px;
   text-align: center;
+  margin-right: 120px;
 }
 
 /* DOWNLOAD APK */
@@ -650,7 +686,6 @@ body {
   display: none;
 }
 
-/* INVOICE HEADER */
 .invoice-header {
   display: flex;
   justify-content: space-between;
@@ -770,14 +805,6 @@ body {
 
 .btn-download-pdf:hover {
   background: #38a169;
-}
-
-.btn-delete {
-  background: #e53e3e;
-}
-
-.btn-delete:hover {
-  background: #c53030;
 }
 
 .btn-logout {
@@ -962,7 +989,6 @@ body {
 <div class="card invoice-admin-card" id="invoiceAdmin">
   <h2 style="text-align: center;">🧾 Panel Invoice Admin</h2>
   
-  <!-- FORM LOGIN -->
   <div id="loginForm" class="login-container">
     <h3>🔐 Login Admin</h3>
     <input type="text" id="loginUsername" placeholder="Username" autocomplete="off">
@@ -974,7 +1000,6 @@ body {
     <p style="text-align: center; font-size: 12px; margin-top: 15px; color: #999;">🔒 Masukkan username dan password admin</p>
   </div>
   
-  <!-- PANEL ADMIN -->
   <div id="adminPanel" class="invoice-admin-panel">
     <div class="admin-header">
       <h3>📋 Dashboard Admin</h3>
@@ -991,6 +1016,7 @@ body {
         <option value="Tiket Pesawat">✈️ Tiket Pesawat</option>
         <option value="Sewa Mobil">🚙 Sewa Mobil</option>
         <option value="Antar Jemput Bandara">🚐 Antar Jemput Bandara</option>
+        <option value="Hotspot Langganan">📱 Hotspot Langganan (Bulanan)</option>
       </select>
       
       <label>👤 Nama Pelanggan</label>
@@ -1021,7 +1047,6 @@ body {
       </div>
     </div>
     
-    <!-- PREVIEW INVOICE -->
     <div id="adminInvoicePreview" class="invoice-preview-admin">
       <div class="invoice-header">
         <div class="invoice-logo-left">
@@ -1059,7 +1084,6 @@ body {
       </div>
     </div>
     
-    <!-- DAFTAR INVOICE DENGAN TOMBOL KIRIM WA -->
     <div class="list-invoice">
       <h3>📋 Daftar Invoice Tersimpan</h3>
       <div id="savedInvoicesList">
@@ -1097,6 +1121,7 @@ body {
     </div>
   </div>
 
+  <!-- Peringatan Pembayaran dengan Barcode Website -->
   <div class="peringatan-bayar">
     <strong>⚠️ PERINGATAN PENTING ⚠️</strong><br>
     Pembayaran yang sah HANYA melalui rekening bank Mandiri:<br>
@@ -1104,6 +1129,10 @@ body {
       🏦 <strong>Bank Mandiri</strong><br>
       📌 No. Rekening: <strong>1050014328318</strong><br>
       👤 Atas nama: <strong>Erikson Sibagariang</strong>
+    </div>
+    <div class="barcode-corner">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://anakrantau88.github.io/AnakRantau/" alt="QR Code Website">
+      <p>Scan untuk Website</p>
     </div>
   </div>
 </div>
@@ -1144,6 +1173,9 @@ body {
     <button class="paket-btn" onclick="pilihPaket(7000, '1 Hari')">🎯 1 Hari (Rp7.000)</button>
     <button class="paket-btn" onclick="pilihPaket(20000, '7 Hari')">🎯 7 Hari (Rp20.000)</button>
     <button class="paket-btn" onclick="pilihPaket(60000, '30 Hari')">🎯 30 Hari (Rp60.000)</button>
+    <button class="paket-btn paket-btn-bulanan" onclick="pilihPaket(50000, 'Langganan 1 Bulan')">
+      📱 Langganan Bulanan <span class="badge-populer">Hemat!</span> (Rp50.000)
+    </button>
   </div>
   
   <button class="btn-bayar-qris" id="btnBayarQRIS" onclick="tampilkanQRIS()">
@@ -1153,7 +1185,7 @@ body {
   
   <div class="info-bayar">
     💡 <strong>Cara Bayar Hotspot:</strong><br>
-    1. Pilih paket di atas<br>
+    1. Pilih paket di atas (termasuk paket Langganan Rp50.000/bulan)<br>
     2. Klik tombol "Bayar dengan QRIS"<br>
     3. Scan QR Code yang muncul<br>
     4. Bayar pakai GoPay, DANA, OVO, atau ShopeePay<br>
@@ -1275,12 +1307,12 @@ body {
 <script>
 // ========== NOMOR WHATSAPP ADMIN ==========
 const NOMOR_WA_ADMIN = "6282162115149";
+const WEBSITE_URL = "https://anakrantau88.github.io/AnakRantau/";
 
 // ========== DATA ADMIN & INVOICE ==========
 let currentAdminInvoiceData = null;
 let savedInvoices = JSON.parse(localStorage.getItem('anakRantauInvoices') || '[]');
 
-// Fungsi toggle password
 function togglePassword() {
     const passwordInput = document.getElementById('loginPassword');
     const toggleBtn = document.querySelector('.toggle-password');
@@ -1293,7 +1325,6 @@ function togglePassword() {
     }
 }
 
-// Fungsi Login Admin
 function adminLogin() {
     const username = document.getElementById('loginUsername').value.trim();
     const password = document.getElementById('loginPassword').value;
@@ -1309,7 +1340,6 @@ function adminLogin() {
         
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('adminInvoiceTanggal').value = today;
-        
         document.getElementById('loginUsername').value = '';
         document.getElementById('loginPassword').value = '';
     } else {
@@ -1317,7 +1347,6 @@ function adminLogin() {
     }
 }
 
-// Cek status login
 window.addEventListener('load', function() {
     if (localStorage.getItem('adminLoggedIn') === 'true') {
         document.getElementById('loginForm').style.display = 'none';
@@ -1343,7 +1372,6 @@ function adminLogout() {
     document.getElementById('adminBtnDownloadPDF').style.display = 'none';
 }
 
-// Buat Invoice
 function buatInvoiceAdmin() {
     const nama = document.getElementById('adminInvoiceNama').value.trim();
     const nowa = document.getElementById('adminInvoiceNoWA').value.trim();
@@ -1451,16 +1479,12 @@ function viewSavedInvoice(index) {
     document.getElementById('adminInvoicePreview').style.display = 'block';
     document.getElementById('adminBtnDownloadPDF').style.display = 'inline-block';
     currentAdminInvoiceData = inv;
-    
     document.getElementById('adminInvoicePreview').scrollIntoView({ behavior: 'smooth' });
 }
 
-// Fungsi Kirim Invoice ke WhatsApp Pelanggan
 function kirimInvoiceKeWA(index) {
     const inv = savedInvoices[index];
-    
-    // Format nomor WhatsApp pelanggan (pastikan dimulai dengan 62)
-    let noPelanggan = inv.nowa.replace(/\D/g, ''); // Hanya angka
+    let noPelanggan = inv.nowa.replace(/\D/g, '');
     if (noPelanggan.startsWith('0')) {
         noPelanggan = '62' + noPelanggan.substring(1);
     }
@@ -1468,7 +1492,6 @@ function kirimInvoiceKeWA(index) {
         noPelanggan = '62' + noPelanggan;
     }
     
-    // Format pesan invoice
     const statusText = inv.status === 'Sudah Dibayar' ? '✅ LUNAS' : (inv.status === 'Pending' ? '🔄 PENDING' : '⏳ BELUM DIBAYAR');
     
     const pesan = `*🧾 INVOICE ANAK RANTAU LUBUK PAKAM*%0A%0A` +
@@ -1489,22 +1512,15 @@ function kirimInvoiceKeWA(index) {
                   `Terima kasih telah menggunakan layanan kami 🙏%0A` +
                   `━━━━━━━━━━━━━━━━━━━━%0A` +
                   `Anak Rantau Lubuk Pakam%0A` +
-                  `📞 082162115149 | ✉️ anakrantaulubukpakam@gmail.com`;
+                  `📞 082162115149 | ✉️ anakrantaulubukpakam@gmail.com%0A` +
+                  `🌐 ${WEBSITE_URL}`;
     
-    // Buka WhatsApp dengan pesan terformat
-    const waUrl = `https://wa.me/${noPelanggan}?text=${pesan}`;
-    window.open(waUrl, '_blank');
-    
-    // Optional: Tampilkan notifikasi
-    alert(`✅ Invoice akan dikirim ke nomor: ${inv.nowa}\n\nPastikan nomor WhatsApp pelanggan benar!`);
+    window.open(`https://wa.me/${noPelanggan}?text=${pesan}`, '_blank');
+    alert(`✅ Invoice akan dikirim ke nomor: ${inv.nowa}`);
 }
 
 function deleteInvoice(index) {
-    if (confirm('⚠️ Apakah Anda yakin ingin menghapus invoice ini?\n\n' + 
-                'Invoice: ' + savedInvoices[index].no + '\n' +
-                'Pelanggan: ' + savedInvoices[index].nama + '\n\n' +
-                'Data yang dihapus tidak dapat dikembalikan!')) {
-        
+    if (confirm('⚠️ Apakah Anda yakin ingin menghapus invoice ini?\n\nInvoice: ' + savedInvoices[index].no + '\nPelanggan: ' + savedInvoices[index].nama + '\n\nData yang dihapus tidak dapat dikembalikan!')) {
         savedInvoices.splice(index, 1);
         localStorage.setItem('anakRantauInvoices', JSON.stringify(savedInvoices));
         loadSavedInvoicesList();
@@ -1514,7 +1530,6 @@ function deleteInvoice(index) {
             document.getElementById('adminBtnDownloadPDF').style.display = 'none';
             currentAdminInvoiceData = null;
         }
-        
         alert('✅ Invoice berhasil dihapus!');
     }
 }
@@ -1526,59 +1541,42 @@ function downloadInvoiceAdminPDF() {
     }
     
     const printContent = document.getElementById('adminInvoicePreview').cloneNode(true);
-    
     const printWindow = window.open('', '_blank');
     printWindow.document.write(`
         <!DOCTYPE html>
         <html>
-        <head>
-            <title>Invoice ${currentAdminInvoiceData.no}</title>
-            <style>
-                body { font-family: Arial, sans-serif; padding: 40px; margin: 0; }
-                .invoice-preview-admin { max-width: 800px; margin: 0 auto; border: 1px solid #ddd; padding: 30px; border-radius: 10px; }
-                .invoice-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #667eea; padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; }
-                .invoice-logo-left { display: flex; flex-direction: column; align-items: center; text-align: center; flex: 1; }
-                .invoice-logo-img { width: 120px; height: 120px; border-radius: 50%; margin-bottom: 5px; }
-                .invoice-title-center { flex: 2; text-align: center; }
-                .invoice-title-center h2 { color: #667eea; margin: 0; font-size: 28px; }
-                .invoice-title-center p { font-size: 16px; }
-                .invoice-contact-right { flex: 1; text-align: right; }
-                .invoice-contact-right p { margin: 8px 0; font-size: 16px; }
-                .invoice-details { margin: 20px 0; }
-                .invoice-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #ddd; }
-                .invoice-row.total { border-top: 3px solid #667eea; border-bottom: none; margin-top: 10px; padding-top: 15px; font-weight: bold; font-size: 20px; color: #667eea; }
-                .invoice-footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #666; }
-                .status-paid { background: #48bb78; color: white; padding: 4px 12px; border-radius: 20px; display: inline-block; }
-                .status-unpaid { background: #ed8936; color: white; padding: 4px 12px; border-radius: 20px; display: inline-block; }
-            </style>
+        <head><title>Invoice ${currentAdminInvoiceData.no}</title>
+        <style>
+            body { font-family: Arial, sans-serif; padding: 40px; margin: 0; }
+            .invoice-preview-admin { max-width: 800px; margin: 0 auto; border: 1px solid #ddd; padding: 30px; border-radius: 10px; }
+            .invoice-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #667eea; padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+            .invoice-logo-left { display: flex; flex-direction: column; align-items: center; text-align: center; flex: 1; }
+            .invoice-logo-img { width: 120px; height: 120px; border-radius: 50%; margin-bottom: 5px; }
+            .invoice-title-center { flex: 2; text-align: center; }
+            .invoice-title-center h2 { color: #667eea; margin: 0; font-size: 28px; }
+            .invoice-title-center p { font-size: 16px; }
+            .invoice-contact-right { flex: 1; text-align: right; }
+            .invoice-contact-right p { margin: 8px 0; font-size: 16px; }
+            .invoice-details { margin: 20px 0; }
+            .invoice-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #ddd; }
+            .invoice-row.total { border-top: 3px solid #667eea; border-bottom: none; margin-top: 10px; padding-top: 15px; font-weight: bold; font-size: 20px; color: #667eea; }
+            .invoice-footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #666; }
+            .status-paid { background: #48bb78; color: white; padding: 4px 12px; border-radius: 20px; display: inline-block; }
+            .status-unpaid { background: #ed8936; color: white; padding: 4px 12px; border-radius: 20px; display: inline-block; }
+        </style>
         </head>
-        <body>
-            ${printContent.outerHTML}
-            <div style="text-align: center; margin-top: 20px;">
-                <button onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
-                <button onclick="window.close()">❌ Tutup</button>
-            </div>
-        </body>
+        <body>${printContent.outerHTML}<div style="text-align:center; margin-top:20px;"><button onclick="window.print()">🖨️ Cetak / Simpan PDF</button><button onclick="window.close()">❌ Tutup</button></div></body>
         </html>
     `);
     printWindow.document.close();
 }
 
-// ========== FUNGSI LAINNYA ==========
-function gabungAgenMMBC() {
-    window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=Halo%20Admin%2C%20saya%20tertarik%20jadi%20agen%20MMBC`, '_blank');
-}
-
-function shareApkLink() {
+function gabungAgenMMBC() { window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=Halo%20Admin%2C%20saya%20tertarik%20jadi%20agen%20MMBC`, '_blank'); }
+function shareApkLink() { 
     const apkUrl = "https://anakrantau88.github.io/AnakRantau/AnakRantau-App.apk";
-    if (navigator.share) {
-        navigator.share({ title: 'Anak Rantau App', url: apkUrl });
-    } else {
-        navigator.clipboard.writeText(apkUrl);
-        alert("✅ Link APK sudah disalin!");
-    }
+    if (navigator.share) navigator.share({ title: 'Anak Rantau App', url: apkUrl });
+    else { navigator.clipboard.writeText(apkUrl); alert("✅ Link APK sudah disalin!"); }
 }
-
 function waPesanTiketPesawat() { window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=Pesan%20Tiket%20Pesawat`, '_blank'); }
 function waSewaMobil() { window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=Sewa%20Mobil`, '_blank'); }
 function waAntarJemputBandara() { window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=Antar%20Jemput%20Bandara`, '_blank'); }
@@ -1590,8 +1588,22 @@ function pilihPaket(harga, namaPaket) {
     document.getElementById("paketTerpilihInfo").style.display = "block";
     document.getElementById("namaPaketTerpilih").innerText = namaPaket;
     document.getElementById("hargaPaketTerpilih").innerText = harga.toLocaleString();
+    
+    // Isi form invoice dengan data hotspot
+    document.getElementById('adminInvoiceLayanan').value = 'Hotspot';
+    document.getElementById('adminInvoiceJumlah').value = harga;
+    document.getElementById('adminInvoiceKeterangan').value = `Paket Hotspot ${namaPaket}`;
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('adminInvoiceTanggal').value = today;
+    
+    if (namaPaket === 'Langganan 1 Bulan') {
+        document.getElementById('adminInvoiceLayanan').value = 'Hotspot Langganan';
+    }
+    
+    alert(`✅ Paket ${namaPaket} (Rp${harga.toLocaleString()}) dipilih!\nSilakan lanjutkan ke pembayaran.`);
 }
-function tampilkanQRIS() { if(paketTerpilih_harga===0) alert("Pilih paket dulu!"); else document.getElementById("qrisSection").style.display = "block"; }
+
+function tampilkanQRIS() { if(paketTerpilih_harga===0) alert("Pilih paket dulu!"); else { document.getElementById("qrisSection").style.display = "block"; document.getElementById("qrisSection").scrollIntoView({ behavior: "smooth" }); } }
 function tutupQRIS() { document.getElementById("qrisSection").style.display = "none"; }
 
 let audioPlayer = document.getElementById('audioPlayer');
