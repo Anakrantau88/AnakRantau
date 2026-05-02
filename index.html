@@ -488,7 +488,7 @@ body {
   transform: scale(1.02);
 }
 
-/* Peringatan Pembayaran Resmi - TANPA BARCODE */
+/* Peringatan Pembayaran Resmi */
 .peringatan-bayar {
   background: #fff3cd;
   border-left: 6px solid #ffc107;
@@ -511,6 +511,169 @@ body {
   font-family: monospace;
   font-size: 15px;
   text-align: center;
+}
+
+/* KOST - DESAIN BARU YANG LEBIH MENARIK */
+.kost-card {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+}
+
+.kost-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.kost-header h2 {
+  color: #0077cc;
+  font-size: 28px;
+  margin: 0 0 5px 0;
+}
+
+.kost-header p {
+  color: #666;
+  font-size: 14px;
+  margin: 0;
+}
+
+.kost-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.kost-item {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.kost-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.kost-item-header {
+  background: linear-gradient(135deg, #0077cc, #0055aa);
+  padding: 15px;
+  text-align: center;
+  color: white;
+}
+
+.kost-item-header .kost-icon {
+  font-size: 40px;
+  margin-bottom: 5px;
+}
+
+.kost-item-header .kost-type {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+.kost-item-header .kost-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.3);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  margin-top: 5px;
+}
+
+.kost-item-body {
+  padding: 20px;
+  text-align: center;
+}
+
+.kost-price {
+  margin-bottom: 15px;
+}
+
+.kost-price .price-label {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 5px;
+}
+
+.kost-price .price-value {
+  font-size: 32px;
+  font-weight: bold;
+  color: #0077cc;
+}
+
+.kost-price .price-value small {
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.kost-price .price-period {
+  font-size: 12px;
+  color: #666;
+}
+
+.kost-features {
+  text-align: left;
+  margin: 15px 0;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.kost-features p {
+  margin: 8px 0;
+  font-size: 13px;
+  color: #555;
+}
+
+.kost-features p:before {
+  content: "✓ ";
+  color: #00aa6c;
+  font-weight: bold;
+}
+
+.btn-kost {
+  display: block;
+  background: #25D366;
+  color: white;
+  text-align: center;
+  padding: 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 15px;
+  transition: background 0.3s;
+}
+
+.btn-kost:hover {
+  background: #128C7E;
+}
+
+.kost-extra {
+  background: #e8f4fd;
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.kost-extra p {
+  margin: 5px 0;
+  font-size: 13px;
+  color: #0077cc;
+}
+
+/* AC dan Non AC dengan warna berbeda */
+.kost-item.ac .kost-item-header {
+  background: linear-gradient(135deg, #00aa6c, #008844);
+}
+
+.kost-item.nonac .kost-item-header {
+  background: linear-gradient(135deg, #ff9800, #f57c00);
+}
+
+.kost-item.dua .kost-item-header {
+  background: linear-gradient(135deg, #9c27b0, #7b1fa2);
 }
 
 /* DOWNLOAD APK */
@@ -763,7 +926,6 @@ body {
   min-height: 100px;
 }
 
-/* BARCODE DI LEMBAR INVOICE - pojok kanan bawah footer */
 .invoice-barcode {
   position: absolute;
   bottom: 10px;
@@ -942,7 +1104,7 @@ body {
   padding: 0 5px;
 }
 
-/* INVOICE SUDAH LUNAS - tampil di laman utama */
+/* INVOICE LUNAS */
 .invoice-lunas-card {
   background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
   border: 1px solid #4caf50;
@@ -1019,12 +1181,124 @@ body {
   </audio>
 </div>
 
-<!-- ============ INVOICE SUDAH LUNAS (TAMPIL DI LAMAN UTAMA) ============ -->
+<!-- ============ INVOICE SUDAH LUNAS ============ -->
 <div class="card invoice-lunas-card" id="invoiceLunas">
   <h2 style="text-align: center;">✅ Bukti Pembayaran Lunas 🎉</h2>
   <p style="text-align: center; color: #2e7d32;">Berikut adalah daftar invoice yang sudah lunas dan dapat dilihat oleh pengunjung</p>
   <div id="invoiceLunasList" style="margin-top: 15px;">
     <div class="loading">⏳ Memuat invoice lunas...</div>
+  </div>
+</div>
+
+<!-- ============ KOST - DESAIN BARU YANG MENARIK ============ -->
+<div class="card kost-card" id="kost">
+  <div class="kost-header">
+    <h2>🏠 Kost Eksklusif Anak Rantau</h2>
+    <p>📍 Lokasi Strategis • Nyaman • Aman • Fasilitas Lengkap</p>
+  </div>
+  
+  <div class="kost-grid">
+    <!-- Non AC 1 Orang -->
+    <div class="kost-item nonac">
+      <div class="kost-item-header">
+        <div class="kost-icon">🛏️</div>
+        <div class="kost-type">Kamar Non AC</div>
+        <div class="kost-badge">💨 Hemat Listrik</div>
+      </div>
+      <div class="kost-item-body">
+        <div class="kost-price">
+          <div class="price-label">Mulai dari</div>
+          <div class="price-value">Rp500<small>.000</small></div>
+          <div class="price-period">/ bulan</div>
+        </div>
+        <div class="kost-features">
+          <p>1 orang per kamar</p>
+          <p>Kipas angin + Kasur + Bantal</p>
+          <p>Kamar mandi dalam</p>
+          <p>Air bersih 24 jam</p>
+          <p>Listrik + WiFi gratis</p>
+        </div>
+        <a href="https://wa.me/6282162115149?text=Halo%20Admin%20Anak%20Rantau,%20saya%20mau%20tanya%20kost%20Non%20AC%201%20orang" class="btn-kost">💬 Tanya Ketersediaan →</a>
+      </div>
+    </div>
+    
+    <!-- Non AC 2 Orang -->
+    <div class="kost-item nonac dua">
+      <div class="kost-item-header">
+        <div class="kost-icon">👥</div>
+        <div class="kost-type">Kamar Non AC (Double)</div>
+        <div class="kost-badge">👫 Cocok untuk 2 orang</div>
+      </div>
+      <div class="kost-item-body">
+        <div class="kost-price">
+          <div class="price-label">Mulai dari</div>
+          <div class="price-value">Rp600<small>.000</small></div>
+          <div class="price-period">/ bulan</div>
+        </div>
+        <div class="kost-features">
+          <p>2 orang per kamar</p>
+          <p>2 Kasur + Bantal + Kipas</p>
+          <p>Kamar mandi dalam</p>
+          <p>Air bersih 24 jam</p>
+          <p>Listrik + WiFi gratis</p>
+        </div>
+        <a href="https://wa.me/6282162115149?text=Halo%20Admin%20Anak%20Rantau,%20saya%20mau%20tanya%20kost%20Non%20AC%202%20orang" class="btn-kost">💬 Tanya Ketersediaan →</a>
+      </div>
+    </div>
+    
+    <!-- AC 1 Orang -->
+    <div class="kost-item ac">
+      <div class="kost-item-header">
+        <div class="kost-icon">❄️</div>
+        <div class="kost-type">Kamar AC</div>
+        <div class="kost-badge">⭐ Premium + Sejuk</div>
+      </div>
+      <div class="kost-item-body">
+        <div class="kost-price">
+          <div class="price-label">Mulai dari</div>
+          <div class="price-value">Rp700<small>.000</small></div>
+          <div class="price-period">/ bulan</div>
+        </div>
+        <div class="kost-features">
+          <p>1 orang per kamar</p>
+          <p>AC + Kasur + Bantal + Lemari</p>
+          <p>Kamar mandi dalam</p>
+          <p>Air panas + Air dingin 24 jam</p>
+          <p>Listrik + WiFi cepat</p>
+        </div>
+        <a href="https://wa.me/6282162115149?text=Halo%20Admin%20Anak%20Rantau,%20saya%20mau%20tanya%20kost%20AC%201%20orang" class="btn-kost">💬 Tanya Ketersediaan →</a>
+      </div>
+    </div>
+    
+    <!-- AC 2 Orang -->
+    <div class="kost-item ac dua">
+      <div class="kost-item-header">
+        <div class="kost-icon">👥❄️</div>
+        <div class="kost-type">Kamar AC (Double)</div>
+        <div class="kost-badge">⭐ Premium + Sejuk</div>
+      </div>
+      <div class="kost-item-body">
+        <div class="kost-price">
+          <div class="price-label">Mulai dari</div>
+          <div class="price-value">Rp800<small>.000</small></div>
+          <div class="price-period">/ bulan</div>
+        </div>
+        <div class="kost-features">
+          <p>2 orang per kamar</p>
+          <p>AC + 2 Kasur + Bantal + Lemari</p>
+          <p>Kamar mandi dalam</p>
+          <p>Air panas + Air dingin 24 jam</p>
+          <p>Listrik + WiFi cepat</p>
+        </div>
+        <a href="https://wa.me/6282162115149?text=Halo%20Admin%20Anak%20Rantau,%20saya%20mau%20tanya%20kost%20AC%202%20orang" class="btn-kost">💬 Tanya Ketersediaan →</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="kost-extra">
+    <p>🏆 Fasilitas Unggulan:</p>
+    <p>✅ WiFi Cepat | ✅ Listrik Termasuk | ✅ Air Bersih 24 Jam | ✅ Keamanan 24 Jam | ✅ Lokasi Strategis</p>
+    <p>📍 Dekat Kampus, Pasar, dan Pusat Kota Lubuk Pakam</p>
   </div>
 </div>
 
@@ -1090,7 +1364,6 @@ body {
       </div>
     </div>
     
-    <!-- PREVIEW INVOICE dengan BARCODE -->
     <div id="adminInvoicePreview" class="invoice-preview-admin">
       <div class="invoice-header">
         <div class="invoice-logo-left">
@@ -1249,17 +1522,6 @@ body {
   </div>
 </div>
 
-<!-- KOST -->
-<div class="card" id="kost">
-  <h2>🏠 Harga Kost</h2>
-  <p>📍 Kost Eksklusif Anak Rantau - Nyaman & Strategis</p>
-  <p>👤 1 Orang Non AC : Rp 500.000 / bulan</p>
-  <p>👥 2 Orang Non AC : Rp 600.000 / bulan</p>
-  <p>👤 1 Orang AC : Rp 700.000 / bulan</p>
-  <p>👥 2 Orang AC : Rp 800.000 / bulan</p>
-  <a class="btn" href="https://wa.me/6282162115149?text=Halo%20Admin%20Anak%20Rantau,%20saya%20mau%20tanya%20ketersediaan%20kost">🏠 Tanya Ketersediaan Kost</a>
-</div>
-
 <!-- GALERI -->
 <div class="card" id="galeri">
   <h2>📸 Galeri</h2>
@@ -1395,7 +1657,6 @@ window.addEventListener('load', function() {
         }
     }
     
-    // Load invoice lunas untuk ditampilkan di laman utama
     loadInvoiceLunas();
     
     let firstButton = document.querySelector('.music-list button');
@@ -1481,7 +1742,7 @@ function buatInvoiceAdmin() {
     document.getElementById('adminInvoicePreview').style.display = 'block';
     document.getElementById('adminBtnDownloadPDF').style.display = 'inline-block';
     loadSavedInvoicesList();
-    loadInvoiceLunas(); // Refresh invoice lunas di laman utama
+    loadInvoiceLunas();
     
     document.getElementById('adminInvoiceNama').value = '';
     document.getElementById('adminInvoiceNoWA').value = '';
@@ -1596,7 +1857,7 @@ function deleteInvoice(index) {
         savedInvoices.splice(index, 1);
         localStorage.setItem('anakRantauInvoices', JSON.stringify(savedInvoices));
         loadSavedInvoicesList();
-        loadInvoiceLunas(); // Refresh invoice lunas di laman utama
+        loadInvoiceLunas();
         
         if (currentAdminInvoiceData && savedInvoices.indexOf(currentAdminInvoiceData) === -1) {
             document.getElementById('adminInvoicePreview').style.display = 'none';
@@ -1665,7 +1926,6 @@ function pilihPaket(harga, namaPaket) {
     document.getElementById("namaPaketTerpilih").innerText = namaPaket;
     document.getElementById("hargaPaketTerpilih").innerText = harga.toLocaleString();
     
-    // Isi form invoice dengan data hotspot
     if (namaPaket === 'Langganan 1 Bulan') {
         document.getElementById('adminInvoiceLayanan').value = 'Hotspot Langganan';
     } else {
