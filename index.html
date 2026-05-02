@@ -457,7 +457,6 @@ body {
   background: #128C7E;
 }
 
-/* Tombol khusus untuk beli tiket pesawat langsung ke MMBC */
 .btn-beli-tiket-mmbc {
   display: inline-block;
   background: #ff6b6b;
@@ -478,7 +477,6 @@ body {
   transform: scale(1.02);
 }
 
-/* Peringatan Pembayaran Resmi */
 .peringatan-bayar {
   background: #fff3cd;
   border-left: 6px solid #ffc107;
@@ -503,7 +501,7 @@ body {
   text-align: center;
 }
 
-/* ============ STYLE DOWNLOAD APK ============ */
+/* DOWNLOAD APK */
 .download-card {
   background: linear-gradient(135deg, #0077cc, #0055aa);
   color: white;
@@ -567,7 +565,7 @@ body {
   margin: 5px 0;
 }
 
-/* ============ STYLE INVOICE ADMIN ============ */
+/* INVOICE ADMIN */
 .invoice-admin-card {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
@@ -652,32 +650,51 @@ body {
   display: none;
 }
 
-/* Style invoice dengan logo */
+/* INVOICE HEADER DENGAN LOGO DI KIRI */
 .invoice-header {
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   border-bottom: 3px solid #667eea;
   padding-bottom: 15px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
-.invoice-logo {
+.invoice-logo-left {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 10px;
+  text-align: center;
 }
 
 .invoice-logo-img {
-  width: 60px;
-  height: 60px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
+  margin-bottom: 10px;
 }
 
-.invoice-header h2 {
-  color: #667eea;
+.invoice-logo-left h3 {
   margin: 0;
+  color: #667eea;
+  font-size: 14px;
+}
+
+.invoice-company-right {
+  text-align: right;
+}
+
+.invoice-company-right h2 {
+  color: #667eea;
+  margin: 0 0 5px 0;
+}
+
+.invoice-company-right p {
+  margin: 3px 0;
+  font-size: 12px;
+  color: #666;
 }
 
 .invoice-details {
@@ -733,14 +750,6 @@ body {
   background: #38a169;
 }
 
-.btn-save-invoice {
-  background: #4299e1;
-}
-
-.btn-save-invoice:hover {
-  background: #3182ce;
-}
-
 .btn-logout {
   background: #e53e3e;
   margin-bottom: 20px;
@@ -790,6 +799,7 @@ body {
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 12px;
+  display: inline-block;
 }
 
 .status-unpaid {
@@ -798,6 +808,7 @@ body {
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 12px;
+  display: inline-block;
 }
 </style>
 </head>
@@ -845,27 +856,26 @@ body {
   </audio>
 </div>
 
-<!-- ============ INVOICE ADMIN (DENGAN LOGIN & LOGO) ============ -->
+<!-- INVOICE ADMIN -->
 <div class="card invoice-admin-card" id="invoiceAdmin">
   <h2 style="text-align: center;">🧾 Panel Invoice Admin</h2>
   
   <!-- FORM LOGIN -->
   <div id="loginForm" class="login-container">
     <h3>🔐 Login Admin</h3>
-    <input type="email" id="loginEmail" placeholder="Email Admin">
-    <input type="password" id="loginPassword" placeholder="Password">
+    <input type="text" id="loginUsername" placeholder="Username" value="Syalom">
+    <input type="password" id="loginPassword" placeholder="Password" value="Debat4">
     <button onclick="adminLogin()">Login</button>
-    <p style="text-align: center; font-size: 12px; margin-top: 15px;">🔑 Gunakan akun yang sudah didaftarkan</p>
+    <p style="text-align: center; font-size: 12px; margin-top: 15px;">🔑 Username: Syalom | Password: Debat4</p>
   </div>
   
-  <!-- PANEL ADMIN (setelah login) -->
+  <!-- PANEL ADMIN -->
   <div id="adminPanel" class="invoice-admin-panel">
     <div class="admin-header">
       <h3>📋 Dashboard Admin</h3>
       <button class="btn-invoice btn-logout" onclick="adminLogout()">🚪 Logout</button>
     </div>
     
-    <!-- Form Buat Invoice -->
     <div class="invoice-form-admin">
       <h3>📝 Buat Invoice Baru</h3>
       
@@ -906,19 +916,22 @@ body {
       </div>
     </div>
     
-    <!-- Preview Invoice dengan LOGO -->
+    <!-- PREVIEW INVOICE dengan LOGO DI KIRI ATAS -->
     <div id="adminInvoicePreview" class="invoice-preview-admin">
       <div class="invoice-header">
-        <div class="invoice-logo">
-          <img src="logo.png" class="invoice-logo-img" onerror="this.src='https://via.placeholder.com/60?text=AR'">
-          <div>
-            <h2>ANAK RANTAU LUBUK PAKAM</h2>
-            <p>Kost, Hotspot & Travel</p>
-          </div>
+        <div class="invoice-logo-left">
+          <img src="logo.png" class="invoice-logo-img" onerror="this.src='https://via.placeholder.com/120?text=AR'">
+          <h3>Anak Rantau</h3>
         </div>
-        <p>📞 082162115149 | ✉️ anakrantau88@gmail.com</p>
-        <div id="adminInvoiceStatusBadge"></div>
+        <div class="invoice-company-right">
+          <h2>ANAK RANTAU LUBUK PAKAM</h2>
+          <p>Kost, Hotspot & Travel</p>
+          <p>📞 082162115149</p>
+          <p>✉️ anakrantaulubukpakam@gmail.com</p>
+        </div>
       </div>
+      
+      <div id="adminInvoiceStatusBadge" style="text-align: center; margin-bottom: 15px;"></div>
       
       <div class="invoice-details" id="adminInvoiceDetails">
         <div class="invoice-row"><strong>No. Invoice:</strong> <span id="adminInvNo">-</span></div>
@@ -939,7 +952,7 @@ body {
       </div>
     </div>
     
-    <!-- Daftar Invoice Tersimpan -->
+    <!-- DAFTAR INVOICE -->
     <div class="list-invoice">
       <h3>📋 Daftar Invoice Tersimpan</h3>
       <div id="savedInvoicesList">
@@ -949,7 +962,7 @@ body {
   </div>
 </div>
 
-<!-- ============ LAYANAN TRAVEL ============ -->
+<!-- LAYANAN TRAVEL -->
 <div class="card" id="layanan">
   <h2 style="text-align: center;">✈️ Layanan Travel & Tiket Pesawat 🚗</h2>
   
@@ -958,9 +971,7 @@ body {
       <div class="layanan-icon">✈️</div>
       <h3>Tiket Pesawat (MMBC Tour)</h3>
       <p>Pesan tiket pesawat langsung via MMBC – harga bersaing, mudah & cepat</p>
-      <a href="https://klikmbc.biz/v2/main-tpl?i=1#" target="_blank" rel="noopener noreferrer" class="btn-beli-tiket-mmbc">
-        🛒 Cari Tiket Pesawat 
-      </a>
+      <a href="https://klikmbc.biz/v2/main-tpl?i=1#" target="_blank" rel="noopener noreferrer" class="btn-beli-tiket-mmbc">🛒 Cari Tiket Pesawat</a>
       <button class="layanan-wa-btn" onclick="waPesanTiketPesawat()">💬 Konsultasi via WA</button>
     </div>
     
@@ -990,8 +1001,8 @@ body {
   </div>
 </div>
 
-<!-- ============ MAU GABUNG AGEN MMBC ============ -->
-<div class="card agen-mmbc-card" id="mauGabung" style="background: linear-gradient(135deg, #FFD700, #FFA500);">
+<!-- MAU GABUNG AGEN -->
+<div class="card" style="background: linear-gradient(135deg, #FFD700, #FFA500);" id="mauGabung">
   <h2>🤝 Mau Gabung? 🚀</h2>
   <h3>✨ Jadi Agen MMBC Sekarang! ✨</h3>
   <p style="font-size:16px; font-weight:500;">Dapatkan keuntungan sampingan dengan berjualan tiket pesawat, tiket bus, tiket kereta, topup pulsa, paket data, dan berbagai produk digital lainnya.</p>
@@ -1048,7 +1059,7 @@ body {
   <div class="qris-container">
     <h3>💚 Scan QRIS GoPay Merchant</h3>
     <img id="gambarQRIS" src="qris_gopay.png" onerror="this.src='https://via.placeholder.com/250?text=QRIS+GoPay+Merchant'">
-    <p style="margin-top: 10px;">📱 Bisa discan dengan: <strong>GoPay • DANA • OVO • ShopeePay • LinkAja</strong></p>
+    <p>📱 Bisa discan dengan: <strong>GoPay • DANA • OVO • ShopeePay • LinkAja</strong></p>
     <p style="color: #00aa6c; font-weight: bold;">✅ MDR 0% (Tidak ada potongan biaya)</p>
     <p style="color: red;">Setelah bayar, kirim bukti ke WhatsApp Admin</p>
     <a class="btn" href="https://wa.me/6282162115149">📤 Kirim Bukti Pembayaran</a>
@@ -1056,6 +1067,7 @@ body {
   </div>
 </div>
 
+<!-- KOST -->
 <div class="card" id="kost">
   <h2>🏠 Harga Kost</h2>
   <p>📍 Kost Eksklusif Anak Rantau - Nyaman & Strategis</p>
@@ -1066,6 +1078,7 @@ body {
   <a class="btn" href="https://wa.me/6282162115149?text=Halo%20Admin%20Anak%20Rantau,%20saya%20mau%20tanya%20ketersediaan%20kost">🏠 Tanya Ketersediaan Kost</a>
 </div>
 
+<!-- GALERI -->
 <div class="card" id="galeri">
   <h2>📸 Galeri</h2>
   <div class="gallery">
@@ -1111,15 +1124,11 @@ body {
 <!-- DOWNLOAD APK -->
 <div class="card download-card" id="download">
   <h2>📱 Download Aplikasi Android</h2>
-  <p style="font-size: 16px;">Install aplikasi <strong>Anak Rantau</strong> langsung di HP Android Anda!</p>
+  <p>Install aplikasi <strong>Anak Rantau</strong> langsung di HP Android Anda!</p>
   
   <div class="download-buttons">
-    <a href="AnakRantau-App.apk" download class="btn-download btn-download-android">
-      ⬇️ Download APK (Android)
-    </a>
-    <button class="btn-download" id="shareApkBtn" onclick="shareApkLink()">
-      📤 Share Link APK
-    </button>
+    <a href="AnakRantau-App.apk" download class="btn-download btn-download-android">⬇️ Download APK (Android)</a>
+    <button class="btn-download" onclick="shareApkLink()">📤 Share Link APK</button>
   </div>
   
   <div class="install-guide">
@@ -1129,12 +1138,10 @@ body {
       <li>Setelah selesai download, buka file APK tersebut</li>
       <li>Jika muncul peringatan, izinkan <strong>"Install dari sumber tidak dikenal"</strong></li>
       <li>Klik <strong>"Install"</strong> dan tunggu hingga selesai</li>
-      <li>Aplikasi <strong>Anak Rantau</strong> siap digunakan!</li>
     </ol>
   </div>
   
-  <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://anakrantau88.github.io/AnakRantau/AnakRantau-App.apk" 
-       style="width: 100px; margin: 5px auto; border-radius: 15px;">
+  <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://anakrantau88.github.io/AnakRantau/AnakRantau-App.apk" style="width: 100px; margin: 5px auto; border-radius: 15px;">
 </div>
 
 <!-- KONTAK -->
@@ -1144,11 +1151,10 @@ body {
   <a class="btn" href="https://wa.me/6282162115149">💬 Chat WhatsApp Admin (082162115149)</a>
 </div>
 
-<!-- QR CODE WEBSITE -->
+<!-- QR WEBSITE -->
 <div class="card" style="text-align: center; background: #f0f8ff;">
   <h2>🌐 Scan QR Website Kami</h2>
-  <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://anakrantau88.github.io/AnakRantau/" 
-       style="width: 180px; margin: 10px auto; border-radius: 15px;">
+  <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://anakrantau88.github.io/AnakRantau/" style="width: 180px; margin: 10px auto; border-radius: 15px;">
   <p>Scan untuk mengunjungi <strong>Anak Rantau</strong> langsung dari HP</p>
 </div>
 
@@ -1167,30 +1173,28 @@ const NOMOR_WA_ADMIN = "6282162115149";
 let currentAdminInvoiceData = null;
 let savedInvoices = JSON.parse(localStorage.getItem('anakRantauInvoices') || '[]');
 
-// Fungsi Login Admin
+// Fungsi Login Admin (Username: Syalom, Password: Debat4)
 function adminLogin() {
-    const email = document.getElementById('loginEmail').value;
+    const username = document.getElementById('loginUsername').value;
     const password = document.getElementById('loginPassword').value;
     
-    // Akun admin default (bisa diubah sesuai keinginan)
-    const validEmail = "admin@anakrantau.com";
-    const validPassword = "admin123";
+    const validUsername = "Syalom";
+    const validPassword = "Debat4";
     
-    if (email === validEmail && password === validPassword) {
+    if (username === validUsername && password === validPassword) {
         localStorage.setItem('adminLoggedIn', 'true');
         document.getElementById('loginForm').style.display = 'none';
         document.getElementById('adminPanel').style.display = 'block';
         loadSavedInvoicesList();
         
-        // Set tanggal default hari ini
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('adminInvoiceTanggal').value = today;
     } else {
-        alert('❌ Email atau password salah!');
+        alert('❌ Username atau password salah!');
     }
 }
 
-// Cek status login saat halaman dimuat
+// Cek status login
 window.addEventListener('load', function() {
     if (localStorage.getItem('adminLoggedIn') === 'true') {
         document.getElementById('loginForm').style.display = 'none';
@@ -1216,7 +1220,7 @@ function adminLogout() {
     document.getElementById('adminBtnDownloadPDF').style.display = 'none';
 }
 
-// Buat Invoice oleh Admin
+// Buat Invoice
 function buatInvoiceAdmin() {
     const nama = document.getElementById('adminInvoiceNama').value.trim();
     const nowa = document.getElementById('adminInvoiceNoWA').value.trim();
@@ -1231,14 +1235,10 @@ function buatInvoiceAdmin() {
         return;
     }
     
-    // Generate nomor invoice unik
     const invNo = 'INV/AR/' + new Date().getFullYear() + '/' + 
                   String(Math.floor(Math.random() * 10000)).padStart(4, '0');
-    
-    // Format jumlah uang
     const jumlahFormatted = new Intl.NumberFormat('id-ID').format(jumlah);
     
-    // Simpan data
     currentAdminInvoiceData = {
         no: invNo,
         tanggal: tanggal,
@@ -1252,21 +1252,14 @@ function buatInvoiceAdmin() {
         createdAt: new Date().toISOString()
     };
     
-    // Simpan ke localStorage
     savedInvoices.unshift(currentAdminInvoiceData);
     localStorage.setItem('anakRantauInvoices', JSON.stringify(savedInvoices));
-    
-    // Update preview
     updateInvoicePreview(currentAdminInvoiceData);
     
-    // Tampilkan preview
     document.getElementById('adminInvoicePreview').style.display = 'block';
     document.getElementById('adminBtnDownloadPDF').style.display = 'inline-block';
-    
-    // Refresh daftar invoice
     loadSavedInvoicesList();
     
-    // Reset form
     document.getElementById('adminInvoiceNama').value = '';
     document.getElementById('adminInvoiceNoWA').value = '';
     document.getElementById('adminInvoiceJumlah').value = '';
@@ -1345,93 +1338,24 @@ function downloadInvoiceAdminPDF() {
         <head>
             <title>Invoice ${currentAdminInvoiceData.no}</title>
             <style>
-                body {
-                    font-family: Arial, sans-serif;
-                    padding: 40px;
-                    margin: 0;
-                }
-                .invoice-preview-admin {
-                    max-width: 800px;
-                    margin: 0 auto;
-                    border: 1px solid #ddd;
-                    padding: 30px;
-                    border-radius: 10px;
-                }
-                .invoice-header {
-                    text-align: center;
-                    border-bottom: 3px solid #667eea;
-                    padding-bottom: 15px;
-                    margin-bottom: 20px;
-                }
-                .invoice-logo {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 15px;
-                    margin-bottom: 10px;
-                }
-                .invoice-logo-img {
-                    width: 60px;
-                    height: 60px;
-                    border-radius: 50%;
-                }
-                .invoice-header h2 {
-                    color: #667eea;
-                    margin: 0;
-                }
-                .invoice-details {
-                    margin: 20px 0;
-                }
-                .invoice-row {
-                    display: flex;
-                    justify-content: space-between;
-                    padding: 10px 0;
-                    border-bottom: 1px dashed #ddd;
-                }
-                .invoice-row.total {
-                    border-top: 3px solid #667eea;
-                    border-bottom: none;
-                    margin-top: 10px;
-                    padding-top: 15px;
-                    font-weight: bold;
-                    font-size: 18px;
-                    color: #667eea;
-                }
-                .invoice-footer {
-                    text-align: center;
-                    margin-top: 30px;
-                    padding-top: 20px;
-                    border-top: 1px solid #ddd;
-                    font-size: 12px;
-                    color: #666;
-                }
-                .status-paid {
-                    background: #48bb78;
-                    color: white;
-                    padding: 4px 12px;
-                    border-radius: 20px;
-                    display: inline-block;
-                }
-                .status-unpaid {
-                    background: #ed8936;
-                    color: white;
-                    padding: 4px 12px;
-                    border-radius: 20px;
-                    display: inline-block;
-                }
-                @media print {
-                    body {
-                        padding: 0;
-                    }
-                    .no-print {
-                        display: none;
-                    }
-                }
+                body { font-family: Arial, sans-serif; padding: 40px; margin: 0; }
+                .invoice-preview-admin { max-width: 800px; margin: 0 auto; border: 1px solid #ddd; padding: 30px; border-radius: 10px; }
+                .invoice-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #667eea; padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+                .invoice-logo-left { display: flex; flex-direction: column; align-items: center; text-align: center; }
+                .invoice-logo-img { width: 120px; height: 120px; border-radius: 50%; margin-bottom: 10px; }
+                .invoice-company-right { text-align: right; }
+                .invoice-company-right h2 { color: #667eea; margin: 0; }
+                .invoice-details { margin: 20px 0; }
+                .invoice-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #ddd; }
+                .invoice-row.total { border-top: 3px solid #667eea; border-bottom: none; margin-top: 10px; padding-top: 15px; font-weight: bold; font-size: 18px; color: #667eea; }
+                .invoice-footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #666; }
+                .status-paid { background: #48bb78; color: white; padding: 4px 12px; border-radius: 20px; display: inline-block; }
+                .status-unpaid { background: #ed8936; color: white; padding: 4px 12px; border-radius: 20px; display: inline-block; }
             </style>
         </head>
         <body>
             ${printContent.outerHTML}
-            <div style="text-align: center; margin-top: 20px;" class="no-print">
+            <div style="text-align: center; margin-top: 20px;">
                 <button onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
                 <button onclick="window.close()">❌ Tutup</button>
             </div>
@@ -1443,56 +1367,33 @@ function downloadInvoiceAdminPDF() {
 
 // ========== FUNGSI LAINNYA ==========
 function gabungAgenMMBC() {
-    let pesan = "Halo Admin Anak Rantau! Saya tertarik untuk menjadi AGEN MMBC.%0A%0ASaya ingin bergabung dan mendapatkan keuntungan sampingan. Mohon info syarat dan cara daftarnya. Terima kasih!";
-    window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=${pesan}`, '_blank');
+    window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=Halo%20Admin%2C%20saya%20tertarik%20jadi%20agen%20MMBC`, '_blank');
 }
 
 function shareApkLink() {
     const apkUrl = "https://anakrantau88.github.io/AnakRantau/AnakRantau-App.apk";
     if (navigator.share) {
-        navigator.share({ title: 'Anak Rantau App', text: 'Download aplikasi Anak Rantau', url: apkUrl });
+        navigator.share({ title: 'Anak Rantau App', url: apkUrl });
     } else {
         navigator.clipboard.writeText(apkUrl);
         alert("✅ Link APK sudah disalin!");
     }
 }
 
-function waPesanTiketPesawat() {
-    let pesan = "Halo Admin, saya ingin memesan tiket pesawat";
-    window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=${pesan}`, '_blank');
-}
+function waPesanTiketPesawat() { window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=Pesan%20Tiket%20Pesawat`, '_blank'); }
+function waSewaMobil() { window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=Sewa%20Mobil`, '_blank'); }
+function waAntarJemputBandara() { window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=Antar%20Jemput%20Bandara`, '_blank'); }
 
-function waSewaMobil() {
-    let pesan = "Halo Admin, saya ingin menyewa mobil";
-    window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=${pesan}`, '_blank');
-}
-
-function waAntarJemputBandara() {
-    let pesan = "Halo Admin, saya ingin antar jemput bandara";
-    window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=${pesan}`, '_blank');
-}
-
-let paketTerpilih_harga = 0;
-let paketTerpilih_nama = "";
-
+let paketTerpilih_harga = 0, paketTerpilih_nama = "";
 function pilihPaket(harga, namaPaket) {
     paketTerpilih_harga = harga;
     paketTerpilih_nama = namaPaket;
     document.getElementById("paketTerpilihInfo").style.display = "block";
     document.getElementById("namaPaketTerpilih").innerText = namaPaket;
     document.getElementById("hargaPaketTerpilih").innerText = harga.toLocaleString();
-    alert(`✅ Paket ${namaPaket} (Rp${harga.toLocaleString()}) dipilih!`);
 }
-
-function tampilkanQRIS() {
-    if (paketTerpilih_harga === 0) return alert("⚠️ Silakan pilih paket terlebih dahulu!");
-    document.getElementById("qrisSection").style.display = "block";
-    document.getElementById("qrisSection").scrollIntoView({ behavior: "smooth" });
-}
-
-function tutupQRIS() {
-    document.getElementById("qrisSection").style.display = "none";
-}
+function tampilkanQRIS() { if(paketTerpilih_harga===0) alert("Pilih paket dulu!"); else document.getElementById("qrisSection").style.display = "block"; }
+function tutupQRIS() { document.getElementById("qrisSection").style.display = "none"; }
 
 let audioPlayer = document.getElementById('audioPlayer');
 function playLagu(file, btnElement) {
@@ -1500,22 +1401,12 @@ function playLagu(file, btnElement) {
     document.querySelectorAll('.music-list button').forEach(btn => btn.classList.remove('active'));
     btnElement.classList.add('active');
     document.getElementById('nowPlaying').innerHTML = `🎤 Sedang diputar: ${file.replace('.mp3', '')}`;
-    audioPlayer.play().catch(() => {});
+    audioPlayer.play();
 }
 
-function zoom(img) {
-    document.getElementById("modal").style.display = "block";
-    document.getElementById("modalImg").src = img.src;
-}
-
-function closeZoom() {
-    document.getElementById("modal").style.display = "none";
-}
-
-function toggleMenu() {
-    var menu = document.getElementById("menu");
-    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-}
+function zoom(img) { document.getElementById("modal").style.display = "block"; document.getElementById("modalImg").src = img.src; }
+function closeZoom() { document.getElementById("modal").style.display = "none"; }
+function toggleMenu() { var menu = document.getElementById("menu"); menu.style.display = menu.style.display === "flex" ? "none" : "flex"; }
 
 const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycby4SfrF6QKzx0WuY-Qj0t-MNGVaq7lWuss1cLw7f1D0mqbtkXK80mR0yPeG_QKlq-Bh/exec";
 
@@ -1525,10 +1416,7 @@ async function loadTestimoni() {
     try {
         const response = await fetch(GOOGLE_SHEETS_URL);
         const data = await response.json();
-        if (data.length === 0) {
-            container.innerHTML = '<div class="testimoni-kosong">✨ Belum ada testimoni. Jadilah yang pertama! ✨</div>';
-            return;
-        }
+        if (data.length === 0) { container.innerHTML = '<div class="testimoni-kosong">✨ Belum ada testimoni. Jadilah yang pertama! ✨</div>'; return; }
         let html = '';
         for (let i = data.length-1; i >= 0; i--) {
             let t = data[i];
@@ -1537,9 +1425,7 @@ async function loadTestimoni() {
             html += `<div class="testimoni-item"><div class="testimoni-header"><span class="testimoni-nama">👤 ${escapeHtml(t.nama||'Anonim')}</span><span class="testimoni-rating">${bintang}</span><span class="testimoni-tanggal">📅 ${t.tanggal||'-'}</span></div><div class="testimoni-pesan">💬 ${escapeHtml(t.pesan||'')}</div></div>`;
         }
         container.innerHTML = html;
-    } catch(e) {
-        container.innerHTML = '<div class="testimoni-kosong">⚠️ Gagal memuat testimoni.</div>';
-    }
+    } catch(e) { container.innerHTML = '<div class="testimoni-kosong">⚠️ Gagal memuat testimoni.</div>'; }
 }
 
 async function tambahTestimoni() {
@@ -1561,10 +1447,7 @@ async function tambahTestimoni() {
     finally { btn.disabled = false; btn.textContent = "Kirim Testimoni"; }
 }
 
-function escapeHtml(text) {
-    if (!text) return '';
-    return text.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
-}
+function escapeHtml(text) { if (!text) return ''; return text.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
 </script>
 
 </body>
