@@ -650,7 +650,7 @@ body {
   display: none;
 }
 
-/* INVOICE HEADER - JUDUL DI TENGAH, LOGO DI KIRI */
+/* INVOICE HEADER - UKURAN TEKS DIPERBESAR */
 .invoice-header {
   display: flex;
   justify-content: space-between;
@@ -678,7 +678,7 @@ body {
 }
 
 .invoice-logo-left span {
-  font-size: 12px;
+  font-size: 14px;
   color: #667eea;
   font-weight: bold;
 }
@@ -690,25 +690,32 @@ body {
 
 .invoice-title-center h2 {
   color: #667eea;
-  margin: 0 0 5px 0;
-  font-size: 20px;
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  font-weight: bold;
 }
 
 .invoice-title-center p {
-  margin: 3px 0;
-  font-size: 12px;
-  color: #666;
+  margin: 5px 0;
+  font-size: 16px;
+  color: #555;
 }
 
 .invoice-contact-right {
   flex: 1;
   text-align: right;
-  font-size: 11px;
-  color: #666;
 }
 
 .invoice-contact-right p {
-  margin: 3px 0;
+  margin: 8px 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.invoice-contact-right p:first-child {
+  font-size: 18px;
+  color: #25D366;
 }
 
 .invoice-details {
@@ -720,6 +727,7 @@ body {
   justify-content: space-between;
   padding: 10px 0;
   border-bottom: 1px dashed #ddd;
+  font-size: 14px;
 }
 
 .invoice-row.total {
@@ -728,7 +736,7 @@ body {
   margin-top: 10px;
   padding-top: 15px;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 20px;
   color: #667eea;
 }
 
@@ -764,6 +772,14 @@ body {
   background: #38a169;
 }
 
+.btn-delete {
+  background: #e53e3e;
+}
+
+.btn-delete:hover {
+  background: #c53030;
+}
+
 .btn-logout {
   background: #e53e3e;
   margin-bottom: 20px;
@@ -787,16 +803,57 @@ body {
   margin-bottom: 10px;
   border-radius: 8px;
   border-left: 4px solid #667eea;
-  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .invoice-item:hover {
   background: #edf2f7;
 }
 
+.invoice-item .inv-info {
+  flex: 1;
+  cursor: pointer;
+}
+
 .invoice-item .inv-no {
   font-weight: bold;
   color: #667eea;
+}
+
+.invoice-item .inv-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-delete-invoice {
+  background: #e53e3e;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.btn-delete-invoice:hover {
+  background: #c53030;
+}
+
+.btn-view-invoice {
+  background: #4299e1;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.btn-view-invoice:hover {
+  background: #3182ce;
 }
 
 .admin-header {
@@ -891,7 +948,7 @@ body {
 <div class="card invoice-admin-card" id="invoiceAdmin">
   <h2 style="text-align: center;">🧾 Panel Invoice Admin</h2>
   
-  <!-- FORM LOGIN - KOSONG, ADMIN HARUS ISI MANUAL -->
+  <!-- FORM LOGIN - KOSONG -->
   <div id="loginForm" class="login-container">
     <h3>🔐 Login Admin</h3>
     <input type="text" id="loginUsername" placeholder="Username" autocomplete="off">
@@ -950,7 +1007,7 @@ body {
       </div>
     </div>
     
-    <!-- PREVIEW INVOICE dengan LOGO DI KIRI, JUDUL DI TENGAH -->
+    <!-- PREVIEW INVOICE -->
     <div id="adminInvoicePreview" class="invoice-preview-admin">
       <div class="invoice-header">
         <div class="invoice-logo-left">
@@ -988,7 +1045,7 @@ body {
       </div>
     </div>
     
-    <!-- DAFTAR INVOICE -->
+    <!-- DAFTAR INVOICE DENGAN TOMBOL HAPUS -->
     <div class="list-invoice">
       <h3>📋 Daftar Invoice Tersimpan</h3>
       <div id="savedInvoicesList">
@@ -1222,7 +1279,7 @@ function togglePassword() {
     }
 }
 
-// Fungsi Login Admin (Username: Syalom, Password: Debat4)
+// Fungsi Login Admin
 function adminLogin() {
     const username = document.getElementById('loginUsername').value.trim();
     const password = document.getElementById('loginPassword').value;
@@ -1239,7 +1296,6 @@ function adminLogin() {
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('adminInvoiceTanggal').value = today;
         
-        // Reset form login
         document.getElementById('loginUsername').value = '';
         document.getElementById('loginPassword').value = '';
     } else {
@@ -1353,14 +1409,20 @@ function loadSavedInvoicesList() {
     for (let i = 0; i < savedInvoices.length; i++) {
         const inv = savedInvoices[i];
         const statusClass = inv.status === 'Sudah Dibayar' ? 'status-paid' : 'status-unpaid';
-        const statusText = inv.status === 'Sudah Dibayar' ? '✅ Lunas' : (inv.status === 'Pending' ? '🔄 Pending' : '⏳ Belum Bayar');
+        const statusText = inv.status === 'Sudah Dibayar' ? 'Lunas' : (inv.status === 'Pending' ? 'Pending' : 'Belum Bayar');
         
         html += `
-            <div class="invoice-item" onclick="viewSavedInvoice(${i})">
-                <div><strong class="inv-no">${inv.no}</strong></div>
-                <div style="font-size: 12px; margin-top: 5px;">
-                    ${inv.tanggal} | ${inv.nama} | Rp ${inv.jumlahFormatted}
-                    <span class="${statusClass}" style="float: right; padding: 2px 8px;">${statusText}</span>
+            <div class="invoice-item">
+                <div class="inv-info" onclick="viewSavedInvoice(${i})">
+                    <div><strong class="inv-no">${inv.no}</strong></div>
+                    <div style="font-size: 12px; margin-top: 5px;">
+                        ${inv.tanggal} | ${inv.nama} | Rp ${inv.jumlahFormatted}
+                        <span class="${statusClass}" style="margin-left: 8px; padding: 2px 8px;">${statusText}</span>
+                    </div>
+                </div>
+                <div class="inv-actions">
+                    <button class="btn-view-invoice" onclick="event.stopPropagation(); viewSavedInvoice(${i})">👁️ Lihat</button>
+                    <button class="btn-delete-invoice" onclick="event.stopPropagation(); deleteInvoice(${i})">🗑️ Hapus</button>
                 </div>
             </div>
         `;
@@ -1374,6 +1436,30 @@ function viewSavedInvoice(index) {
     document.getElementById('adminInvoicePreview').style.display = 'block';
     document.getElementById('adminBtnDownloadPDF').style.display = 'inline-block';
     currentAdminInvoiceData = inv;
+    
+    // Scroll ke preview
+    document.getElementById('adminInvoicePreview').scrollIntoView({ behavior: 'smooth' });
+}
+
+function deleteInvoice(index) {
+    if (confirm('⚠️ Apakah Anda yakin ingin menghapus invoice ini?\n\n' + 
+                'Invoice: ' + savedInvoices[index].no + '\n' +
+                'Pelanggan: ' + savedInvoices[index].nama + '\n\n' +
+                'Data yang dihapus tidak dapat dikembalikan!')) {
+        
+        savedInvoices.splice(index, 1);
+        localStorage.setItem('anakRantauInvoices', JSON.stringify(savedInvoices));
+        loadSavedInvoicesList();
+        
+        // Jika invoice yang sedang dilihat dihapus, sembunyikan preview
+        if (currentAdminInvoiceData && savedInvoices.indexOf(currentAdminInvoiceData) === -1) {
+            document.getElementById('adminInvoicePreview').style.display = 'none';
+            document.getElementById('adminBtnDownloadPDF').style.display = 'none';
+            currentAdminInvoiceData = null;
+        }
+        
+        alert('✅ Invoice berhasil dihapus!');
+    }
 }
 
 function downloadInvoiceAdminPDF() {
@@ -1397,11 +1483,13 @@ function downloadInvoiceAdminPDF() {
                 .invoice-logo-left { display: flex; flex-direction: column; align-items: center; text-align: center; flex: 1; }
                 .invoice-logo-img { width: 120px; height: 120px; border-radius: 50%; margin-bottom: 5px; }
                 .invoice-title-center { flex: 2; text-align: center; }
-                .invoice-title-center h2 { color: #667eea; margin: 0; }
-                .invoice-contact-right { flex: 1; text-align: right; font-size: 11px; }
+                .invoice-title-center h2 { color: #667eea; margin: 0; font-size: 28px; }
+                .invoice-title-center p { font-size: 16px; }
+                .invoice-contact-right { flex: 1; text-align: right; }
+                .invoice-contact-right p { margin: 8px 0; font-size: 16px; }
                 .invoice-details { margin: 20px 0; }
                 .invoice-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #ddd; }
-                .invoice-row.total { border-top: 3px solid #667eea; border-bottom: none; margin-top: 10px; padding-top: 15px; font-weight: bold; font-size: 18px; color: #667eea; }
+                .invoice-row.total { border-top: 3px solid #667eea; border-bottom: none; margin-top: 10px; padding-top: 15px; font-weight: bold; font-size: 20px; color: #667eea; }
                 .invoice-footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #666; }
                 .status-paid { background: #48bb78; color: white; padding: 4px 12px; border-radius: 20px; display: inline-block; }
                 .status-unpaid { background: #ed8936; color: white; padding: 4px 12px; border-radius: 20px; display: inline-block; }
