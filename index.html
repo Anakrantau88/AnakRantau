@@ -196,6 +196,26 @@ body {
   background: #008844;
 }
 
+/* TOMBOL TRIAL SEBAGAI TAUTAN */
+.trial-link-button {
+  display: block;
+  width: 100%;
+  background: #00aa6c;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+  text-align: center;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+.trial-link-button:hover {
+  background: #008844;
+}
+
 .error-msg {
   color: #e53e3e;
   font-size: 13px;
@@ -1343,7 +1363,7 @@ body {
   </div>
 </div>
 
-<!-- ============ KOST - HANYA JUDUL KOST EKSKLUSIF ============ -->
+<!-- ============ KOST ============ -->
 <div class="card kost-card" id="kost">
   <div class="kost-header">
     <h2>🏠 Kost Eksklusif Anak Rantau</h2>
@@ -1657,25 +1677,27 @@ body {
     <h2 style="text-align: center;">🌐 Akses Internet</h2>
     <div class="login-hotspot-container">
       
-      <!-- KOLOM KIRI: LOGIN DENGAN VOUCHER -->
+      <!-- KOLOM KIRI: LOGIN DENGAN VOUCHER (MENGGUNAKAN FORM STANDAR) -->
       <div class="login-hotspot-form">
         <h3>🔑 Login dengan Voucher</h3>
         <p style="font-size: 12px; text-align: center; color: #666;">Sudah punya voucher? Masukkan username & password</p>
-        <input type="text" id="hotspotUsername" placeholder="Username Voucher">
-        <input type="password" id="hotspotPassword" placeholder="Password Voucher">
+        <form method="post" action="http://40.40.40.1/login">
+          <input type="text" name="username" placeholder="Username Voucher" required>
+          <input type="password" name="password" placeholder="Password Voucher" required>
+          <input type="hidden" name="dst" value="https://anakrantau88.my.id">
+          <button type="submit">🚀 Login Hotspot</button>
+        </form>
         <div id="loginErrorMsg" class="error-msg"></div>
-        <button onclick="loginHotspot()">🚀 Login Hotspot</button>
       </div>
       
-      <!-- KOLOM KANAN: COBA TRIAL GRATIS -->
+      <!-- KOLOM KANAN: COBA TRIAL GRATIS (MENGGUNAKAN TAUTAN LANGSUNG) -->
       <div class="trial-hotspot-form">
         <h3>🎁 Coba Trial Gratis</h3>
         <div class="trial-info">
           <span class="duration">🕐 8 menit Trial</span><br>
           <small>Nikmati internet gratis 8 menit untuk mencoba jaringan kami</small>
         </div>
-        <div id="trialErrorMsg" class="error-msg"></div>
-        <button onclick="trialLogin()">✨ Mulai Trial Sekarang</button>
+        <a href="http://40.40.40.1/login?dst=https://anakrantau88.my.id" class="trial-link-button">✨ Mulai Trial Sekarang</a>
         <p style="font-size: 11px; text-align: center; margin-top: 12px; color: #888;">Trial tersedia untuk perangkat baru. 1x24 jam per perangkat.</p>
       </div>
       
@@ -1786,38 +1808,6 @@ body {
 </div>
 
 <script>
-// ========== KONFIGURASI HOTSPOT ==========
-const HOTSPOT_GATEWAY = "40.40.40.1"; // IP Gateway hotspot Anda
-const REDIRECT_URL = "https://anakrantau88.my.id";
-
-// ========== FUNGSI LOGIN VOUCHER ==========
-function loginHotspot() {
-    const username = document.getElementById('hotspotUsername').value.trim();
-    const password = document.getElementById('hotspotPassword').value;
-    const errorDiv = document.getElementById('loginErrorMsg');
-    
-    errorDiv.style.display = 'none';
-    
-    if (!username || !password) {
-        errorDiv.innerHTML = '⚠️ Username dan password harus diisi!';
-        errorDiv.style.display = 'block';
-        return;
-    }
-    
-    window.location.href = `http://${HOTSPOT_GATEWAY}/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&dst=${encodeURIComponent(REDIRECT_URL)}`;
-}
-
-// ========== FUNGSI LOGIN TRIAL ==========
-function trialLogin() {
-    const errorDiv = document.getElementById('trialErrorMsg');
-    errorDiv.style.display = 'none';
-    
-    // Username trial otomatis dalam format T-XXXXXXXXXXXX (MAC address perangkat)
-    // Ini akan ditangani oleh MikroTik secara otomatis saat redirect ke login
-    // Kita cukup redirect ke halaman login MikroTik dengan mode trial
-    window.location.href = `http://${HOTSPOT_GATEWAY}/login?dst=${encodeURIComponent(REDIRECT_URL)}`;
-}
-
 // ========== NOMOR WHATSAPP ADMIN ==========
 const NOMOR_WA_ADMIN = "6282162115149";
 const WEBSITE_URL = "https://anakrantau88.github.io/AnakRantau/";
@@ -1877,28 +1867,6 @@ window.addEventListener('load', function() {
     let firstButton = document.querySelector('.music-list button');
     if (firstButton) setTimeout(() => playLagu('musik1.mp3', firstButton), 500);
     loadTestimoni();
-    
-    // Cek parameter error di URL (jika login gagal)
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('error') === 'true') {
-        const errorDiv = document.getElementById('loginErrorMsg');
-        errorDiv.innerHTML = '❌ Username atau password voucher salah! Silakan coba lagi.';
-        errorDiv.style.display = 'block';
-    }
-    if (urlParams.get('error') === 'timeout') {
-        const errorDiv = document.getElementById('loginErrorMsg');
-        errorDiv.innerHTML = '⏰ Sesi Anda telah berakhir. Silakan login kembali.';
-        errorDiv.style.display = 'block';
-    }
-    if (urlParams.get('trial') === 'true') {
-        const errorDiv = document.getElementById('trialErrorMsg');
-        errorDiv.innerHTML = '🎉 Selamat! Anda sedang dalam masa trial. Silakan nikmati internet.';
-        errorDiv.style.display = 'block';
-        errorDiv.style.color = '#00aa6c';
-        setTimeout(() => {
-            errorDiv.style.display = 'none';
-        }, 5000);
-    }
 });
 
 function loadInvoiceLunas() {
