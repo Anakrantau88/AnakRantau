@@ -27,7 +27,6 @@
 
 <style>
 /* ========== SEMUA STYLE YANG SUDAH ADA ========== */
-/* (Saya pertahankan semua style dari file asli Anda) */
 .hamburger {
   display: none;
   font-size: 25px;
@@ -100,6 +99,54 @@ body {
   margin-bottom: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* FORM LOGIN HOTSPOT */
+.hotspot-login-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+.login-hotspot-form {
+  max-width: 400px;
+  margin: 0 auto;
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  color: #333;
+}
+.login-hotspot-form h3 {
+  text-align: center;
+  color: #667eea;
+  margin-bottom: 20px;
+}
+.login-hotspot-form input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+.login-hotspot-form button {
+  width: 100%;
+  background: #667eea;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+.login-hotspot-form button:hover {
+  background: #5a67d8;
+}
+.error-msg {
+  color: #e53e3e;
+  font-size: 13px;
+  text-align: center;
+  margin-top: 10px;
+  display: none;
 }
 
 /* GALERI */
@@ -768,7 +815,7 @@ body {
   color: white;
 }
 
-.login-container {
+.admin-login-container {
   max-width: 400px;
   margin: 0 auto;
   background: white;
@@ -777,13 +824,13 @@ body {
   color: #333;
 }
 
-.login-container h3 {
+.admin-login-container h3 {
   text-align: center;
   color: #667eea;
   margin-bottom: 20px;
 }
 
-.login-container input {
+.admin-login-container input {
   width: 100%;
   padding: 12px;
   margin: 10px 0;
@@ -792,7 +839,7 @@ body {
   box-sizing: border-box;
 }
 
-.login-container button {
+.admin-login-container button {
   width: 100%;
   background: #667eea;
   color: white;
@@ -804,7 +851,7 @@ body {
   margin-top: 10px;
 }
 
-.login-container button:hover {
+.admin-login-container button:hover {
   background: #5a67d8;
 }
 
@@ -1349,7 +1396,7 @@ body {
 <div class="card invoice-admin-card" id="invoiceAdmin">
   <h2 style="text-align: center;">🧾 Panel Invoice Admin</h2>
   
-  <div id="loginForm" class="login-container">
+  <div id="loginForm" class="admin-login-container">
     <h3>🔐 Login Admin</h3>
     <input type="text" id="loginUsername" placeholder="Username" autocomplete="off">
     <div class="password-wrapper">
@@ -1519,9 +1566,9 @@ body {
   </button>
 </div>
 
-<!-- PAKET HOTSPOT -->
-<div id="hotspot">
-  <h2>🔥 Pilih Paket Hotspot</h2>
+<!-- ============ PAKET HOTSPOT & FORM LOGIN ============ -->
+<div id="hotspot" class="card">
+  <h2 style="text-align: center;">🔥 Pilih Paket Hotspot</h2>
   
   <div id="paketTerpilihInfo" class="paket-terpilih-info" style="display:none;">
     ✅ Paket terpilih: <span id="namaPaketTerpilih">-</span> | Rp<span id="hargaPaketTerpilih">0</span>
@@ -1542,7 +1589,22 @@ body {
     <span class="badge-gratis">MDR 0%</span>
   </button>
   
-  <div class="info-bayar">
+  <!-- FORM LOGIN HOTSPOT CUSTOM -->
+  <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
+    <h2 style="text-align: center;">🌐 Login Hotspot</h2>
+    <p style="text-align: center; color: #666;">Sudah punya voucher? Masukkan username & password untuk akses internet</p>
+    
+    <div class="login-hotspot-form">
+      <h3>🔐 Masuk ke WiFi</h3>
+      <input type="text" id="hotspotUsername" placeholder="Username">
+      <input type="password" id="hotspotPassword" placeholder="Password">
+      <div id="loginErrorMsg" class="error-msg"></div>
+      <button onclick="loginHotspot()">🚀 Login</button>
+      <p style="text-align: center; font-size: 12px; margin-top: 15px;">💡 Belum punya voucher? <a href="https://wa.me/6282162115149" style="color: #667eea;">Hubungi Admin</a> untuk pembelian</p>
+    </div>
+  </div>
+  
+  <div class="info-bayar" style="margin-top: 20px;">
     💡 <strong>Cara Bayar Hotspot:</strong><br>
     1. Pilih paket di atas (termasuk paket Langganan Rp50.000/bulan)<br>
     2. Klik tombol "Bayar dengan QRIS"<br>
@@ -1646,6 +1708,35 @@ body {
 </div>
 
 <script>
+// ========== KONFIGURASI HOTSPOT ==========
+// GANTI IP_GATEWAY_HOTSPOT dengan IP gateway hotspot MikroTik Anda
+// Contoh: 10.5.50.1 atau 192.168.1.1
+const HOTSPOT_GATEWAY = "10.5.50.1"; // <-- SESUAIKAN DENGAN IP HOTSPOT ANDA
+
+// URL login MikroTik
+const LOGIN_URL = `http://${HOTSPOT_GATEWAY}/login`;
+
+// URL tujuan setelah login berhasil (website utama Anda)
+const REDIRECT_URL = "https://anakrantau88.my.id";
+
+// ========== FUNGSI LOGIN HOTSPOT ==========
+function loginHotspot() {
+    const username = document.getElementById('hotspotUsername').value.trim();
+    const password = document.getElementById('hotspotPassword').value;
+    const errorDiv = document.getElementById('loginErrorMsg');
+    
+    errorDiv.style.display = 'none';
+    
+    if (!username || !password) {
+        errorDiv.innerHTML = '⚠️ Username dan password harus diisi!';
+        errorDiv.style.display = 'block';
+        return;
+    }
+    
+    // Redirect langsung ke halaman login MikroTik dengan parameter
+    window.location.href = `http://${HOTSPOT_GATEWAY}/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&dst=${encodeURIComponent(REDIRECT_URL)}`;
+}
+
 // ========== NOMOR WHATSAPP ADMIN ==========
 const NOMOR_WA_ADMIN = "6282162115149";
 const WEBSITE_URL = "https://anakrantau88.github.io/AnakRantau/";
@@ -1705,6 +1796,19 @@ window.addEventListener('load', function() {
     let firstButton = document.querySelector('.music-list button');
     if (firstButton) setTimeout(() => playLagu('musik1.mp3', firstButton), 500);
     loadTestimoni();
+    
+    // Cek parameter error di URL (jika login gagal)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('error') === 'true') {
+        const errorDiv = document.getElementById('loginErrorMsg');
+        errorDiv.innerHTML = '❌ Username atau password salah! Silakan coba lagi.';
+        errorDiv.style.display = 'block';
+    }
+    if (urlParams.get('error') === 'timeout') {
+        const errorDiv = document.getElementById('loginErrorMsg');
+        errorDiv.innerHTML = '⏰ Sesi Anda telah berakhir. Silakan login kembali.';
+        errorDiv.style.display = 'block';
+    }
 });
 
 function loadInvoiceLunas() {
@@ -2037,7 +2141,8 @@ async function tambahTestimoni() {
     finally { btn.disabled = false; btn.textContent = "Kirim Testimoni"; }
 }
 
-function escapeHtml(text) { if (!text) return ''; return text.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+function escapeHtml(text) { if (!text) return '';
+ return text.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
 </script>
 
 </body>
