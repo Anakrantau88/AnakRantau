@@ -569,6 +569,14 @@ body {
   background: #128C7E;
 }
 
+/* Gaya untuk tombol yang dinonaktifkan (SEGERA HADIR) */
+.layanan-wa-btn:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
+}
+
 .btn-beli-tiket-mmbc {
   display: inline-block;
   background: #ff6b6b;
@@ -1484,18 +1492,20 @@ body {
       <button class="layanan-wa-btn" onclick="waPesanTiketPesawat()">💬 Konsultasi via WA</button>
     </div>
     
-    <div class="layanan-card" onclick="waSewaMobil()">
+    <!-- Sewa Mobil Harian - SEGERA HADIR -->
+    <div class="layanan-card">
       <div class="layanan-icon">🚙</div>
-      <h3>Sewa Mobil Harian</h3>
+      <h3>Sewa Mobil Harian <span style="background:#ff9800; color:white; font-size:10px; padding:2px 6px; border-radius:12px; margin-left:5px;">SEGERA HADIR</span></h3>
       <p>Mobil bersih, supir berpengalaman</p>
-      <button class="layanan-wa-btn" onclick="event.stopPropagation(); waSewaMobil()">📱 Pesan via WA</button>
+      <button class="layanan-wa-btn" disabled style="background:#cccccc; cursor:not-allowed;">⏳ Segera Hadir</button>
     </div>
     
-    <div class="layanan-card" onclick="waAntarJemputBandara()">
+    <!-- Antar Jemput Bandara Kualanamu - SEGERA HADIR -->
+    <div class="layanan-card">
       <div class="layanan-icon">🚐</div>
-      <h3>Antar Jemput Bandara Kualanamu</h3>
+      <h3>Antar Jemput Bandara Kualanamu <span style="background:#ff9800; color:white; font-size:10px; padding:2px 6px; border-radius:12px; margin-left:5px;">SEGERA HADIR</span></h3>
       <p>Drop off & pick up dari/ke bandara KNO</p>
-      <button class="layanan-wa-btn" onclick="event.stopPropagation(); waAntarJemputBandara()">📱 Pesan via WA</button>
+      <button class="layanan-wa-btn" disabled style="background:#cccccc; cursor:not-allowed;">⏳ Segera Hadir</button>
     </div>
   </div>
 
@@ -1542,10 +1552,10 @@ body {
   </div>
   
   <div style="text-align: center;">
-    <button class="paket-btn" onclick="pilihPaket(3000, '2 Jam')">🎯 2 Jam (Rp2.000)</button>
-    <button class="paket-btn" onclick="pilihPaket(7000, '1 Hari')">🎯 1 Hari (Rp5.000)</button>
-    <button class="paket-btn" onclick="pilihPaket(20000, '7 Hari')">🎯 7 Hari (Rp15.000)</button>
-    <button class="paket-btn" onclick="pilihPaket(60000, '30 Hari')">🎯 30 Hari (Rp55.000)</button>
+    <button class="paket-btn" onclick="pilihPaket(2000, '2 Jam')">🎯 2 Jam (Rp2.000)</button>
+    <button class="paket-btn" onclick="pilihPaket(5000, '1 Hari')">🎯 1 Hari (Rp5.000)</button>
+    <button class="paket-btn" onclick="pilihPaket(15000, '7 Hari')">🎯 7 Hari (Rp15.000)</button>
+    <button class="paket-btn" onclick="pilihPaket(55000, '30 Hari')">🎯 30 Hari (Rp55.000)</button>
     <button class="paket-btn paket-btn-bulanan" onclick="pilihPaket(50000, 'Langganan 1 Bulan')">
       📱 Langganan Bulanan <span class="badge-populer">Hemat!</span> (Rp50.000)
     </button>
@@ -1969,8 +1979,7 @@ function downloadInvoiceAdminPDF() {
 
 function gabungAgenMMBC() { window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=Halo%20Admin%2C%20saya%20tertarik%20jadi%20agen%20MMBC`, '_blank'); }
 function waPesanTiketPesawat() { window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=Pesan%20Tiket%20Pesawat`, '_blank'); }
-function waSewaMobil() { window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=Sewa%20Mobil`, '_blank'); }
-function waAntarJemputBandara() { window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=Antar%20Jemput%20Bandara`, '_blank'); }
+// Fungsi untuk Sewa Mobil dan Antar Jemput sudah dihapus karena tombol disabled
 
 let paketTerpilih_harga = 0, paketTerpilih_nama = "";
 function pilihPaket(harga, namaPaket) {
