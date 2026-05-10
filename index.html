@@ -204,19 +204,33 @@ body {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* Google Maps Styles */
+/* Google Maps Styles - Satellite View */
 .map-container {
     margin: 15px 0;
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    position: relative;
 }
 
 .map-container iframe {
     width: 100%;
-    height: 400px;
+    height: 450px;
     border: none;
     display: block;
+}
+
+.map-control-note {
+    background: rgba(0,0,0,0.7);
+    color: white;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 10;
+    pointer-events: none;
 }
 
 .location-info {
@@ -1462,36 +1476,40 @@ body {
   </div>
 </div>
 
-<!-- ============ GOOGLE MAPS LOKASI KOST ============ -->
+<!-- ============ GOOGLE MAPS LOKASI KOST - SATELLITE VIEW ============ -->
 <div class="card" id="lokasi">
-  <h2 style="text-align: center;">📍 Lokasi Kost Anak Rantau</h2>
+  <h2 style="text-align: center;">📍 Lokasi Kost Anak Rantau (Tampilan Satelit)</h2>
   <p style="text-align: center; color: #555;">Mudah dijangkau, dekat dengan berbagai fasilitas umum</p>
   
   <div class="map-container">
+    <!-- Tampilan Google Maps dengan mode satellite (citra satelit) -->
     <iframe 
-      src="https://www.google.com/maps?q=3.545927,98.875764&hl=id&z=17&output=embed"
+      src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=3.545927,98.875764&zoom=18&maptype=satellite"
       allowfullscreen="" 
       loading="lazy" 
       referrerpolicy="no-referrer-when-downgrade">
     </iframe>
+    <div class="map-control-note">
+      🛰️ Mode Satelit | Zoom untuk melihat lebih detail
+    </div>
   </div>
   
   <div class="warning-map">
-    Foto/fasad dari Google Maps belum terupdate. Untuk melihat kondisi kost yang sebenarnya, silakan lihat galeri foto atau datang langsung ke lokasi.
+    📸 Foto/fasad dari Google Maps belum terupdate (citra satelit mungkin masih lama). Untuk melihat kondisi kost yang sebenarnya, silakan lihat galeri foto atau datang langsung ke lokasi.
   </div>
   
   <div class="location-info">
     <strong>🏠 Kost Anak Rantau Lubuk Pakam</strong><br>
     📍 Koordinat: 3.545927, 98.875764<br>
+    🛰️ Tampilan di atas adalah citra satelit lokasi kost<br>
     🚶 Dekat dengan pusat kota Lubuk Pakam<br>
-    🏫 Akses mudah ke sekolah dan kampus<br>
-    🚗 Jalan strategis, dilalui kendaraan umum
+    🏫 Akses mudah ke sekolah dan kampus
   </div>
   
   <div class="location-address">
     <span>📍 Jl. Pendidikan, Lubuk Pakam, Sumatera Utara</span>
     <button class="btn-copy-address" onclick="copyAddress()">📋 Salin Alamat</button>
-    <a href="https://www.google.com/maps?q=3.545927,98.875764" target="_blank" class="btn-copy-address" style="background:#25D366; text-decoration:none;">🗺️ Buka di Google Maps</a>
+    <a href="https://www.google.com/maps?q=3.545927,98.875764&layer=s" target="_blank" class="btn-copy-address" style="background:#25D366; text-decoration:none;">🗺️ Buka di Google Maps (Satelit)</a>
   </div>
 </div>
 
@@ -1868,7 +1886,6 @@ window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
   
-  // Cek apakah banner sudah ditutup sebelumnya
   if (!localStorage.getItem('pwaBannerClosed')) {
     pwaInstallBanner.style.display = 'flex';
   }
@@ -1891,7 +1908,6 @@ closeBannerBtn.addEventListener('click', () => {
   localStorage.setItem('pwaBannerClosed', 'true');
 });
 
-// Cek apakah sudah terinstall sebagai PWA
 window.addEventListener('appinstalled', (evt) => {
   console.log('App installed successfully');
   pwaInstallBanner.style.display = 'none';
