@@ -1,3 +1,23 @@
+# Untuk semua bot/search engine
 User-agent: *
+
+# Izinkan akses ke semua halaman utama
 Allow: /
+
+# Blokir akses ke halaman admin (tidak perlu diindeks)
+Disallow: /admin
+Disallow: /login
+
+# Blokir file/folder yang tidak perlu diindeks
+Disallow: /private/
+Disallow: /tmp/
+Disallow: /backup/
+
+# Beri tahu lokasi sitemap
 Sitemap: https://anakrantau88.my.id/sitemap.xml
+
+# Crawl delay untuk mencegah server overload (opsional)
+Crawl-delay: 5
+
+# Waktu terbaik crawling untuk server Indonesia
+Visit-time: 0100-0500
