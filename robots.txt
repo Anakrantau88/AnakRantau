@@ -1,23 +1,55 @@
-# Untuk semua bot/search engine
-User-agent: *
+# ===========================================
+# ROBOTS.TXT - ANAK RANTAU LUBUK PAKAM
+# Dibuat untuk mengatur crawling oleh search engine
+# ===========================================
 
-# Izinkan akses ke semua halaman utama
+User-agent: *
 Allow: /
 
-# Blokir akses ke halaman admin (tidak perlu diindeks)
-Disallow: /admin
-Disallow: /login
+# ===== SEMUA HALAMAN BOLEH DIINDEX =====
+# Halaman utama dan semua section boleh di-crawl
+# Sitemap sudah disediakan untuk memandu crawler
 
-# Blokir file/folder yang tidak perlu diindeks
-Disallow: /private/
-Disallow: /tmp/
-Disallow: /backup/
-
-# Beri tahu lokasi sitemap
-Sitemap: https://anakrantau88.my.id/sitemap.xml
-
-# Crawl delay untuk mencegah server overload (opsional)
+# ===== PERINTAKHUSUS UNTUK GOOGLE BOT =====
+User-agent: Googlebot
+Allow: /
 Crawl-delay: 5
 
-# Waktu terbaik crawling untuk server Indonesia
-Visit-time: 0100-0500
+# ===== PERINTAKHUSUS UNTUK BING BOT =====
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 5
+
+# ===== PERINTAKHUSUS UNTUK YANDEX BOT =====
+User-agent: Yandex
+Allow: /
+Crawl-delay: 5
+
+# ===== BLOKIR AKSES KE AREA ADMIN (TIDAK ADA DI SITEMAP) =====
+# Area admin tidak boleh di-crawl
+Disallow: /admin
+Disallow: /login
+Disallow: /wp-admin
+
+# ===== BLOKIR AKSES KE FILE DAN FOLDER TERTENTU =====
+Disallow: /manifest.json
+Disallow: /sw.js
+Disallow: /icon-192.png
+Disallow: /icon-512.png
+
+# ===== BLOKIR QUERY PARAMETER (MENCEGAH DUPLICATE CONTENT) =====
+Disallow: /*?fbclid=
+Disallow: /*?ref=
+Disallow: /*?utm_
+Disallow: /*?gclid=
+
+# ===== LOKASI SITEMAP =====
+Sitemap: https://anakrantau88.my.id/sitemap.xml
+
+# ===== WAKTU CRAWL (OPTIMALNYA DI JAM SEPI) =====
+# Crawl-delay: 5 (detik) - agar tidak membebani server
+
+# ===== KESIMPULAN =====
+# Semua konten utama BOLEH diindex
+# Halaman admin dan file internal TIDAK BOLEH diindex
+# Sitemap dan informasi crawler sudah ditentukan
