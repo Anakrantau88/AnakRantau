@@ -772,19 +772,6 @@ body {
   color: #0077cc;
 }
 
-/* AC dan Non AC dengan warna berbeda */
-.kost-item.ac .kost-item-header {
-  background: linear-gradient(135deg, #00aa6c, #008844);
-}
-
-.kost-item.nonac .kost-item-header {
-  background: linear-gradient(135deg, #ff9800, #f57c00);
-}
-
-.kost-item.dua .kost-item-header {
-  background: linear-gradient(135deg, #9c27b0, #7b1fa2);
-}
-
 /* INVOICE ADMIN */
 .invoice-admin-card {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -869,6 +856,32 @@ body {
   color: #333;
   display: none;
   position: relative;
+}
+/* CSS YouTube Embed */
+.youtube-video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    margin: 20px 0;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+.youtube-video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 15px;
+}
+.youtube-caption {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 8px;
+    color: #0077cc;
+    font-style: italic;
 }
 
 .invoice-header {
@@ -990,7 +1003,6 @@ body {
 .invoice-barcode p {
   font-size: 8px;
   margin: 3px 0 0 0;
-  color: #666;
 }
 
 .btn-invoice {
@@ -1149,7 +1161,6 @@ body {
   padding: 0 5px;
 }
 
-/* INVOICE LUNAS */
 .invoice-lunas-card {
   background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
   border: 1px solid #4caf50;
@@ -1227,7 +1238,7 @@ body {
 
 <div class="container">
 
-<!-- PEMUTAR MUSIK -->
+<!-- PEMUTAR MUSIK + YOUTUBE "TAK KENAL MAKA TAK SAYANG" -->
 <div class="music-player" id="musik">
   <h3>🎵 Musik Pengiring 🎧</h3>
   <div class="music-list">
@@ -1244,6 +1255,16 @@ body {
     <source src="" type="audio/mpeg">
     Browser tidak mendukung audio.
   </audio>
+  
+  <!-- YOUTUBE EMBED : TAK KENAL MAKA TAK SAYANG -->
+  <div style="margin-top: 20px; background: #00000022; border-radius: 15px; padding: 12px;">
+    <div class="youtube-video-container">
+      <iframe src="https://www.youtube.com/embed/FegjMjCv5ow?si=gyd-i25gBc8taOf_" title="Tak Kenal Maka Tak Sayang - Anak Rantau" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <div class="youtube-caption">
+      🎬 "Tak kenal maka tak sayang, tonton kami disini" — Kenali lebih dekat Anak Rantau Lubuk Pakam 🎬
+    </div>
+  </div>
 </div>
 
 <!-- ============ INVOICE SUDAH LUNAS ============ -->
@@ -1492,7 +1513,6 @@ body {
       <button class="layanan-wa-btn" onclick="waPesanTiketPesawat()">💬 Konsultasi via WA</button>
     </div>
     
-    <!-- Sewa Mobil Harian - SEGERA HADIR -->
     <div class="layanan-card">
       <div class="layanan-icon">🚙</div>
       <h3>Sewa Mobil Harian <span style="background:#ff9800; color:white; font-size:10px; padding:2px 6px; border-radius:12px; margin-left:5px;">SEGERA HADIR</span></h3>
@@ -1500,7 +1520,6 @@ body {
       <button class="layanan-wa-btn" disabled style="background:#cccccc; cursor:not-allowed;">⏳ Segera Hadir</button>
     </div>
     
-    <!-- Antar Jemput Bandara Kualanamu - SEGERA HADIR -->
     <div class="layanan-card">
       <div class="layanan-icon">🚐</div>
       <h3>Antar Jemput Bandara Kualanamu <span style="background:#ff9800; color:white; font-size:10px; padding:2px 6px; border-radius:12px; margin-left:5px;">SEGERA HADIR</span></h3>
@@ -1566,12 +1585,9 @@ body {
     <span class="badge-gratis">MDR 0%</span>
   </button>
   
-  <!-- FORM LOGIN HOTSPOT (HANYA VOUCHER, TANPA TRIAL/GRATIS) -->
   <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
     <h2 style="text-align: center;">🌐 Akses Internet dengan Voucher</h2>
     <div class="login-hotspot-container">
-      
-      <!-- KOLOM LOGIN VOUCHER -->
       <div class="login-hotspot-form">
         <h3>🔑 Login dengan Voucher</h3>
         <p style="font-size: 12px; text-align: center; color: #666;">Masukkan username & password dari voucher yang Anda beli</p>
@@ -1979,7 +1995,6 @@ function downloadInvoiceAdminPDF() {
 
 function gabungAgenMMBC() { window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=Halo%20Admin%2C%20saya%20tertarik%20jadi%20agen%20MMBC`, '_blank'); }
 function waPesanTiketPesawat() { window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=Pesan%20Tiket%20Pesawat`, '_blank'); }
-// Fungsi untuk Sewa Mobil dan Antar Jemput sudah dihapus karena tombol disabled
 
 let paketTerpilih_harga = 0, paketTerpilih_nama = "";
 function pilihPaket(harga, namaPaket) {
