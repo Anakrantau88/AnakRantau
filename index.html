@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Anak Rantau Lubuk Pakam - Kost, Hotspot, Travel & Tiket Pesawat</title>
+
+<!-- ========== PWA (PROGRESSIVE WEB APP) ========== -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0077cc">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Anak Rantau">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+
 <!-- Meta Tag Dasar untuk SEO -->
 <meta name="description" content="Kost eksklusif dan hotspot ber voucher di Lubuk Pakam. Harga mulai Rp500.000/bulan. Tersedia kamar AC/Non AC. Fasilitas lengkap, lokasi strategis dekat sekolah.">
 <meta name="keywords" content="kost lubuk pakam, kost karyawan, kost pelajar, hotspot lubuk pakam, voucher wifi, sewa kost murah, kost dekat smu negeri 2 lubuk pakam">
@@ -65,6 +76,92 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   background: #e6f7ff;
+}
+
+/* PWA Install Banner */
+.pwa-install-banner {
+  background: linear-gradient(135deg, #0077cc, #0055aa);
+  color: white;
+  padding: 12px 15px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.pwa-install-banner .banner-text {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.pwa-install-banner .banner-text span {
+  font-size: 28px;
+}
+
+.pwa-install-banner .banner-text h3 {
+  font-size: 14px;
+  margin: 0;
+}
+
+.pwa-install-banner .banner-text p {
+  font-size: 11px;
+  margin: 3px 0 0 0;
+  opacity: 0.9;
+}
+
+.btn-install-pwa {
+  background: #25D366;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s;
+}
+
+.btn-install-pwa:hover {
+  transform: scale(1.02);
+  background: #128C7E;
+}
+
+.btn-close-banner {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-close-banner:hover {
+  background: rgba(255,255,255,0.4);
 }
 
 /* NAVBAR */
@@ -1299,6 +1396,21 @@ body {
 
 <body>
 
+<!-- PWA INSTALL BANNER -->
+<div id="pwaBanner" class="pwa-install-banner" style="display: none;">
+  <div class="banner-text">
+    <span>📱</span>
+    <div>
+      <h3>Install Aplikasi Anak Rantau</h3>
+      <p>Mudah diakses seperti aplikasi sungguhan! Klik Install</p>
+    </div>
+  </div>
+  <button id="installPwaBtn" class="btn-install-pwa">
+    📲 Install Aplikasi
+  </button>
+  <button id="closeBannerBtn" class="btn-close-banner">✕</button>
+</div>
+
 <!-- NAVBAR -->
 <div class="navbar">
   <div class="logo">
@@ -1746,6 +1858,46 @@ body {
 </div>
 
 <script>
+// ========== PWA (PROGRESSIVE WEB APP) ==========
+let deferredPrompt = null;
+let pwaInstallBanner = document.getElementById('pwaBanner');
+let installBtn = document.getElementById('installPwaBtn');
+let closeBannerBtn = document.getElementById('closeBannerBtn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  
+  // Cek apakah banner sudah ditutup sebelumnya
+  if (!localStorage.getItem('pwaBannerClosed')) {
+    pwaInstallBanner.style.display = 'flex';
+  }
+});
+
+installBtn.addEventListener('click', async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      console.log('User accepted install');
+    }
+    deferredPrompt = null;
+    pwaInstallBanner.style.display = 'none';
+  }
+});
+
+closeBannerBtn.addEventListener('click', () => {
+  pwaInstallBanner.style.display = 'none';
+  localStorage.setItem('pwaBannerClosed', 'true');
+});
+
+// Cek apakah sudah terinstall sebagai PWA
+window.addEventListener('appinstalled', (evt) => {
+  console.log('App installed successfully');
+  pwaInstallBanner.style.display = 'none';
+  localStorage.setItem('pwaBannerClosed', 'true');
+});
+
 // ========== FUNGSI UNTUK ADMIN, INVOICE, MUSIK, DLL ==========
 
 const NOMOR_WA_ADMIN = "6282162115149";
