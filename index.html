@@ -120,8 +120,7 @@ body {
   justify-content: center;
 }
 
-.login-hotspot-form,
-.gratis-hotspot-form {
+.login-hotspot-form {
   flex: 1;
   min-width: 280px;
   background: white;
@@ -131,8 +130,7 @@ body {
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-.login-hotspot-form h3,
-.gratis-hotspot-form h3 {
+.login-hotspot-form h3 {
   text-align: center;
   margin-bottom: 20px;
 }
@@ -141,56 +139,7 @@ body {
   color: #667eea;
 }
 
-.gratis-hotspot-form {
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-  border: 2px solid #00aa6c;
-}
-
-.gratis-hotspot-form h3 {
-  color: #00aa6c;
-}
-
-.gratis-info {
-  text-align: center;
-  margin-bottom: 20px;
-  padding: 10px;
-  background: #e8f4fd;
-  border-radius: 10px;
-}
-
-.gratis-info .duration {
-  font-size: 28px;
-  font-weight: bold;
-  color: #00aa6c;
-}
-
-.gratis-info .credential {
-  font-size: 16px;
-  font-weight: bold;
-  color: #0077cc;
-  background: #e8f4fd;
-  padding: 8px;
-  border-radius: 8px;
-  margin-top: 10px;
-}
-
-.gratis-info .credential span {
-  background: white;
-  padding: 4px 12px;
-  border-radius: 5px;
-  font-family: monospace;
-  font-size: 14px;
-}
-
-.gratis-info small {
-  font-size: 12px;
-  color: #666;
-  display: block;
-  margin-top: 8px;
-}
-
-.login-hotspot-form input,
-.gratis-hotspot-form input {
+.login-hotspot-form input {
   width: 100%;
   padding: 12px;
   margin: 10px 0;
@@ -199,8 +148,7 @@ body {
   box-sizing: border-box;
 }
 
-.login-hotspot-form button,
-.gratis-hotspot-form button {
+.login-hotspot-form button {
   width: 100%;
   background: #667eea;
   color: white;
@@ -215,14 +163,6 @@ body {
 
 .login-hotspot-form button:hover {
   background: #5a67d8;
-}
-
-.gratis-hotspot-form button {
-  background: #00aa6c;
-}
-
-.gratis-hotspot-form button:hover {
-  background: #008844;
 }
 
 .error-msg {
@@ -1616,41 +1556,26 @@ body {
     <span class="badge-gratis">MDR 0%</span>
   </button>
   
-  <!-- FORM LOGIN HOTSPOT CUSTOM (DUA KOLOM: VOUCHER + INTERNET GRATIS) -->
+  <!-- FORM LOGIN HOTSPOT (HANYA VOUCHER, TANPA TRIAL/GRATIS) -->
   <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
-    <h2 style="text-align: center;">🌐 Akses Internet</h2>
+    <h2 style="text-align: center;">🌐 Akses Internet dengan Voucher</h2>
     <div class="login-hotspot-container">
       
-      <!-- KOLOM KIRI: LOGIN DENGAN VOUCHER -->
+      <!-- KOLOM LOGIN VOUCHER -->
       <div class="login-hotspot-form">
         <h3>🔑 Login dengan Voucher</h3>
-        <p style="font-size: 12px; text-align: center; color: #666;">Sudah punya voucher? Masukkan username & password</p>
+        <p style="font-size: 12px; text-align: center; color: #666;">Masukkan username & password dari voucher yang Anda beli</p>
         <form method="post" action="http://40.40.40.1/login">
           <input type="text" name="username" placeholder="Username Voucher" required>
           <input type="password" name="password" placeholder="Password Voucher" required>
           <input type="hidden" name="dst" value="https://anakrantau88.my.id">
           <button type="submit">🚀 Login Hotspot</button>
         </form>
-      </div>
-      
-      <!-- KOLOM KANAN: INTERNET GRATIS (Username: anak, Password: rantau) -->
-      <div class="gratis-hotspot-form">
-        <h3>🎁 Internet Gratis</h3>
-        <div class="gratis-info">
-          <span class="duration">🕐 Durasi: 10 Menit</span><br>
-          <span class="credential">
-            🔐 Username: <span>anak</span> &nbsp;|&nbsp; Password: <span>rantau</span>
-          </span>
-          <small>⚠️ Hanya 1x dalam 10 hari per perangkat ⚠️<br>Gunakan kesempatan ini untuk mencoba jaringan kami!</small>
+        <div class="info-bayar" style="margin-top: 15px; font-size: 12px;">
+          💡 <strong>Belum punya voucher?</strong><br>
+          Pilih paket di atas, lakukan pembayaran via QRIS, lalu kirim bukti ke WhatsApp admin untuk mendapatkan username & password.
         </div>
-        <form method="post" action="http://40.40.40.1/login">
-          <input type="text" name="username" value="anak" placeholder="Username" required>
-          <input type="password" name="password" value="rantau" placeholder="Password" required>
-          <input type="hidden" name="dst" value="https://anakrantau88.my.id">
-          <button type="submit">🎉 Mulai Internet Gratis</button>
-        </form>
       </div>
-      
     </div>
   </div>
   
@@ -1660,7 +1585,7 @@ body {
     2. Klik tombol "Bayar dengan QRIS"<br>
     3. Scan QR Code yang muncul<br>
     4. Bayar pakai GoPay, DANA, OVO, atau ShopeePay<br>
-    5. Kirim bukti ke WhatsApp Admin
+    5. Setelah bayar, kirim bukti ke WhatsApp Admin untuk mendapatkan voucher login
   </div>
 </div>
 
