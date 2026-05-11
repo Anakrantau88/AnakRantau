@@ -838,7 +838,7 @@ body {
 
 .kost-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
   margin-bottom: 20px;
 }
@@ -849,11 +849,35 @@ body {
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
 }
 
 .kost-item:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* Status Badge */
+.status-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: bold;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.status-tersedia {
+  background: #00aa6c;
+  color: white;
+}
+
+.status-habis {
+  background: #e53e3e;
+  color: white;
 }
 
 .kost-item-header {
@@ -948,6 +972,76 @@ body {
 
 .btn-kost:hover {
   background: #128C7E;
+}
+
+/* Admin Panel untuk Status Kost */
+.admin-status-panel {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f0f8ff;
+  border-radius: 10px;
+  border: 1px solid #0077cc;
+}
+
+.admin-status-panel h4 {
+  color: #0077cc;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-status-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.admin-status-btn {
+  background: #0077cc;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+.admin-status-btn:hover {
+  transform: scale(1.02);
+}
+
+.admin-status-btn.active-tersedia {
+  background: #00aa6c;
+}
+
+.admin-status-btn.active-habis {
+  background: #e53e3e;
+}
+
+.status-login-area {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.status-login-area input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.status-login-area button {
+  background: #0077cc;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 .kost-extra {
@@ -1482,7 +1576,6 @@ body {
   <p style="text-align: center; color: #555;">Mudah dijangkau, dekat dengan berbagai fasilitas umum</p>
   
   <div class="map-container">
-    <!-- Tampilan Google Maps dengan mode satellite (citra satelit) -->
     <iframe 
       src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=3.545927,98.875764&zoom=18&maptype=satellite"
       allowfullscreen="" 
@@ -1530,7 +1623,9 @@ body {
   </div>
   
   <div class="kost-grid">
-    <div class="kost-item nonac">
+    <!-- Kamar Non AC 1 Orang -->
+    <div class="kost-item nonac" id="kamar-nonac-1">
+      <div class="status-badge" id="status-nonac-1">✓ Tersedia</div>
       <div class="kost-item-header">
         <div class="kost-icon">🛏️</div>
         <div class="kost-type">Kamar Non AC</div>
@@ -1553,7 +1648,9 @@ body {
       </div>
     </div>
     
-    <div class="kost-item nonac dua">
+    <!-- Kamar Non AC Double 2 Orang -->
+    <div class="kost-item nonac dua" id="kamar-nonac-2">
+      <div class="status-badge" id="status-nonac-2">✓ Tersedia</div>
       <div class="kost-item-header">
         <div class="kost-icon">👥</div>
         <div class="kost-type">Kamar Non AC (Double)</div>
@@ -1576,7 +1673,9 @@ body {
       </div>
     </div>
     
-    <div class="kost-item ac">
+    <!-- Kamar AC 1 Orang -->
+    <div class="kost-item ac" id="kamar-ac-1">
+      <div class="status-badge" id="status-ac-1">✓ Tersedia</div>
       <div class="kost-item-header">
         <div class="kost-icon">❄️</div>
         <div class="kost-type">Kamar AC</div>
@@ -1599,7 +1698,9 @@ body {
       </div>
     </div>
     
-    <div class="kost-item ac dua">
+    <!-- Kamar AC Double 2 Orang -->
+    <div class="kost-item ac dua" id="kamar-ac-2">
+      <div class="status-badge" id="status-ac-2">✓ Tersedia</div>
       <div class="kost-item-header">
         <div class="kost-icon">👥❄️</div>
         <div class="kost-type">Kamar AC (Double)</div>
@@ -1620,6 +1721,28 @@ body {
         </div>
         <a href="https://wa.me/6282162115149?text=Halo%20Admin%20Anak%20Rantau,%20saya%20mau%20tanya%20kost%20AC%202%20orang" class="btn-kost">💬 Tanya Ketersediaan →</a>
       </div>
+    </div>
+  </div>
+  
+  <!-- Admin Panel untuk Update Status Kamar -->
+  <div class="admin-status-panel" id="adminStatusPanel">
+    <h4>🔧 Panel Admin - Update Status Ketersediaan Kamar</h4>
+    <div id="statusLoginArea" class="status-login-area">
+      <input type="password" id="statusPassword" placeholder="Masukkan Password Admin">
+      <button onclick="loginStatusAdmin()">Login Admin Status</button>
+    </div>
+    <div id="statusControlArea" style="display: none;">
+      <div class="admin-status-buttons">
+        <button class="admin-status-btn" onclick="updateStatus('nonac-1', 'tersedia')">🟢 Non AC (1) - Tersedia</button>
+        <button class="admin-status-btn" onclick="updateStatus('nonac-1', 'habis')">🔴 Non AC (1) - Habis</button>
+        <button class="admin-status-btn" onclick="updateStatus('nonac-2', 'tersedia')">🟢 Non AC Double - Tersedia</button>
+        <button class="admin-status-btn" onclick="updateStatus('nonac-2', 'habis')">🔴 Non AC Double - Habis</button>
+        <button class="admin-status-btn" onclick="updateStatus('ac-1', 'tersedia')">🟢 AC (1) - Tersedia</button>
+        <button class="admin-status-btn" onclick="updateStatus('ac-1', 'habis')">🔴 AC (1) - Habis</button>
+        <button class="admin-status-btn" onclick="updateStatus('ac-2', 'tersedia')">🟢 AC Double - Tersedia</button>
+        <button class="admin-status-btn" onclick="updateStatus('ac-2', 'habis')">🔴 AC Double - Habis</button>
+      </div>
+      <button onclick="logoutStatusAdmin()" style="margin-top: 10px; background: #e53e3e; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer;">🚪 Logout Panel Status</button>
     </div>
   </div>
   
@@ -1876,6 +1999,77 @@ body {
 </div>
 
 <script>
+// ========== STATUS KOST (TERSEDIA / HABIS) ==========
+// Password: Debat4
+
+// Data status awal (default semua tersedia)
+let statusKost = {
+  'nonac-1': 'tersedia',
+  'nonac-2': 'tersedia',
+  'ac-1': 'tersedia',
+  'ac-2': 'tersedia'
+};
+
+// Load status dari localStorage
+function loadStatusKost() {
+  const saved = localStorage.getItem('anakRantauStatusKost');
+  if (saved) {
+    statusKost = JSON.parse(saved);
+  }
+  updateAllStatusDisplay();
+}
+
+// Simpan status ke localStorage
+function saveStatusKost() {
+  localStorage.setItem('anakRantauStatusKost', JSON.stringify(statusKost));
+}
+
+// Update tampilan status untuk semua kamar
+function updateAllStatusDisplay() {
+  for (const [kamarId, status] of Object.entries(statusKost)) {
+    const badge = document.getElementById(`status-${kamarId}`);
+    if (badge) {
+      if (status === 'tersedia') {
+        badge.textContent = '✓ Tersedia';
+        badge.className = 'status-badge status-tersedia';
+      } else {
+        badge.textContent = '✗ Habis';
+        badge.className = 'status-badge status-habis';
+      }
+    }
+  }
+}
+
+// Update status oleh admin
+function updateStatus(kamarId, newStatus) {
+  if (typeof statusKost[kamarId] !== 'undefined') {
+    statusKost[kamarId] = newStatus;
+    saveStatusKost();
+    updateAllStatusDisplay();
+    alert(`✅ Status kamar berhasil diubah menjadi ${newStatus === 'tersedia' ? 'TERSEDIA' : 'HABIS'}`);
+  }
+}
+
+// Login admin status
+function loginStatusAdmin() {
+  const password = document.getElementById('statusPassword').value;
+  if (password === 'Debat4') {
+    document.getElementById('statusLoginArea').style.display = 'none';
+    document.getElementById('statusControlArea').style.display = 'block';
+    alert('✅ Login berhasil! Anda sekarang dapat mengubah status ketersediaan kamar.');
+  } else {
+    alert('❌ Password salah!');
+  }
+}
+
+// Logout admin status
+function logoutStatusAdmin() {
+  document.getElementById('statusLoginArea').style.display = 'flex';
+  document.getElementById('statusControlArea').style.display = 'none';
+  document.getElementById('statusPassword').value = '';
+  alert('🔒 Anda telah logout dari panel status.');
+}
+
 // ========== PWA (PROGRESSIVE WEB APP) ==========
 let deferredPrompt = null;
 let pwaInstallBanner = document.getElementById('pwaBanner');
@@ -1964,6 +2158,9 @@ function adminLogin() {
 }
 
 window.addEventListener('load', function() {
+    // Load status kamar dari localStorage
+    loadStatusKost();
+    
     if (localStorage.getItem('adminLoggedIn') === 'true') {
         document.getElementById('loginForm').style.display = 'none';
         document.getElementById('adminPanel').style.display = 'block';
