@@ -5,16 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Anak Rantau Lubuk Pakam - Kost, Hotspot, Travel & Tiket Pesawat</title>
 
-<!-- ========== PWA (PROGRESSIVE WEB APP) ========== -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0077cc">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Anak Rantau">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
-
 <!-- Meta Tag Dasar untuk SEO -->
 <meta name="description" content="Kost eksklusif dan hotspot ber voucher di Lubuk Pakam. Harga mulai Rp500.000/bulan. Tersedia kamar AC/Non AC. Fasilitas lengkap, lokasi strategis dekat sekolah.">
 <meta name="keywords" content="kost lubuk pakam, kost karyawan, kost pelajar, hotspot lubuk pakam, voucher wifi, sewa kost murah, kost dekat smu negeri 2 lubuk pakam">
@@ -33,11 +23,18 @@
 <meta name="twitter:description" content="Kost dan hotspot murah di Lubuk Pakam. Harga mulai Rp500.000.">
 <meta name="twitter:image" content="https://anakrantau88.my.id/logo.png">
 
-<!-- PDF Library (html2pdf) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- ========== PWA (PROGRESSIVE WEB APP) ========== -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0077cc">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Anak Rantau">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 
 <style>
-/* ========== SEMUA STYLE YANG SUDAH ADA ========== */
+/* ========== SEMUA STYLE ========== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 .hamburger { display: none; font-size: 25px; cursor: pointer; }
 @media (max-width: 768px) {
@@ -68,7 +65,6 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
 .location-address { background: #e8f4fd; padding: 12px; border-radius: 10px; margin-top: 10px; display: flex; align-items: center; gap: 10px; justify-content: center; flex-wrap: wrap; }
 .btn-copy-address { background: #0077cc; color: white; border: none; padding: 5px 12px; border-radius: 20px; cursor: pointer; font-size: 12px; }
 .warning-map { background: #fff3cd; border-left: 4px solid #ffc107; padding: 8px 12px; border-radius: 8px; margin-top: 10px; font-size: 12px; color: #856404; display: flex; align-items: center; gap: 8px; }
-.warning-map:before { content: "⚠️"; font-size: 14px; }
 .login-hotspot-container { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; }
 .login-hotspot-form { flex: 1; min-width: 280px; background: white; padding: 25px; border-radius: 15px; color: #333; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
 .login-hotspot-form h3 { text-align: center; margin-bottom: 20px; color: #667eea; }
@@ -181,21 +177,13 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
 .password-wrapper { position: relative; }
 .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; user-select: none; color: #667eea; font-size: 14px; background: white; padding: 0 5px; }
 
-/* PDF Print Styles */
-.invoice-pdf-container {
-  font-family: Arial, sans-serif;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 30px;
+/* Print Style untuk PDF */
+@media print {
+  body * { visibility: hidden; }
+  .print-invoice, .print-invoice * { visibility: visible; }
+  .print-invoice { position: absolute; top: 0; left: 0; width: 100%; padding: 20px; }
+  .no-print { display: none; }
 }
-.invoice-pdf-container .invoice-header-pdf { text-align: center; border-bottom: 3px solid #667eea; padding-bottom: 15px; margin-bottom: 20px; }
-.invoice-pdf-container .invoice-header-pdf h2 { color: #667eea; margin: 0; font-size: 28px; }
-.invoice-pdf-container .invoice-header-pdf p { margin: 5px 0; font-size: 14px; color: #666; }
-.invoice-pdf-container .status-badge-pdf { text-align: center; margin: 15px 0; }
-.invoice-pdf-container .status-badge-pdf span { background: #48bb78; color: white; padding: 6px 20px; border-radius: 20px; display: inline-block; }
-.invoice-pdf-container .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #ddd; }
-.invoice-pdf-container .detail-row.total { border-top: 3px solid #667eea; border-bottom: none; margin-top: 10px; padding-top: 15px; font-weight: bold; font-size: 18px; color: #667eea; }
-.invoice-pdf-container .footer-pdf { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 11px; color: #666; }
 </style>
 </head>
 
@@ -254,7 +242,7 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
     <input type="password" id="downloadLunasPassword" placeholder="Masukkan Password Download">
     <button onclick="verifyDownloadPassword()" style="background:#0077cc; color:white; border:none; padding:8px 20px; border-radius:8px; cursor:pointer;">Verifikasi</button>
   </div>
-  <div id="downloadSuccessMsg" style="display:none; text-align:center; color:#00aa6c; margin-top:10px; font-size:12px;">✅ Password benar! Klik tombol Download pada invoice.</div>
+  <div id="downloadSuccessMsg" style="display:none; text-align:center; color:#00aa6c; margin-top:10px; font-size:12px;">✅ Password benar! Klik tombol Download PDF pada invoice.</div>
 </div>
 
 <div class="card kost-card" id="kost">
@@ -491,7 +479,7 @@ function sendInvoiceToGroup() {
   window.open(`https://wa.me/6282162115149?text=${pesan}`, '_blank');
 }
 
-// ========== INVOICE LUNAS UNTUK PENGUNJUNG (PDF DOWNLOAD) ==========
+// ========== INVOICE LUNAS UNTUK PENGUNJUNG (PDF DOWNLOAD dengan PRINT) ==========
 function loadInvoiceLunas() {
   const container = document.getElementById('invoiceLunasList');
   const invoicesLunas = savedInvoices.filter(inv => inv.status === 'Sudah Dibayar');
@@ -511,7 +499,6 @@ function verifyDownloadPassword() {
   if (pwd === 'Riank') {
     isPasswordVerified = true;
     document.getElementById('downloadSuccessMsg').style.display = 'block';
-    // Enable all download buttons
     for (let i = 0; i < window.lunasInvoices.length; i++) {
       const btn = document.getElementById(`downloadBtn-${i}`);
       if (btn) {
@@ -533,53 +520,69 @@ function downloadInvoiceAsPDF(index) {
   }
   const inv = window.lunasInvoices[index];
   
-  // Create PDF content HTML
-  const pdfContent = `
-    <div class="invoice-pdf-container">
-      <div class="invoice-header-pdf">
-        <h2>ANAK RANTAU LUBUK PAKAM</h2>
-        <p>Kost, Hotspot & Travel</p>
-        <p>📞 082162115149 | ✉️ anakrantaulubukpakam@gmail.com</p>
-      </div>
-      <div class="status-badge-pdf">
-        <span>✅ SUDAH DIBAYAR LUNAS</span>
-      </div>
-      <div class="detail-row"><strong>No. Invoice:</strong> <span>${inv.no}</span></div>
-      <div class="detail-row"><strong>Tanggal Transaksi:</strong> <span>${inv.tanggal}</span></div>
-      <div class="detail-row"><strong>Layanan:</strong> <span>${inv.layanan}</span></div>
-      <div class="detail-row"><strong>Pelanggan / Kamar:</strong> <span>${inv.nama}</span></div>
-      <div class="detail-row"><strong>Detail Transaksi:</strong> <span>${inv.keterangan}</span></div>
-      <div class="detail-row total"><strong>Total Pembayaran:</strong> <span>Rp ${inv.jumlahFormatted}</span></div>
-      <div class="footer-pdf">
-        <p><strong>⚠️ Peringatan Penting</strong><br>Pembayaran resmi hanya melalui rekening Bank Mandiri<br>1050014328318 a.n. Erikson Sibagariang</p>
-        <p>Terima kasih telah menggunakan layanan kami 🙏</p>
-        <p style="margin-top:15px;">Dicetak pada: ${new Date().toLocaleString('id-ID')}</p>
-      </div>
-    </div>
-  `;
+  // Buat konten HTML untuk PDF
+  const printContent = `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Invoice ${inv.no}</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Arial', sans-serif; padding: 40px; background: white; }
+  .invoice-container { max-width: 800px; margin: 0 auto; background: white; }
+  .header { text-align: center; border-bottom: 3px solid #667eea; padding-bottom: 15px; margin-bottom: 20px; }
+  .header h2 { color: #667eea; margin: 0 0 5px 0; font-size: 28px; }
+  .header p { color: #666; margin: 5px 0; font-size: 14px; }
+  .status-badge { text-align: center; margin: 20px 0; }
+  .status-badge span { background: #48bb78; color: white; padding: 8px 25px; border-radius: 25px; display: inline-block; font-weight: bold; }
+  .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #ddd; font-size: 14px; }
+  .detail-row.total { border-top: 3px solid #667eea; border-bottom: none; margin-top: 10px; padding-top: 15px; font-weight: bold; font-size: 18px; color: #667eea; }
+  .footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 11px; color: #666; }
+  .bank-info { background: #f0f8ff; padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center; font-size: 13px; }
+  .bank-info strong { color: #0077cc; }
+  @media print {
+    body { padding: 0; margin: 0; }
+    .no-print { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="invoice-container">
+  <div class="header">
+    <h2>ANAK RANTAU LUBUK PAKAM</h2>
+    <p>Kost, Hotspot & Travel</p>
+    <p>📞 082162115149 | ✉️ anakrantaulubukpakam@gmail.com</p>
+  </div>
+  <div class="status-badge">
+    <span>✅ SUDAH DIBAYAR LUNAS</span>
+  </div>
+  <div class="detail-row"><strong>No. Invoice:</strong> <span>${inv.no}</span></div>
+  <div class="detail-row"><strong>Tanggal Transaksi:</strong> <span>${inv.tanggal}</span></div>
+  <div class="detail-row"><strong>Layanan:</strong> <span>${inv.layanan}</span></div>
+  <div class="detail-row"><strong>Pelanggan / Kamar:</strong> <span>${inv.nama}</span></div>
+  <div class="detail-row"><strong>Detail Transaksi:</strong> <span>${inv.keterangan}</span></div>
+  <div class="detail-row total"><strong>Total Pembayaran:</strong> <span>Rp ${inv.jumlahFormatted}</span></div>
+  <div class="bank-info">
+    <strong>⚠️ Peringatan Penting</strong><br>
+    Pembayaran resmi hanya melalui rekening Bank Mandiri<br>
+    <strong>1050014328318</strong> a.n. <strong>Erikson Sibagariang</strong>
+  </div>
+  <div class="footer">
+    <p>Terima kasih telah menggunakan layanan kami 🙏</p>
+    <p style="margin-top:10px;">Dicetak pada: ${new Date().toLocaleString('id-ID')}</p>
+  </div>
+</div>
+<script>
+  window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 500); };
+<\/script>
+</body>
+</html>`;
 
-  // Create temporary div for PDF generation
-  const element = document.createElement('div');
-  element.innerHTML = pdfContent;
-  element.style.position = 'absolute';
-  element.style.left = '-9999px';
-  element.style.top = '-9999px';
-  document.body.appendChild(element);
-
-  // Generate PDF
-  html2pdf().set({
-    margin: [0.5, 0.5, 0.5, 0.5],
-    filename: `Invoice_${inv.no}.pdf`,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, letterRendering: true },
-    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-  }).from(element).save().then(() => {
-    document.body.removeChild(element);
-  }).catch(err => {
-    console.error('PDF Error:', err);
-    document.body.removeChild(element);
-    alert('❌ Gagal membuat PDF. Silakan coba lagi.');
-  });
+  // Buka jendela baru untuk print/save as PDF
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(printContent);
+  printWindow.document.close();
 }
 
 // ========== OTHER FUNCTIONS ==========
