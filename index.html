@@ -33,6 +33,9 @@
 <meta name="twitter:description" content="Kost dan hotspot murah di Lubuk Pakam. Harga mulai Rp500.000.">
 <meta name="twitter:image" content="https://anakrantau88.my.id/logo.png">
 
+<!-- PDF Library (html2pdf) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <style>
 /* ========== SEMUA STYLE YANG SUDAH ADA ========== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -177,6 +180,22 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
 .youtube-caption { text-align: center; font-weight: bold; margin-top: 8px; color: #0077cc; }
 .password-wrapper { position: relative; }
 .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; user-select: none; color: #667eea; font-size: 14px; background: white; padding: 0 5px; }
+
+/* PDF Print Styles */
+.invoice-pdf-container {
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 30px;
+}
+.invoice-pdf-container .invoice-header-pdf { text-align: center; border-bottom: 3px solid #667eea; padding-bottom: 15px; margin-bottom: 20px; }
+.invoice-pdf-container .invoice-header-pdf h2 { color: #667eea; margin: 0; font-size: 28px; }
+.invoice-pdf-container .invoice-header-pdf p { margin: 5px 0; font-size: 14px; color: #666; }
+.invoice-pdf-container .status-badge-pdf { text-align: center; margin: 15px 0; }
+.invoice-pdf-container .status-badge-pdf span { background: #48bb78; color: white; padding: 6px 20px; border-radius: 20px; display: inline-block; }
+.invoice-pdf-container .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #ddd; }
+.invoice-pdf-container .detail-row.total { border-top: 3px solid #667eea; border-bottom: none; margin-top: 10px; padding-top: 15px; font-weight: bold; font-size: 18px; color: #667eea; }
+.invoice-pdf-container .footer-pdf { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 11px; color: #666; }
 </style>
 </head>
 
@@ -233,8 +252,9 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
   <div id="invoiceLunasList" style="margin-top: 15px;"><div class="loading">⏳ Memuat invoice lunas...</div></div>
   <div class="download-password-area" id="downloadPasswordArea" style="display:none;">
     <input type="password" id="downloadLunasPassword" placeholder="Masukkan Password Download">
-    <button onclick="showDownloadButtons()" style="background:#0077cc; color:white; border:none; padding:8px 20px; border-radius:8px; cursor:pointer;">Verifikasi</button>
+    <button onclick="verifyDownloadPassword()" style="background:#0077cc; color:white; border:none; padding:8px 20px; border-radius:8px; cursor:pointer;">Verifikasi</button>
   </div>
+  <div id="downloadSuccessMsg" style="display:none; text-align:center; color:#00aa6c; margin-top:10px; font-size:12px;">✅ Password benar! Klik tombol Download pada invoice.</div>
 </div>
 
 <div class="card kost-card" id="kost">
@@ -377,6 +397,7 @@ function logoutStatusAdmin() { document.getElementById('statusLoginArea').style.
 // ========== INVOICE SYSTEM ==========
 let savedInvoices = JSON.parse(localStorage.getItem('anakRantauInvoices') || '[]');
 let currentAdminInvoiceData = null;
+let isPasswordVerified = false;
 
 function togglePassword() { const pwd = document.getElementById('loginPassword'); const btn = document.querySelector('.toggle-password'); if (pwd.type === 'password') { pwd.type = 'text'; btn.textContent = '🙈'; } else { pwd.type = 'password'; btn.textContent = '👁️'; } }
 
@@ -470,7 +491,7 @@ function sendInvoiceToGroup() {
   window.open(`https://wa.me/6282162115149?text=${pesan}`, '_blank');
 }
 
-// ========== INVOICE LUNAS UNTUK PENGUNJUNG ==========
+// ========== INVOICE LUNAS UNTUK PENGUNJUNG (PDF DOWNLOAD) ==========
 function loadInvoiceLunas() {
   const container = document.getElementById('invoiceLunasList');
   const invoicesLunas = savedInvoices.filter(inv => inv.status === 'Sudah Dibayar');
@@ -479,43 +500,87 @@ function loadInvoiceLunas() {
   let html = '';
   for (let i = 0; i < invoicesLunas.length; i++) {
     const inv = invoicesLunas[i];
-    html += `<div class="invoice-lunas-item" id="lunas-item-${i}"><div><div><strong class="inv-no">${inv.no}</strong></div><div style="font-size:12px;">📅 ${inv.tanggal} | 👤 ${inv.nama} | ${inv.layanan}</div><div style="font-size:13px; font-weight:bold; color:#2e7d32;">💰 Rp ${inv.jumlahFormatted}</div><div><span class="status-paid" style="font-size:11px;">${inv.status}</span></div></div><div><button class="download-lunas-btn" onclick="prepareDownloadLunas(${i})">📥 Download</button></div></div>`;
+    html += `<div class="invoice-lunas-item" data-inv-index="${i}"><div><div><strong class="inv-no">${inv.no}</strong></div><div style="font-size:12px;">📅 ${inv.tanggal} | 👤 ${inv.nama} | ${inv.layanan}</div><div style="font-size:13px; font-weight:bold; color:#2e7d32;">💰 Rp ${inv.jumlahFormatted}</div><div><span class="status-paid" style="font-size:11px;">${inv.status}</span></div></div><div><button class="download-lunas-btn" onclick="downloadInvoiceAsPDF(${i})" id="downloadBtn-${i}" disabled style="opacity:0.5;">📥 Download PDF</button></div></div>`;
   }
   container.innerHTML = html;
   window.lunasInvoices = invoicesLunas;
 }
 
-function prepareDownloadLunas(index) {
+function verifyDownloadPassword() {
   const pwd = document.getElementById('downloadLunasPassword').value;
-  if (pwd !== 'Riank') { alert('❌ Password salah! Gunakan password: Riank'); return; }
-  downloadLunasInvoice(index);
+  if (pwd === 'Riank') {
+    isPasswordVerified = true;
+    document.getElementById('downloadSuccessMsg').style.display = 'block';
+    // Enable all download buttons
+    for (let i = 0; i < window.lunasInvoices.length; i++) {
+      const btn = document.getElementById(`downloadBtn-${i}`);
+      if (btn) {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+      }
+    }
+    alert('✅ Password benar! Silakan klik tombol Download PDF pada invoice yang ingin diunduh.');
+  } else {
+    alert('❌ Password salah! Gunakan password: Riank');
+  }
 }
 
-function downloadLunasInvoice(index) {
+function downloadInvoiceAsPDF(index) {
+  if (!isPasswordVerified) {
+    alert('⚠️ Silakan masukkan password terlebih dahulu!');
+    return;
+  }
   const inv = window.lunasInvoices[index];
-  const statusBadge = '<span style="background:#48bb78; color:white; padding:4px 12px; border-radius:20px;">✅ SUDAH DIBAYAR</span>';
-  const htmlContent = `
-    <!DOCTYPE html><html><head><title>Invoice ${inv.no}</title><style>
-      body { font-family: Arial, sans-serif; padding: 40px; } .invoice { max-width: 800px; margin: 0 auto; border: 1px solid #ddd; padding: 30px; border-radius: 10px; }
-      .header { text-align: center; border-bottom: 3px solid #667eea; padding-bottom: 15px; margin-bottom: 20px; }
-      .header h2 { color: #667eea; margin: 0; } .row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #ddd; }
-      .total { border-top: 3px solid #667eea; border-bottom: none; margin-top: 10px; padding-top: 15px; font-weight: bold; font-size: 20px; color: #667eea; }
-      .footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; }
-    </style></head><body>
-    <div class="invoice"><div class="header"><h2>ANAK RANTAU LUBUK PAKAM</h2><p>Kost, Hotspot & Travel</p></div>
-    <div style="text-align:center; margin-bottom:15px;">${statusBadge}</div>
-    <div class="row"><strong>No. Invoice:</strong> <span>${inv.no}</span></div>
-    <div class="row"><strong>Tanggal:</strong> <span>${inv.tanggal}</span></div>
-    <div class="row"><strong>Layanan:</strong> <span>${inv.layanan}</span></div>
-    <div class="row"><strong>Pelanggan:</strong> <span>${inv.nama}</span></div>
-    <div class="row"><strong>Detail Transaksi:</strong> <span>${inv.keterangan}</span></div>
-    <div class="row total"><strong>Total Pembayaran:</strong> <span>Rp ${inv.jumlahFormatted}</span></div>
-    <div class="footer"><p>⚠️ Pembayaran resmi hanya melalui Bank Mandiri 1050014328318 a.n. Erikson Sibagariang</p><p>Terima kasih 🙏</p></div></div>
-    <script>window.print();<\/script></body></html>`;
-  const blob = new Blob([htmlContent], {type: 'text/html'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `Invoice_${inv.no}.html`; a.click(); URL.revokeObjectURL(url);
-}
+  
+  // Create PDF content HTML
+  const pdfContent = `
+    <div class="invoice-pdf-container">
+      <div class="invoice-header-pdf">
+        <h2>ANAK RANTAU LUBUK PAKAM</h2>
+        <p>Kost, Hotspot & Travel</p>
+        <p>📞 082162115149 | ✉️ anakrantaulubukpakam@gmail.com</p>
+      </div>
+      <div class="status-badge-pdf">
+        <span>✅ SUDAH DIBAYAR LUNAS</span>
+      </div>
+      <div class="detail-row"><strong>No. Invoice:</strong> <span>${inv.no}</span></div>
+      <div class="detail-row"><strong>Tanggal Transaksi:</strong> <span>${inv.tanggal}</span></div>
+      <div class="detail-row"><strong>Layanan:</strong> <span>${inv.layanan}</span></div>
+      <div class="detail-row"><strong>Pelanggan / Kamar:</strong> <span>${inv.nama}</span></div>
+      <div class="detail-row"><strong>Detail Transaksi:</strong> <span>${inv.keterangan}</span></div>
+      <div class="detail-row total"><strong>Total Pembayaran:</strong> <span>Rp ${inv.jumlahFormatted}</span></div>
+      <div class="footer-pdf">
+        <p><strong>⚠️ Peringatan Penting</strong><br>Pembayaran resmi hanya melalui rekening Bank Mandiri<br>1050014328318 a.n. Erikson Sibagariang</p>
+        <p>Terima kasih telah menggunakan layanan kami 🙏</p>
+        <p style="margin-top:15px;">Dicetak pada: ${new Date().toLocaleString('id-ID')}</p>
+      </div>
+    </div>
+  `;
 
-function showDownloadButtons() { const pwd = document.getElementById('downloadLunasPassword').value; if (pwd !== 'Riank') { alert('❌ Password salah!'); } else { alert('✅ Password benar! Silakan klik tombol Download pada invoice yang ingin diunduh.'); } }
+  // Create temporary div for PDF generation
+  const element = document.createElement('div');
+  element.innerHTML = pdfContent;
+  element.style.position = 'absolute';
+  element.style.left = '-9999px';
+  element.style.top = '-9999px';
+  document.body.appendChild(element);
+
+  // Generate PDF
+  html2pdf().set({
+    margin: [0.5, 0.5, 0.5, 0.5],
+    filename: `Invoice_${inv.no}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, letterRendering: true },
+    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+  }).from(element).save().then(() => {
+    document.body.removeChild(element);
+  }).catch(err => {
+    console.error('PDF Error:', err);
+    document.body.removeChild(element);
+    alert('❌ Gagal membuat PDF. Silakan coba lagi.');
+  });
+}
 
 // ========== OTHER FUNCTIONS ==========
 function copyAddress() { navigator.clipboard.writeText("Kost Anak Rantau Lubuk Pakam - Koordinat: 3.545927, 98.875764").then(()=>alert("✅ Alamat disalin!")); }
