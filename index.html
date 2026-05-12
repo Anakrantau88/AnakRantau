@@ -149,8 +149,8 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
 .btn-invoice-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
 .btn-send-wa { background: #25D366; }
 .btn-send-group { background: #075e54; }
+.btn-edit-invoice { background: #ff9800; }
 .invoice-preview-admin { background: white; border-radius: 12px; padding: 20px; margin-top: 20px; color: #333; display: none; }
-/* Perbaikan posisi header invoice: logo kiri, judul tengah, kontak kanan */
 .invoice-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #667eea; padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; }
 .invoice-logo-area { display: flex; align-items: center; gap: 15px; flex: 1; }
 .invoice-logo { width: 60px; height: auto; }
@@ -167,7 +167,9 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
 .invoice-item .inv-info { flex: 1; cursor: pointer; }
 .invoice-item .inv-no { font-weight: bold; color: #667eea; }
 .invoice-item .inv-actions { display: flex; gap: 8px; }
+.edit-invoice-btn { background: #ff9800; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
 .delete-invoice-btn { background: #e53e3e; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+.send-wa-invoice-btn { background: #25D366; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
 .status-paid { background: #48bb78; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; display: inline-block; }
 .status-unpaid { background: #ed8936; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; display: inline-block; }
 .invoice-lunas-card { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border: 1px solid #4caf50; }
@@ -276,8 +278,11 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
   </div>
   <div id="adminPanel" class="invoice-admin-panel">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;"><h3>📋 Dashboard Admin</h3><button class="btn-invoice" onclick="adminLogout()" style="background:#e53e3e;">🚪 Logout</button></div>
+    
+    <!-- Form Buat/Edit Invoice -->
     <div class="invoice-form-admin">
-      <h3>📝 Buat Invoice Baru</h3>
+      <h3 id="formTitle">📝 Buat Invoice Baru</h3>
+      <input type="hidden" id="editInvoiceIndex" value="-1">
       <label>📌 Tipe Layanan</label>
       <select id="adminInvoiceLayanan">
         <option value="Kost">🏠 Kost</option>
@@ -312,11 +317,13 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
       <label>✅ Status Pembayaran</label>
       <select id="adminInvoiceStatus"><option value="Belum Dibayar">⏳ Belum Dibayar</option><option value="Sudah Dibayar">✅ Sudah Dibayar</option><option value="Pending">🔄 Pending</option></select>
       <div class="btn-invoice-group">
-        <button class="btn-invoice" onclick="buatInvoiceAdmin()">📄 Buat & Simpan Invoice</button>
-        <button class="btn-invoice btn-send-wa" onclick="sendInvoiceToWA()">💬 Kirim ke WA Pelanggan</button>
-        <button class="btn-invoice btn-send-group" onclick="sendInvoiceToGroup()">📢 Kirim ke Group WA Kost Anak Rantau</button>
+        <button class="btn-invoice" onclick="simpanInvoice()">📄 Simpan Invoice</button>
+        <button class="btn-invoice btn-send-wa" onclick="sendInvoiceToWAPelanggan()">💬 Kirim ke WA Pelanggan</button>
+        <button class="btn-invoice btn-send-group" onclick="sendInvoiceToGroup()">📢 Kirim ke Group WA</button>
+        <button class="btn-invoice" onclick="cancelEdit()" id="cancelEditBtn" style="display:none; background:#999;">✖ Batal Edit</button>
       </div>
     </div>
+    
     <div id="adminInvoicePreview" class="invoice-preview-admin"></div>
     <div class="list-invoice"><h3>📋 Daftar Invoice Tersimpan</h3><div id="savedInvoicesList"><p style="color:gray; text-align:center;">Belum ada invoice tersimpan</p></div></div>
   </div>
@@ -409,7 +416,8 @@ function adminLogin() {
 
 function adminLogout() { localStorage.removeItem('adminLoggedIn'); document.getElementById('loginForm').style.display = 'block'; document.getElementById('adminPanel').style.display = 'none'; document.getElementById('adminInvoicePreview').style.display = 'none'; }
 
-function buatInvoiceAdmin() {
+function simpanInvoice() {
+  const editIndex = parseInt(document.getElementById('editInvoiceIndex').value);
   const nama = document.getElementById('adminInvoiceNama').value;
   const nowa = document.getElementById('adminInvoiceNoWA').value.trim();
   const jumlah = document.getElementById('adminInvoiceJumlah').value;
@@ -417,30 +425,78 @@ function buatInvoiceAdmin() {
   const keterangan = document.getElementById('adminInvoiceKeterangan').value.trim() || '-';
   const tanggal = document.getElementById('adminInvoiceTanggal').value;
   const status = document.getElementById('adminInvoiceStatus').value;
+  
   if (!nama || !jumlah || !tanggal) { alert('⚠️ Mohon isi Nama/Kamar, Jumlah, dan Tanggal!'); return; }
-  const invNo = 'INV/AR/' + new Date().getFullYear() + '/' + String(Math.floor(Math.random() * 10000)).padStart(4, '0');
+  
   const jumlahFormatted = new Intl.NumberFormat('id-ID').format(jumlah);
-  currentAdminInvoiceData = { no: invNo, tanggal, layanan, nama, nowa, keterangan, jumlah, jumlahFormatted, status, createdAt: new Date().toISOString() };
-  savedInvoices.unshift(currentAdminInvoiceData);
+  
+  if (editIndex >= 0 && editIndex < savedInvoices.length) {
+    // Edit existing invoice
+    savedInvoices[editIndex] = { 
+      ...savedInvoices[editIndex],
+      tanggal, layanan, nama, nowa, keterangan, jumlah, jumlahFormatted, status
+    };
+    alert('✅ Invoice berhasil diupdate!');
+    cancelEdit();
+  } else {
+    // Create new invoice
+    const invNo = 'INV/AR/' + new Date().getFullYear() + '/' + String(Math.floor(Math.random() * 10000)).padStart(4, '0');
+    const newInvoice = { no: invNo, tanggal, layanan, nama, nowa, keterangan, jumlah, jumlahFormatted, status, createdAt: new Date().toISOString() };
+    savedInvoices.unshift(newInvoice);
+    currentAdminInvoiceData = newInvoice;
+    alert('✅ Invoice berhasil disimpan!\nNomor Invoice: ' + invNo);
+  }
+  
   localStorage.setItem('anakRantauInvoices', JSON.stringify(savedInvoices));
-  updateInvoicePreview(currentAdminInvoiceData);
+  updateInvoicePreview(currentAdminInvoiceData || savedInvoices[editIndex >=0 ? editIndex : 0]);
   document.getElementById('adminInvoicePreview').style.display = 'block';
   loadSavedInvoicesList();
   loadInvoiceLunas();
+  clearForm();
+}
+
+function editInvoice(index) {
+  const inv = savedInvoices[index];
+  document.getElementById('editInvoiceIndex').value = index;
+  document.getElementById('formTitle').innerHTML = '✏️ Edit Invoice';
+  document.getElementById('adminInvoiceLayanan').value = inv.layanan;
+  document.getElementById('adminInvoiceNama').value = inv.nama;
+  document.getElementById('adminInvoiceNoWA').value = inv.nowa || '';
+  document.getElementById('adminInvoiceJumlah').value = inv.jumlah;
+  document.getElementById('adminInvoiceKeterangan').value = inv.keterangan;
+  document.getElementById('adminInvoiceTanggal').value = inv.tanggal;
+  document.getElementById('adminInvoiceStatus').value = inv.status;
+  document.getElementById('cancelEditBtn').style.display = 'inline-block';
+  updateInvoicePreview(inv);
+  document.getElementById('adminInvoicePreview').style.display = 'block';
+  currentAdminInvoiceData = inv;
+  window.scrollTo({ top: document.getElementById('invoiceAdmin').offsetTop, behavior: 'smooth' });
+}
+
+function cancelEdit() {
+  document.getElementById('editInvoiceIndex').value = '-1';
+  document.getElementById('formTitle').innerHTML = '📝 Buat Invoice Baru';
+  document.getElementById('cancelEditBtn').style.display = 'none';
+  clearForm();
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('adminInvoiceTanggal').value = today;
+}
+
+function clearForm() {
   document.getElementById('adminInvoiceNama').value = '';
   document.getElementById('adminInvoiceNoWA').value = '';
   document.getElementById('adminInvoiceJumlah').value = '';
   document.getElementById('adminInvoiceKeterangan').value = '';
-  alert('✅ Invoice berhasil disimpan!\nNomor Invoice: ' + invNo);
+  document.getElementById('adminInvoiceStatus').value = 'Belum Dibayar';
 }
 
 function updateInvoicePreview(data) {
+  if (!data) return;
   const statusBadge = data.status === 'Sudah Dibayar' ? '<span class="status-paid">✅ SUDAH DIBAYAR</span>' : (data.status === 'Pending' ? '<span class="status-unpaid">🔄 PENDING</span>' : '<span class="status-unpaid">⏳ BELUM DIBAYAR</span>');
-  // Menambahkan QR Code untuk URL Website
   const qrCodeDivId = `qrcode-${Date.now()}`;
   setTimeout(() => {
     const qrContainer = document.getElementById(qrCodeDivId);
-    if (qrContainer) {
+    if (qrContainer && typeof QRCode !== 'undefined') {
       qrContainer.innerHTML = "";
       new QRCode(qrContainer, {
         text: "https://anakrantau88.my.id",
@@ -469,7 +525,7 @@ function updateInvoicePreview(data) {
     </div>
     <div style="text-align:center; margin-bottom:15px;">${statusBadge}</div>
     <div class="invoice-details">
-      <div class="invoice-row"><strong>No. Invoice:</strong> <span>${data.no}</span></div>
+      <div class="invoice-row"><strong>No. Invoice:</strong> <span>${data.no || '-'}</span></div>
       <div class="invoice-row"><strong>Tanggal:</strong> <span>${data.tanggal}</span></div>
       <div class="invoice-row"><strong>Layanan:</strong> <span>${data.layanan}</span></div>
       <div class="invoice-row"><strong>Pelanggan:</strong> <span>${data.nama}</span></div>
@@ -496,29 +552,70 @@ function loadSavedInvoicesList() {
     const inv = savedInvoices[i];
     const statusClass = inv.status === 'Sudah Dibayar' ? 'status-paid' : 'status-unpaid';
     const statusText = inv.status === 'Sudah Dibayar' ? 'Lunas' : (inv.status === 'Pending' ? 'Pending' : 'Belum Bayar');
-    html += `<div class="invoice-item"><div class="inv-info" onclick="viewSavedInvoice(${i})"><div><strong class="inv-no">${inv.no}</strong></div><div style="font-size:12px;">${inv.tanggal} | ${inv.nama} | Rp ${inv.jumlahFormatted}<span class="${statusClass}" style="margin-left:8px; padding:2px 8px;">${statusText}</span></div></div><div class="inv-actions"><button class="delete-invoice-btn" onclick="event.stopPropagation(); deleteInvoice(${i})">🗑️ Hapus</button></div></div>`;
+    html += `<div class="invoice-item">
+      <div class="inv-info" onclick="viewSavedInvoice(${i})">
+        <div><strong class="inv-no">${inv.no}</strong></div>
+        <div style="font-size:12px;">${inv.tanggal} | ${inv.nama} | Rp ${inv.jumlahFormatted}<span class="${statusClass}" style="margin-left:8px; padding:2px 8px;">${statusText}</span></div>
+      </div>
+      <div class="inv-actions">
+        <button class="edit-invoice-btn" onclick="event.stopPropagation(); editInvoice(${i})">✏️ Edit</button>
+        <button class="send-wa-invoice-btn" onclick="event.stopPropagation(); sendInvoiceToNumber('${inv.nowa || ''}', ${i})">💬 Kirim WA</button>
+        <button class="delete-invoice-btn" onclick="event.stopPropagation(); deleteInvoice(${i})">🗑️ Hapus</button>
+      </div>
+    </div>`;
   }
   container.innerHTML = html;
 }
 
 function viewSavedInvoice(index) { const inv = savedInvoices[index]; updateInvoicePreview(inv); document.getElementById('adminInvoicePreview').style.display = 'block'; currentAdminInvoiceData = inv; }
+
 function deleteInvoice(index) { if (confirm('Hapus invoice ini?')) { savedInvoices.splice(index,1); localStorage.setItem('anakRantauInvoices',JSON.stringify(savedInvoices)); loadSavedInvoicesList(); loadInvoiceLunas(); if (currentAdminInvoiceData && savedInvoices.indexOf(currentAdminInvoiceData)===-1) { document.getElementById('adminInvoicePreview').style.display='none'; currentAdminInvoiceData=null; } } }
 
-function sendInvoiceToWA() {
-  if (!currentAdminInvoiceData) { alert('⚠️ Buat atau pilih invoice terlebih dahulu!'); return; }
-  let no = currentAdminInvoiceData.nowa.replace(/\D/g,'');
-  if (!no) { alert('⚠️ Nomor WA pelanggan belum diisi!'); return; }
+function sendInvoiceToNumber(noWa, index) {
+  const inv = savedInvoices[index];
+  if (!inv) return;
+  let no = (noWa || inv.nowa || '').replace(/\D/g,'');
+  if (!no) { alert('⚠️ Nomor WA pelanggan belum diisi! Silakan edit invoice dan isi nomor WA.'); return; }
   if (no.startsWith('0')) no = '62' + no.substring(1);
   if (!no.startsWith('62')) no = '62' + no;
-  const statusText = currentAdminInvoiceData.status === 'Sudah Dibayar' ? '✅ LUNAS' : (currentAdminInvoiceData.status === 'Pending' ? '🔄 PENDING' : '⏳ BELUM DIBAYAR');
-  const pesan = `*🧾 INVOICE ANAK RANTAU LUBUK PAKAM*%0A%0A*No. Invoice:* ${currentAdminInvoiceData.no}%0A*Tanggal:* ${currentAdminInvoiceData.tanggal}%0A*Layanan:* ${currentAdminInvoiceData.layanan}%0A*Pelanggan:* ${currentAdminInvoiceData.nama}%0A*Total:* Rp ${currentAdminInvoiceData.jumlahFormatted}%0A*Status:* ${statusText}%0A%0A⚠️ Pembayaran resmi hanya melalui Bank Mandiri 1050014328318 a.n. Erikson Sibagariang`;
+  const statusText = inv.status === 'Sudah Dibayar' ? '✅ LUNAS' : (inv.status === 'Pending' ? '🔄 PENDING' : '⏳ BELUM DIBAYAR');
+  const pesan = `*🧾 INVOICE ANAK RANTAU LUBUK PAKAM*%0A%0A*No. Invoice:* ${inv.no}%0A*Tanggal:* ${inv.tanggal}%0A*Layanan:* ${inv.layanan}%0A*Pelanggan:* ${inv.nama}%0A*Total:* Rp ${inv.jumlahFormatted}%0A*Status:* ${statusText}%0A%0A⚠️ Pembayaran resmi hanya melalui Bank Mandiri 1050014328318 a.n. Erikson Sibagariang%0A%0ATerima kasih telah menggunakan layanan kami 🙏`;
+  window.open(`https://wa.me/${no}?text=${pesan}`, '_blank');
+}
+
+function sendInvoiceToWAPelanggan() {
+  const editIndex = parseInt(document.getElementById('editInvoiceIndex').value);
+  let inv;
+  if (editIndex >= 0 && editIndex < savedInvoices.length) {
+    inv = savedInvoices[editIndex];
+  } else if (currentAdminInvoiceData) {
+    inv = currentAdminInvoiceData;
+  } else {
+    alert('⚠️ Tidak ada invoice yang dipilih! Buat atau pilih invoice terlebih dahulu.');
+    return;
+  }
+  let no = (inv.nowa || '').replace(/\D/g,'');
+  if (!no) { alert('⚠️ Nomor WA pelanggan belum diisi! Silakan isi nomor WA pada form.'); return; }
+  if (no.startsWith('0')) no = '62' + no.substring(1);
+  if (!no.startsWith('62')) no = '62' + no;
+  const statusText = inv.status === 'Sudah Dibayar' ? '✅ LUNAS' : (inv.status === 'Pending' ? '🔄 PENDING' : '⏳ BELUM DIBAYAR');
+  const pesan = `*🧾 INVOICE ANAK RANTAU LUBUK PAKAM*%0A%0A*No. Invoice:* ${inv.no}%0A*Tanggal:* ${inv.tanggal}%0A*Layanan:* ${inv.layanan}%0A*Pelanggan:* ${inv.nama}%0A*Total:* Rp ${inv.jumlahFormatted}%0A*Status:* ${statusText}%0A%0A⚠️ Pembayaran resmi hanya melalui Bank Mandiri 1050014328318 a.n. Erikson Sibagariang%0A%0ATerima kasih telah menggunakan layanan kami 🙏`;
   window.open(`https://wa.me/${no}?text=${pesan}`, '_blank');
 }
 
 function sendInvoiceToGroup() {
-  if (!currentAdminInvoiceData) { alert('⚠️ Buat atau pilih invoice terlebih dahulu!'); return; }
-  const statusText = currentAdminInvoiceData.status === 'Sudah Dibayar' ? '✅ LUNAS' : (currentAdminInvoiceData.status === 'Pending' ? '🔄 PENDING' : '⏳ BELUM DIBAYAR');
-  const pesan = `📢 *INVOICE BARU - KOST ANAK RANTAU* %0A%0A*No:* ${currentAdminInvoiceData.no}%0A*Tgl:* ${currentAdminInvoiceData.tanggal}%0A*Layanan:* ${currentAdminInvoiceData.layanan}%0A*Pelanggan:* ${currentAdminInvoiceData.nama}%0A*Total:* Rp ${currentAdminInvoiceData.jumlahFormatted}%0A*Status:* ${statusText}%0A%0ADibuat oleh admin.`;
+  const editIndex = parseInt(document.getElementById('editInvoiceIndex').value);
+  let inv;
+  if (editIndex >= 0 && editIndex < savedInvoices.length) {
+    inv = savedInvoices[editIndex];
+  } else if (currentAdminInvoiceData) {
+    inv = currentAdminInvoiceData;
+  } else {
+    alert('⚠️ Tidak ada invoice yang dipilih! Buat atau pilih invoice terlebih dahulu.');
+    return;
+  }
+  const statusText = inv.status === 'Sudah Dibayar' ? '✅ LUNAS' : (inv.status === 'Pending' ? '🔄 PENDING' : '⏳ BELUM DIBAYAR');
+  const pesan = `📢 *INVOICE BARU - KOST ANAK RANTAU* %0A%0A*No:* ${inv.no}%0A*Tgl:* ${inv.tanggal}%0A*Layanan:* ${inv.layanan}%0A*Pelanggan:* ${inv.nama}%0A*Total:* Rp ${inv.jumlahFormatted}%0A*Status:* ${statusText}%0A%0ADibuat oleh admin.`;
   window.open(`https://wa.me/6282162115149?text=${pesan}`, '_blank');
 }
 
@@ -563,10 +660,6 @@ function downloadInvoiceAsPDF(index) {
   }
   const inv = window.lunasInvoices[index];
   
-  // Generate QR Code for PDF inside iframe print
-  // Slight delay to ensure QR code container is ready? Better to embed static QR image generation here, but for simplicity we use URL param.
-  // Because print window is separate, we embed using QRCode library again there.
-  // We will create a full HTML string for the PDF print with dynamic QR.
   const printContent = `
 <!DOCTYPE html>
 <html>
@@ -594,7 +687,6 @@ function downloadInvoiceAsPDF(index) {
   .qr-bottom { display: flex; justify-content: flex-end; margin-top: 20px; }
   @media print {
     body { padding: 0; margin: 0; }
-    .no-print { display: none; }
   }
 </style>
 </head>
@@ -652,7 +744,6 @@ function downloadInvoiceAsPDF(index) {
 </body>
 </html>`;
 
-  // Buka jendela baru untuk print/save as PDF
   const printWindow = window.open('', '_blank');
   printWindow.document.write(printContent);
   printWindow.document.close();
