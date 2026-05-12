@@ -203,7 +203,6 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
 }
 </style>
 </head>
-
 <body>
 
 <div id="pwaBanner" class="pwa-install-banner" style="display: none;">
@@ -346,177 +345,13 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
   <p style="text-align: center; margin-bottom: 15px;">Siapa saja boleh bertanya, Admin akan menjawab setiap pertanyaan</p>
   
   <!-- Form Bertanya untuk Pengunjung -->
-// ========== FORUM TANYA JAWAB DENGAN GOOGLE SHEETS ==========
-// API URL Google Apps Script Anda
-const GOOGLE_SHEETS_FORUM_API = 'https://script.google.com/macros/s/AKfycby4ZgNMm7fIi_RMMTjYNsnngaWaU_sNT9-TQLWoGPnnIo_OSgEJPX8YlBo1BUA6glhAwg/exec';
-
-let isForumAdminLoggedIn = false;
-
-/**
- * Memuat semua pertanyaan dari Google Sheets
- */
-function loadForum() {
-  const container = document.getElementById('forumList');
-  if (!container) return;
-  
-  container.innerHTML = '<div class="loading">⏳ Memuat pertanyaan...</div>';
-  
-  const url = `${GOOGLE_SHEETS_FORUM_API}?action=get`;
-  
-  fetch(url)
-    .then(response => response.json())
-    .then(result => {
-      if (result.status !== 'success') {
-        container.innerHTML = '<p style="text-align:center; color:#666;">⚠️ Gagal memuat data forum.</p>';
-        return;
-      }
-      
-      const forumData = result.data;
-      
-      if (!forumData || forumData.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#666;">✨ Belum ada pertanyaan. Jadilah yang pertama! ✨</p>';
-        return;
-      }
-      
-      let html = '';
-      for (let i = 0; i < forumData.length; i++) {
-        const q = forumData[i];
-        const tanggal = q.timestamp ? new Date(q.timestamp).toLocaleString('id-ID') : '-';
-        
-        html += `<div class="forum-question">
-          <div class="asker-info">
-            <strong>👤 ${escapeHtml(q.name)}</strong>
-            <span class="asker-wa">📞 ${escapeHtml(q.wa)}</span>
-            <span style="font-size: 11px; color: #999; margin-left: 10px;">📅 ${tanggal}</span>
-          </div>
-          <div class="question-text">❓ ${escapeHtml(q.question)}</div>`;
-        
-        if (q.answer && q.answer !== "") {
-          html += `<div class="forum-answer">
-            <span class="admin-badge">👨‍💼 Admin</span>
-            <div class="answer-text">💬 ${escapeHtml(q.answer)}</div>
-          </div>`;
-        } else if (isForumAdminLoggedIn) {
-          html += `<div style="margin-top: 10px;">
-            <textarea id="answerText-${q.id}" rows="2" placeholder="Tulis jawaban..." style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ddd;"></textarea>
-            <button onclick="submitAnswer(${q.id})" style="background: #4caf50; color: white; border: none; padding: 8px 20px; border-radius: 8px; margin-top: 5px; cursor: pointer;">✅ Jawab Pertanyaan</button>
-          </div>`;
-        } else {
-          html += `<div style="margin-top: 10px; font-size: 12px; color: #999; font-style: italic;">⏳ Menunggu jawaban dari admin...</div>`;
-        }
-        
-        html += `</div>`;
-      }
-      container.innerHTML = html;
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      container.innerHTML = '<p style="text-align:center; color:#666;">⚠️ Gagal memuat forum. Periksa koneksi internet.</p>';
-    });
-}
-
-/**
- * Menyimpan pertanyaan baru ke Google Sheets
- */
-function submitQuestion() {
-  const name = document.getElementById('askerName').value.trim();
-  const wa = document.getElementById('askerWA').value.trim();
-  const question = document.getElementById('questionText').value.trim();
-  
-  if (!name) { alert('❌ Nama harus diisi!'); return; }
-  if (!wa) { alert('❌ Nomor WhatsApp harus diisi!'); return; }
-  if (!question) { alert('❌ Pertanyaan harus diisi!'); return; }
-  if (!wa.match(/^[0-9]{10,13}$/)) { 
-    alert('❌ Nomor WhatsApp tidak valid! Masukkan angka saja (10-13 digit).'); 
-    return; 
-  }
-  
-  const submitBtn = document.querySelector('#forum .btn-kirim-question') || document.querySelector('#forum button[onclick="submitQuestion()"]');
-  if (submitBtn) {
-    submitBtn.disabled = true;
-    submitBtn.textContent = '⏳ Mengirim...';
-  }
-  
-  const url = `${GOOGLE_SHEETS_FORUM_API}?action=ask&name=${encodeURIComponent(name)}&wa=${encodeURIComponent(wa)}&question=${encodeURIComponent(question)}`;
-  
-  fetch(url)
-    .then(response => response.json())
-    .then(result => {
-      if (result.status === 'success') {
-        alert('✅ Pertanyaan Anda telah dikirim! Admin akan segera menjawab.');
-        document.getElementById('askerName').value = '';
-        document.getElementById('askerWA').value = '';
-        document.getElementById('questionText').value = '';
-        loadForum();
-      } else {
-        alert('❌ Gagal mengirim: ' + (result.message || 'Unknown error'));
-      }
-    })
-    .catch(error => {
-      alert('❌ Gagal mengirim pertanyaan: ' + error.message);
-    })
-    .finally(() => {
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = '📤 Kirim Pertanyaan';
-      }
-    });
-}
-
-/**
- * Menyimpan jawaban (untuk admin yang sudah login)
- */
-function submitAnswer(questionId) {
-  const answerText = document.getElementById(`answerText-${questionId}`).value.trim();
-  if (!answerText) { 
-    alert('❌ Jawaban tidak boleh kosong!'); 
-    return; 
-  }
-  
-  const url = `${GOOGLE_SHEETS_FORUM_API}?action=answer&id=${questionId}&answer=${encodeURIComponent(answerText)}`;
-  
-  fetch(url)
-    .then(response => response.json())
-    .then(result => {
-      if (result.status === 'success') {
-        alert('✅ Jawaban telah disimpan!');
-        loadForum();
-      } else {
-        alert('❌ Gagal menyimpan jawaban: ' + (result.message || 'Unknown error'));
-      }
-    })
-    .catch(error => {
-      alert('❌ Gagal: ' + error.message);
-    });
-}
-
-/**
- * Login Admin Forum (password: Debat4)
- */
-function loginForumAdmin() {
-  const pwd = document.getElementById('forumAdminPassword').value;
-  if (pwd === 'Debat4') {
-    isForumAdminLoggedIn = true;
-    document.getElementById('forumLoginArea').style.display = 'none';
-    document.getElementById('forumAdminControls').style.display = 'block';
-    loadForum();
-    alert('✅ Login Admin Forum berhasil!');
-  } else {
-    alert('❌ Password salah!');
-  }
-}
-
-/**
- * Logout Admin Forum
- */
-function logoutForumAdmin() {
-  isForumAdminLoggedIn = false;
-  document.getElementById('forumLoginArea').style.display = 'block';
-  document.getElementById('forumAdminControls').style.display = 'none';
-  document.getElementById('forumAdminPassword').value = '';
-  loadForum();
-  alert('🔒 Logout dari Admin Forum.');
-}
+  <div style="background: #fff3e0; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+    <h3>📝 Ajukan Pertanyaan</h3>
+    <input type="text" id="askerName" placeholder="Nama Anda" style="width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px;">
+    <input type="tel" id="askerWA" placeholder="Nomor WhatsApp (wajib, contoh: 081234567890)" style="width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px;">
+    <textarea id="questionText" rows="3" placeholder="Tulis pertanyaan Anda di sini..." style="width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px;"></textarea>
+    <button onclick="submitQuestion()" style="background: #ff9800; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer;">📤 Kirim Pertanyaan</button>
+  </div>
   
   <!-- Panel Admin Forum (Login dengan password: Debat4) -->
   <div id="forumAdminPanel" style="background: #e8eaf6; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
@@ -955,44 +790,68 @@ function downloadInvoiceAsPDF(index) {
   printWindow.document.close();
 }
 
-// ========== FORUM TANYA JAWAB ==========
+// ========== FORUM TANYA JAWAB DENGAN GOOGLE SHEETS ==========
+const GOOGLE_SHEETS_FORUM_API = 'https://script.google.com/macros/s/AKfycby4ZgNMm7fIi_RMMTjYNsnngaWaU_sNT9-TQLWoGPnnIo_OSgEJPX8YlBo1BUA6glhAwg/exec';
 let isForumAdminLoggedIn = false;
 
 function loadForum() {
   const container = document.getElementById('forumList');
-  if (forumData.length === 0) {
-    container.innerHTML = '<p style="text-align:center; color:#666;">✨ Belum ada pertanyaan. Jadilah yang pertama! ✨</p>';
-    return;
-  }
-  let html = '';
-  for (let i = 0; i < forumData.length; i++) {
-    const q = forumData[i];
-    html += `<div class="forum-question">
-      <div class="asker-info">
-        <strong>👤 ${escapeHtml(q.name)}</strong>
-        <span class="asker-wa">📞 ${escapeHtml(q.wa)}</span>
-        <span style="font-size: 11px; color: #999; margin-left: 10px;">📅 ${q.tanggal}</span>
-      </div>
-      <div class="question-text">❓ ${escapeHtml(q.question)}</div>`;
-    
-    if (q.answer) {
-      html += `<div class="forum-answer">
-        <span class="admin-badge">👨‍💼 Admin</span>
-        <div class="answer-text">💬 ${escapeHtml(q.answer)}</div>
-        <div style="font-size: 10px; color: #999; margin-top: 5px;">📅 Dijawab: ${q.answerTanggal || q.tanggal}</div>
-      </div>`;
-    } else if (isForumAdminLoggedIn) {
-      html += `<div style="margin-top: 10px;">
-        <textarea id="answerText-${i}" rows="2" placeholder="Tulis jawaban..." style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ddd;"></textarea>
-        <button onclick=(${i})" style="background: #4caf50; color: white; border: none; padding: 8px 20px; border-radius: 8px; margin-top: 5px; cursor: pointer;">✅ Jawab Pertanyaan</button>
-      </div>`;
-    } else {
-      html += `<div style="margin-top: 10px; font-size: 12px; color: #999; font-style: italic;">⏳ Menunggu jawaban dari admin...</div>`;
-    }
-    
-    html += `</div>`;
-  }
-  container.innerHTML = html;
+  if (!container) return;
+  
+  container.innerHTML = '<div class="loading">⏳ Memuat pertanyaan...</div>';
+  
+  const url = `${GOOGLE_SHEETS_FORUM_API}?action=get`;
+  
+  fetch(url)
+    .then(response => response.json())
+    .then(result => {
+      if (result.status !== 'success') {
+        container.innerHTML = '<p style="text-align:center; color:#666;">⚠️ Gagal memuat data forum.</p>';
+        return;
+      }
+      
+      const forumData = result.data;
+      
+      if (!forumData || forumData.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#666;">✨ Belum ada pertanyaan. Jadilah yang pertama! ✨</p>';
+        return;
+      }
+      
+      let html = '';
+      for (let i = 0; i < forumData.length; i++) {
+        const q = forumData[i];
+        const tanggal = q.timestamp ? new Date(q.timestamp).toLocaleString('id-ID') : '-';
+        
+        html += `<div class="forum-question">
+          <div class="asker-info">
+            <strong>👤 ${escapeHtml(q.name)}</strong>
+            <span class="asker-wa">📞 ${escapeHtml(q.wa)}</span>
+            <span style="font-size: 11px; color: #999; margin-left: 10px;">📅 ${tanggal}</span>
+          </div>
+          <div class="question-text">❓ ${escapeHtml(q.question)}</div>`;
+        
+        if (q.answer && q.answer !== "") {
+          html += `<div class="forum-answer">
+            <span class="admin-badge">👨‍💼 Admin</span>
+            <div class="answer-text">💬 ${escapeHtml(q.answer)}</div>
+          </div>`;
+        } else if (isForumAdminLoggedIn) {
+          html += `<div style="margin-top: 10px;">
+            <textarea id="answerText-${q.id}" rows="2" placeholder="Tulis jawaban..." style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ddd;"></textarea>
+            <button onclick="submitAnswer(${q.id})" style="background: #4caf50; color: white; border: none; padding: 8px 20px; border-radius: 8px; margin-top: 5px; cursor: pointer;">✅ Jawab Pertanyaan</button>
+          </div>`;
+        } else {
+          html += `<div style="margin-top: 10px; font-size: 12px; color: #999; font-style: italic;">⏳ Menunggu jawaban dari admin...</div>`;
+        }
+        
+        html += `</div>`;
+      }
+      container.innerHTML = html;
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      container.innerHTML = '<p style="text-align:center; color:#666;">⚠️ Gagal memuat forum. Periksa koneksi internet.</p>';
+    });
 }
 
 function submitQuestion() {
@@ -1003,38 +862,65 @@ function submitQuestion() {
   if (!name) { alert('❌ Nama harus diisi!'); return; }
   if (!wa) { alert('❌ Nomor WhatsApp harus diisi!'); return; }
   if (!question) { alert('❌ Pertanyaan harus diisi!'); return; }
-  if (!wa.match(/^[0-9]{10,13}$/)) { alert('❌ Nomor WhatsApp tidak valid! Masukkan angka saja (10-13 digit).'); return; }
+  if (!wa.match(/^[0-9]{10,13}$/)) { 
+    alert('❌ Nomor WhatsApp tidak valid! Masukkan angka saja (10-13 digit).'); 
+    return; 
+  }
   
-  const newQuestion = {
-    id: Date.now(),
-    name: name,
-    wa: wa,
-    question: question,
-    tanggal: new Date().toLocaleString('id-ID'),
-    answer: null,
-    answerTanggal: null
-  };
+  const submitBtn = document.querySelector('#forum button[onclick="submitQuestion()"]');
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = '⏳ Mengirim...';
+  }
   
-  forumData.unshift(newQuestion);
-  localStorage.setItem('anakRantauForum', JSON.stringify(forumData));
+  const url = `${GOOGLE_SHEETS_FORUM_API}?action=ask&name=${encodeURIComponent(name)}&wa=${encodeURIComponent(wa)}&question=${encodeURIComponent(question)}`;
   
-  document.getElementById('askerName').value = '';
-  document.getElementById('askerWA').value = '';
-  document.getElementById('questionText').value = '';
-  
-  ();
-  alert('✅ Pertanyaan Anda telah dikirim! Admin akan segera menjawab.');
+  fetch(url)
+    .then(response => response.json())
+    .then(result => {
+      if (result.status === 'success') {
+        alert('✅ Pertanyaan Anda telah dikirim! Admin akan segera menjawab.');
+        document.getElementById('askerName').value = '';
+        document.getElementById('askerWA').value = '';
+        document.getElementById('questionText').value = '';
+        loadForum();
+      } else {
+        alert('❌ Gagal mengirim: ' + (result.message || 'Unknown error'));
+      }
+    })
+    .catch(error => {
+      alert('❌ Gagal mengirim pertanyaan: ' + error.message);
+    })
+    .finally(() => {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '📤 Kirim Pertanyaan';
+      }
+    });
 }
 
-function submitAnswer(index) {
-  const answerText = document.getElementById(`answerText-${index}`).value.trim();
-  if (!answerText) { alert('❌ Jawaban tidak boleh kosong!'); return; }
+function submitAnswer(questionId) {
+  const answerText = document.getElementById(`answerText-${questionId}`).value.trim();
+  if (!answerText) { 
+    alert('❌ Jawaban tidak boleh kosong!'); 
+    return; 
+  }
   
-  forumData[index].answer = answerText;
-  forumData[index].answerTanggal = new Date().toLocaleString('id-ID');
-  localStorage.setItem('anakRantauForum', JSON.stringify(forumData));
-  loadForum();
-  alert('✅ Jawaban telah disimpan!');
+  const url = `${GOOGLE_SHEETS_FORUM_API}?action=answer&id=${questionId}&answer=${encodeURIComponent(answerText)}`;
+  
+  fetch(url)
+    .then(response => response.json())
+    .then(result => {
+      if (result.status === 'success') {
+        alert('✅ Jawaban telah disimpan!');
+        loadForum();
+      } else {
+        alert('❌ Gagal menyimpan jawaban: ' + (result.message || 'Unknown error'));
+      }
+    })
+    .catch(error => {
+      alert('❌ Gagal: ' + error.message);
+    });
 }
 
 function loginForumAdmin() {
