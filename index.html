@@ -31,6 +31,8 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<!-- QR Code Library -->
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
 <style>
 /* ========== SEMUA STYLE ========== */
@@ -149,9 +151,12 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
 .btn-send-group { background: #075e54; }
 .invoice-preview-admin { background: white; border-radius: 12px; padding: 20px; margin-top: 20px; color: #333; display: none; }
 .invoice-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #667eea; padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; }
-.invoice-title-center { flex: 2; text-align: center; }
-.invoice-title-center h2 { color: #667eea; margin: 0; font-size: 28px; }
-.invoice-contact-right { text-align: right; }
+.invoice-logo-area { display: flex; align-items: center; gap: 15px; flex: 1; }
+.invoice-logo { width: 60px; height: auto; }
+.invoice-title-center { flex: 0 1 auto; text-align: left; }
+.invoice-title-center h2 { color: #667eea; margin: 0; font-size: 24px; }
+.invoice-contact-right { text-align: right; flex: 1; }
+.invoice-qr-bottom { display: flex; justify-content: flex-end; margin-top: 20px; }
 .invoice-details { margin: 20px 0; }
 .invoice-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #ddd; }
 .invoice-row.total { border-top: 3px solid #667eea; border-bottom: none; margin-top: 10px; padding-top: 15px; font-weight: bold; font-size: 20px; color: #667eea; }
@@ -430,8 +435,37 @@ function buatInvoiceAdmin() {
 
 function updateInvoicePreview(data) {
   const statusBadge = data.status === 'Sudah Dibayar' ? '<span class="status-paid">✅ SUDAH DIBAYAR</span>' : (data.status === 'Pending' ? '<span class="status-unpaid">🔄 PENDING</span>' : '<span class="status-unpaid">⏳ BELUM DIBAYAR</span>');
+  // Menambahkan QR Code untuk URL Website
+  const qrCodeDivId = `qrcode-${Date.now()}`;
+  setTimeout(() => {
+    const qrContainer = document.getElementById(qrCodeDivId);
+    if (qrContainer) {
+      qrContainer.innerHTML = "";
+      new QRCode(qrContainer, {
+        text: "https://anakrantau88.my.id",
+        width: 100,
+        height: 100,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    }
+  }, 100);
+  
   document.getElementById('adminInvoicePreview').innerHTML = `
-    <div class="invoice-header"><div class="invoice-title-center"><h2>ANAK RANTAU LUBUK PAKAM</h2><p>Kost, Hotspot & Travel</p></div><div class="invoice-contact-right"><p>📞 082162115149</p><p>✉️ anakrantaulubukpakam@gmail.com</p></div></div>
+    <div class="invoice-header">
+      <div class="invoice-logo-area">
+        <img src="logo.png" class="invoice-logo" onerror="this.src='https://via.placeholder.com/60'">
+        <div class="invoice-title-center">
+          <h2>ANAK RANTAU LUBUK PAKAM</h2>
+          <p>Kost, Hotspot & Travel</p>
+        </div>
+      </div>
+      <div class="invoice-contact-right">
+        <p>📞 082162115149</p>
+        <p>✉️ anakrantaulubukpakam@gmail.com</p>
+      </div>
+    </div>
     <div style="text-align:center; margin-bottom:15px;">${statusBadge}</div>
     <div class="invoice-details">
       <div class="invoice-row"><strong>No. Invoice:</strong> <span>${data.no}</span></div>
@@ -441,7 +475,16 @@ function updateInvoicePreview(data) {
       <div class="invoice-row"><strong>Detail Transaksi:</strong> <span>${data.keterangan}</span></div>
       <div class="invoice-row total"><strong>Total Pembayaran:</strong> <span>Rp ${data.jumlahFormatted}</span></div>
     </div>
-    <div class="invoice-footer"><p><strong>⚠️ Peringatan Penting ⚠️</strong><br>Pembayaran resmi hanya melalui rekening Bank Mandiri 1050014328318 a.n. Erikson Sibagariang.</p><p>Terima kasih telah menggunakan layanan kami 🙏</p></div>`;
+    <div class="invoice-qr-bottom">
+      <div style="text-align: center;">
+        <div id="${qrCodeDivId}"></div>
+        <p style="font-size: 10px; margin-top: 5px;">Scan untuk website</p>
+      </div>
+    </div>
+    <div class="invoice-footer">
+      <p><strong>⚠️ Peringatan Penting ⚠️</strong><br>Pembayaran resmi hanya melalui rekening Bank Mandiri 1050014328318 a.n. Erikson Sibagariang.</p>
+      <p>Terima kasih telah menggunakan layanan kami 🙏</p>
+    </div>`;
 }
 
 function loadSavedInvoicesList() {
@@ -519,20 +562,25 @@ function downloadInvoiceAsPDF(index) {
   }
   const inv = window.lunasInvoices[index];
   
-  // Buat konten HTML untuk PDF
+  // Generate QR Code for PDF inside iframe print
+  // Slight delay to ensure QR code container is ready? Better to embed static QR image generation here, but for simplicity we use URL param.
+  // Because print window is separate, we embed using QRCode library again there.
+  // We will create a full HTML string for the PDF print with dynamic QR.
   const printContent = `
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Invoice ${inv.no}</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"><\/script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Arial', sans-serif; padding: 40px; background: white; }
   .invoice-container { max-width: 800px; margin: 0 auto; background: white; }
-  .header { text-align: center; border-bottom: 3px solid #667eea; padding-bottom: 15px; margin-bottom: 20px; }
-  .header h2 { color: #667eea; margin: 0 0 5px 0; font-size: 28px; }
-  .header p { color: #666; margin: 5px 0; font-size: 14px; }
+  .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #667eea; padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+  .logo-area { display: flex; align-items: center; gap: 15px; }
+  .logo-img { width: 60px; height: auto; }
+  .title-area h2 { color: #667eea; margin: 0; }
   .status-badge { text-align: center; margin: 20px 0; }
   .status-badge span { background: #48bb78; color: white; padding: 8px 25px; border-radius: 25px; display: inline-block; font-weight: bold; }
   .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #ddd; font-size: 14px; }
@@ -540,6 +588,7 @@ function downloadInvoiceAsPDF(index) {
   .footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 11px; color: #666; }
   .bank-info { background: #f0f8ff; padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center; font-size: 13px; }
   .bank-info strong { color: #0077cc; }
+  .qr-bottom { display: flex; justify-content: flex-end; margin-top: 20px; }
   @media print {
     body { padding: 0; margin: 0; }
     .no-print { display: none; }
@@ -549,9 +598,17 @@ function downloadInvoiceAsPDF(index) {
 <body>
 <div class="invoice-container">
   <div class="header">
-    <h2>ANAK RANTAU LUBUK PAKAM</h2>
-    <p>Kost, Hotspot & Travel</p>
-    <p>📞 082162115149 | ✉️ anakrantaulubukpakam@gmail.com</p>
+    <div class="logo-area">
+      <img src="logo.png" class="logo-img" onerror="this.src='https://via.placeholder.com/60'">
+      <div class="title-area">
+        <h2>ANAK RANTAU LUBUK PAKAM</h2>
+        <p>Kost, Hotspot & Travel</p>
+      </div>
+    </div>
+    <div>
+      <p>📞 082162115149</p>
+      <p>✉️ anakrantaulubukpakam@gmail.com</p>
+    </div>
   </div>
   <div class="status-badge">
     <span>✅ SUDAH DIBAYAR LUNAS</span>
@@ -567,12 +624,26 @@ function downloadInvoiceAsPDF(index) {
     Pembayaran resmi hanya melalui rekening Bank Mandiri<br>
     <strong>1050014328318</strong> a.n. <strong>Erikson Sibagariang</strong>
   </div>
+  <div class="qr-bottom">
+    <div style="text-align: center;">
+      <div id="qrcode-pdf"></div>
+      <p style="font-size: 10px;">Scan untuk website</p>
+    </div>
+  </div>
   <div class="footer">
     <p>Terima kasih telah menggunakan layanan kami 🙏</p>
     <p style="margin-top:10px;">Dicetak pada: ${new Date().toLocaleString('id-ID')}</p>
   </div>
 </div>
 <script>
+  new QRCode(document.getElementById("qrcode-pdf"), {
+    text: "https://anakrantau88.my.id",
+    width: 100,
+    height: 100,
+    colorDark: "#000000",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H
+  });
   window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 500); };
 <\/script>
 </body>
