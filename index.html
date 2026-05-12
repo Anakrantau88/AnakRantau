@@ -344,33 +344,6 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
   <h2 style="text-align: center;">💬 Forum Tanya Jawab</h2>
   <p style="text-align: center; margin-bottom: 15px;">Siapa saja boleh bertanya, Admin akan menjawab setiap pertanyaan</p>
   
-  <!-- Form Bertanya untuk Pengunjung -->
-  <div style="background: #fff3e0; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-    <h3>📝 Ajukan Pertanyaan</h3>
-    <input type="text" id="askerName" placeholder="Nama Anda" style="width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px;">
-    <input type="tel" id="askerWA" placeholder="Nomor WhatsApp (wajib, contoh: 081234567890)" style="width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px;">
-    <textarea id="questionText" rows="3" placeholder="Tulis pertanyaan Anda di sini..." style="width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px;"></textarea>
-    <button onclick="submitQuestion()" style="background: #ff9800; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer;">📤 Kirim Pertanyaan</button>
-  </div>
-  
-  <!-- Panel Admin Forum (Login dengan password: Debat4) -->
-  <div id="forumAdminPanel" style="background: #e8eaf6; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
-    <h3>🔐 Panel Admin Forum</h3>
-    <div id="forumLoginArea">
-      <input type="password" id="forumAdminPassword" placeholder="Password Admin" style="padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
-      <button onclick="loginForumAdmin()" style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">Login Admin</button>
-    </div>
-    <div id="forumAdminControls" style="display: none; margin-top: 15px;">
-      <p style="color: green;">✅ Anda login sebagai Admin</p>
-      <button onclick="logoutForumAdmin()" style="background: #e53e3e; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer;">Logout</button>
-    </div>
-  </div>
-  
-  <!-- Daftar Pertanyaan dan Jawaban -->
-  <div id="forumList">
-    <div class="loading">⏳ Memuat pertanyaan...</div>
-  </div>
-</div>
 
 <div class="card" id="layanan">
   <h2 style="text-align: center;">✈️ Layanan Travel & Tiket Pesawat 🚗</h2>
