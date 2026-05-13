@@ -184,16 +184,6 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
 .password-wrapper { position: relative; }
 .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; user-select: none; color: #667eea; font-size: 14px; background: white; padding: 0 5px; }
 
-/* FORUM STYLES */
-.forum-card { background: linear-gradient(135deg, #f5f7fa, #e4e8f0); }
-.forum-question { background: #fff3e0; border-left: 4px solid #ff9800; padding: 15px; margin-bottom: 15px; border-radius: 10px; }
-.forum-answer { background: #e8f5e9; border-left: 4px solid #4caf50; padding: 12px; margin-top: 10px; margin-left: 20px; border-radius: 8px; }
-.forum-question .asker-info { font-size: 12px; color: #666; margin-bottom: 8px; }
-.forum-question .asker-wa { background: #25D366; color: white; padding: 2px 8px; border-radius: 20px; font-size: 10px; display: inline-block; }
-.forum-question .question-text { font-size: 15px; margin: 10px 0; }
-.forum-answer .answer-text { font-size: 14px; color: #2e7d32; }
-.admin-badge { background: #667eea; color: white; padding: 2px 8px; border-radius: 20px; font-size: 10px; }
-
 /* Print Style untuk PDF */
 @media print {
   body * { visibility: hidden; }
@@ -215,10 +205,15 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
 <div class="navbar">
   <div class="logo"><img src="logo.png" onerror="this.src='https://via.placeholder.com/40'"><b>Anak Rantau Lubuk Pakam</b></div>
   <div class="menu" id="menu">
-    <a href="#lokasi">📍 Lokasi Kost</a><a href="#layanan">Layanan Travel</a><a href="#hotspot">Hotspot</a>
-    <a href="#kost">Kost</a><a href="#invoiceAdmin">Invoice Admin</a><a href="#invoiceLunas">Invoice Lunas</a>
-    <a href="#forum">💬 Forum Tanya Jawab</a>
-    <a href="#galeri">Galeri</a><a href="#testimoni">Testimoni</a><a href="#kontak">Kontak</a>
+    <a href="#lokasi">📍 Lokasi Kost</a>
+    <a href="#layanan">Layanan Travel</a>
+    <a href="#hotspot">Hotspot</a>
+    <a href="#kost">Kost</a>
+    <a href="#invoiceAdmin">Invoice Admin</a>
+    <a href="#invoiceLunas">Invoice Lunas</a>
+    <a href="#galeri">Galeri</a>
+    <a href="#testimoni">Testimoni</a>
+    <a href="#kontak">Kontak</a>
     <a href="#mauGabung" style="background:#FFA500; padding:5px 12px; border-radius:20px;">✨ Mau Gabung</a>
   </div>
   <div class="hamburger" onclick="toggleMenu()">☰</div>
@@ -337,39 +332,6 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
     
     <div id="adminInvoicePreview" class="invoice-preview-admin"></div>
     <div class="list-invoice"><h3>📋 Daftar Invoice Tersimpan</h3><div id="savedInvoicesList"><p style="color:gray; text-align:center;">Belum ada invoice tersimpan</p></div></div>
-  </div>
-</div>
-
-<!-- FORUM TANYA JAWAB - MENGGUNAKAN LOCALSTORAGE + SPREADSHEET -->
-<div class="card forum-card" id="forum">
-  <h2 style="text-align: center;">💬 Forum Tanya Jawab</h2>
-  <p style="text-align: center; margin-bottom: 15px;">Siapa saja boleh bertanya, Admin akan menjawab setiap pertanyaan</p>
-  
-  <!-- Form Bertanya untuk Pengunjung -->
-  <div style="background: #fff3e0; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-    <h3>📝 Ajukan Pertanyaan</h3>
-    <input type="text" id="askerName" placeholder="Nama Anda" style="width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px;">
-    <input type="tel" id="askerWA" placeholder="Nomor WhatsApp (wajib, contoh: 081234567890)" style="width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px;">
-    <textarea id="questionText" rows="3" placeholder="Tulis pertanyaan Anda di sini..." style="width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px;"></textarea>
-    <button onclick="submitQuestion()" style="background: #ff9800; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer;">📤 Kirim Pertanyaan</button>
-  </div>
-  
-  <!-- Panel Admin Forum (Login dengan password: Debat4) -->
-  <div id="forumAdminPanel" style="background: #e8eaf6; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
-    <h3>🔐 Panel Admin Forum</h3>
-    <div id="forumLoginArea">
-      <input type="password" id="forumAdminPassword" placeholder="Password Admin" style="padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
-      <button onclick="loginForumAdmin()" style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">Login Admin</button>
-    </div>
-    <div id="forumAdminControls" style="display: none; margin-top: 15px;">
-      <p style="color: green;">✅ Anda login sebagai Admin</p>
-      <button onclick="logoutForumAdmin()" style="background: #e53e3e; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer;">Logout</button>
-    </div>
-  </div>
-  
-  <!-- Daftar Pertanyaan dan Jawaban -->
-  <div id="forumList">
-    <div class="loading">⏳ Memuat pertanyaan...</div>
   </div>
 </div>
 
@@ -791,161 +753,7 @@ function downloadInvoiceAsPDF(index) {
   printWindow.document.close();
 }
 
-// ========== FORUM TANYA JAWAB - MENGGUNAKAN LOCALSTORAGE (KARENA SPREADSHEET BELUM SUPPORT POST) ==========
-// Data forum disimpan di localStorage agar bisa berfungsi antar perangkat di browser yang sama
-let forumData = JSON.parse(localStorage.getItem('anakRantauForum') || '[]');
-let isForumAdminLoggedIn = false;
-
-// URL Spreadsheet untuk mengambil data (READ ONLY)
-const FORUM_SPREADSHEET_URL = "https://script.google.com/macros/s/AKfycbxU6CP5onf2LgBpQ8fyDzUe6UulZuAwK_34ygAnUE_297sm3EE2rr31KffUU5aAQH-BlA/exec?action=get";
-
-// Fungsi untuk mencoba mengambil data dari Spreadsheet dan menggabungkan dengan localStorage
-async function loadForumFromSpreadsheet() {
-  const container = document.getElementById('forumList');
-  container.innerHTML = '<div class="loading">⏳ Memuat pertanyaan...</div>';
-  
-  try {
-    // Coba ambil data dari Spreadsheet
-    const response = await fetch(FORUM_SPREADSHEET_URL);
-    const spreadsheetData = await response.json();
-    
-    if (spreadsheetData && Array.isArray(spreadsheetData) && spreadsheetData.length > 0) {
-      // Jika ada data dari spreadsheet, gunakan itu
-      forumData = spreadsheetData;
-      localStorage.setItem('anakRantauForum', JSON.stringify(forumData));
-      console.log('Data forum dimuat dari Spreadsheet:', forumData.length, 'pertanyaan');
-    } else {
-      // Jika tidak ada data dari spreadsheet, gunakan data dari localStorage
-      const localData = JSON.parse(localStorage.getItem('anakRantauForum') || '[]');
-      if (localData.length > 0) {
-        forumData = localData;
-        console.log('Data forum dimuat dari LocalStorage:', forumData.length, 'pertanyaan');
-      } else {
-        // Data contoh untuk demo
-        forumData = [];
-        console.log('Tidak ada data forum, mulai dari kosong');
-      }
-    }
-  } catch (error) {
-    console.error('Error loading from spreadsheet, using localStorage:', error);
-    // Jika gagal mengambil dari spreadsheet, gunakan localStorage
-    const localData = JSON.parse(localStorage.getItem('anakRantauForum') || '[]');
-    forumData = localData;
-  }
-  
-  renderForum();
-}
-
-// Fungsi untuk merender forum
-function renderForum() {
-  const container = document.getElementById('forumList');
-  
-  if (forumData.length === 0) {
-    container.innerHTML = '<p style="text-align:center; color:#666;">✨ Belum ada pertanyaan. Jadilah yang pertama! ✨</p>';
-    return;
-  }
-  
-  let html = '';
-  for (let i = 0; i < forumData.length; i++) {
-    const q = forumData[i];
-    html += `<div class="forum-question">
-      <div class="asker-info">
-        <strong>👤 ${escapeHtml(q.nama || q.name || 'Anonymous')}</strong>
-        <span class="asker-wa">📞 ${escapeHtml(q.wa || q.whatsapp || '-')}</span>
-        <span style="font-size: 11px; color: #999; margin-left: 10px;">📅 ${q.tanggal || q.date || '-'}</span>
-      </div>
-      <div class="question-text">❓ ${escapeHtml(q.pertanyaan || q.question || '')}</div>`;
-    
-    if (q.jawaban || q.answer) {
-      html += `<div class="forum-answer">
-        <span class="admin-badge">👨‍💼 Admin</span>
-        <div class="answer-text">💬 ${escapeHtml(q.jawaban || q.answer)}</div>
-        <div style="font-size: 10px; color: #999; margin-top: 5px;">📅 Dijawab: ${q.tanggal_jawab || q.answerTanggal || q.tanggal || '-'}</div>
-      </div>`;
-    } else if (isForumAdminLoggedIn) {
-      html += `<div style="margin-top: 10px;">
-        <textarea id="answerText-${i}" rows="2" placeholder="Tulis jawaban..." style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ddd;"></textarea>
-        <button onclick="submitAnswer(${i})" style="background: #4caf50; color: white; border: none; padding: 8px 20px; border-radius: 8px; margin-top: 5px; cursor: pointer;">✅ Jawab Pertanyaan</button>
-      </div>`;
-    } else {
-      html += `<div style="margin-top: 10px; font-size: 12px; color: #999; font-style: italic;">⏳ Menunggu jawaban dari admin...</div>`;
-    }
-    
-    html += `</div>`;
-  }
-  container.innerHTML = html;
-}
-
-// Fungsi untuk mengirim pertanyaan (disimpan ke localStorage)
-function submitQuestion() {
-  const name = document.getElementById('askerName').value.trim();
-  const wa = document.getElementById('askerWA').value.trim();
-  const question = document.getElementById('questionText').value.trim();
-  
-  if (!name) { alert('❌ Nama harus diisi!'); return; }
-  if (!wa) { alert('❌ Nomor WhatsApp harus diisi!'); return; }
-  if (!question) { alert('❌ Pertanyaan harus diisi!'); return; }
-  if (!wa.match(/^[0-9]{10,13}$/)) { alert('❌ Nomor WhatsApp tidak valid! Masukkan angka saja (10-13 digit).'); return; }
-  
-  const newQuestion = {
-    id: Date.now(),
-    nama: name,
-    wa: wa,
-    pertanyaan: question,
-    tanggal: new Date().toLocaleString('id-ID'),
-    jawaban: null,
-    tanggal_jawab: null
-  };
-  
-  forumData.unshift(newQuestion);
-  localStorage.setItem('anakRantauForum', JSON.stringify(forumData));
-  
-  // Reset form
-  document.getElementById('askerName').value = '';
-  document.getElementById('askerWA').value = '';
-  document.getElementById('questionText').value = '';
-  
-  renderForum();
-  alert('✅ Pertanyaan Anda telah disimpan! Admin akan segera menjawab.');
-}
-
-// Fungsi untuk menjawab pertanyaan
-function submitAnswer(index) {
-  const answerText = document.getElementById(`answerText-${index}`).value.trim();
-  if (!answerText) { alert('❌ Jawaban tidak boleh kosong!'); return; }
-  
-  forumData[index].jawaban = answerText;
-  forumData[index].tanggal_jawab = new Date().toLocaleString('id-ID');
-  localStorage.setItem('anakRantauForum', JSON.stringify(forumData));
-  
-  renderForum();
-  alert('✅ Jawaban telah disimpan!');
-}
-
-// Login Admin Forum
-function loginForumAdmin() {
-  const pwd = document.getElementById('forumAdminPassword').value;
-  if (pwd === 'Debat4') {
-    isForumAdminLoggedIn = true;
-    document.getElementById('forumLoginArea').style.display = 'none';
-    document.getElementById('forumAdminControls').style.display = 'block';
-    renderForum();
-    alert('✅ Login Admin Forum berhasil!');
-  } else {
-    alert('❌ Password salah!');
-  }
-}
-
-function logoutForumAdmin() {
-  isForumAdminLoggedIn = false;
-  document.getElementById('forumLoginArea').style.display = 'block';
-  document.getElementById('forumAdminControls').style.display = 'none';
-  document.getElementById('forumAdminPassword').value = '';
-  renderForum();
-  alert('🔒 Logout dari Admin Forum.');
-}
-
-// ========== OTHER FUNCTIONS ==========
+// ========== OTHER FUNCTIONS (Forum sudah dihapus) ==========
 function copyAddress() { navigator.clipboard.writeText("Kost Anak Rantau Lubuk Pakam - Koordinat: 3.545927, 98.875764").then(()=>alert("✅ Alamat disalin!")); }
 window.addEventListener('load', function() { 
   loadStatusKost(); 
@@ -957,17 +765,9 @@ window.addEventListener('load', function() {
     document.getElementById('adminInvoiceTanggal').value=today; 
   } 
   loadInvoiceLunas(); 
-  loadForumFromSpreadsheet(); // Load forum
   loadTestimoni();
   let firstBtn=document.querySelector('.music-list button'); 
   if(firstBtn) setTimeout(()=>playLagu('musik1.mp3', firstBtn),500); 
-  
-  // Tambahkan contoh data awal jika kosong (untuk testing)
-  setTimeout(() => {
-    if (forumData.length === 0) {
-      console.log('Forum masih kosong, silakan tambah pertanyaan pertama');
-    }
-  }, 1000);
 });
 
 let deferredPrompt = null;
