@@ -391,14 +391,128 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
 <div id="modal" class="modal" onclick="closeZoom()"><img id="modalImg"></div>
 
 <script>
-// ========== STATUS KOST ==========
+// ========== STATUS KOST - TERINTEGRASI GOOGLE SPREADSHEET ==========
+// GANTI DENGAN URL APPS SCRIPT ANDA
+const STATUS_API_URL = "https://script.google.com/macros/s/AKfycbxRU7h41wBjOfwRJY_avXzFzhMhWQEXEI2FjAeE25JrNhAAuoL-ztQJsJ4YRJ4H2N3x/exec";
+
 let statusKost = { 'nonac-1': 'tersedia', 'nonac-2': 'tersedia', 'ac-1': 'tersedia', 'ac-2': 'tersedia' };
-function loadStatusKost() { const saved = localStorage.getItem('anakRantauStatusKost'); if (saved) { statusKost = JSON.parse(saved); } updateAllStatusDisplay(); }
-function saveStatusKost() { localStorage.setItem('anakRantauStatusKost', JSON.stringify(statusKost)); }
-function updateAllStatusDisplay() { for (const [id, status] of Object.entries(statusKost)) { const badge = document.getElementById(`status-${id}`); if (badge) { if (status === 'tersedia') { badge.textContent = '✓ Tersedia'; badge.className = 'status-badge status-tersedia'; } else { badge.textContent = '✗ Habis'; badge.className = 'status-badge status-habis'; } } } }
-function updateStatus(kamarId, newStatus) { statusKost[kamarId] = newStatus; saveStatusKost(); updateAllStatusDisplay(); alert(`✅ Status kamar berhasil diubah menjadi ${newStatus === 'tersedia' ? 'TERSEDIA' : 'HABIS'}`); }
-function loginStatusAdmin() { const pwd = document.getElementById('statusPassword').value; if (pwd === 'Debat4') { document.getElementById('statusLoginArea').style.display = 'none'; document.getElementById('statusControlArea').style.display = 'block'; alert('✅ Login berhasil!'); } else { alert('❌ Password salah!'); } }
-function logoutStatusAdmin() { document.getElementById('statusLoginArea').style.display = 'flex'; document.getElementById('statusControlArea').style.display = 'none'; document.getElementById('statusPassword').value = ''; alert('🔒 Logout.'); }
+let isStatusAdminLoggedIn = false;
+
+// Muat status dari Spreadsheet
+async function loadStatusFromSpreadsheet() {
+  try {
+    console.log('📡 Memuat status kost dari spreadsheet...');
+    const response = await fetch(`${STATUS_API_URL}?action=getStatus`);
+    const data = await response.json();
+    
+    if (data && !data.error) {
+      statusKost = { ...statusKost, ...data };
+      updateAllStatusDisplay();
+      console.log('✅ Status kost dimuat dari spreadsheet:', statusKost);
+      return true;
+    }
+  } catch (error) {
+    console.error('❌ Gagal memuat dari spreadsheet:', error);
+  }
+  
+  // Fallback ke localStorage jika gagal
+  const saved = localStorage.getItem('anakRantauStatusKost');
+  if (saved) {
+    statusKost = JSON.parse(saved);
+    updateAllStatusDisplay();
+    console.log('📦 Status kost dimuat dari localStorage (fallback)');
+  }
+  return false;
+}
+
+// Simpan status ke Spreadsheet
+async function saveStatusToSpreadsheet(key, newStatus) {
+  try {
+    const response = await fetch(STATUS_API_URL, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'updateStatus',
+        key: key,
+        status: newStatus
+      })
+    });
+    
+    const result = await response.json();
+    if (result.success) {
+      console.log(`✅ Status ${key} berhasil disimpan ke spreadsheet`);
+      return true;
+    } else {
+      console.error('Gagal simpan ke spreadsheet:', result);
+      return false;
+    }
+  } catch (error) {
+    console.error('❌ Error simpan ke spreadsheet:', error);
+    return false;
+  }
+}
+
+// Update tampilan status di HTML
+function updateAllStatusDisplay() {
+  for (const [id, status] of Object.entries(statusKost)) {
+    const badge = document.getElementById(`status-${id}`);
+    if (badge) {
+      if (status === 'tersedia') {
+        badge.textContent = '✓ Tersedia';
+        badge.className = 'status-badge status-tersedia';
+      } else {
+        badge.textContent = '✗ Habis';
+        badge.className = 'status-badge status-habis';
+      }
+    }
+  }
+}
+
+// Update status (panggil dari admin panel)
+async function updateStatus(kamarId, newStatus) {
+  // Update tampilan dulu
+  statusKost[kamarId] = newStatus;
+  updateAllStatusDisplay();
+  
+  // Simpan ke localStorage sebagai backup
+  localStorage.setItem('anakRantauStatusKost', JSON.stringify(statusKost));
+  
+  // Kirim ke spreadsheet
+  const success = await saveStatusToSpreadsheet(kamarId, newStatus);
+  
+  if (success) {
+    alert(`✅ Status kamar berhasil diubah menjadi ${newStatus === 'tersedia' ? 'TERSEDIA' : 'HABIS'} (tersimpan di cloud)`);
+  } else {
+    alert(`⚠️ Status berubah tapi GAGAL tersimpan ke cloud. Periksa koneksi internet.`);
+  }
+  
+  // Refresh data dari spreadsheet untuk memastikan sinkron
+  setTimeout(() => loadStatusFromSpreadsheet(), 1000);
+}
+
+// Login admin status (Password: Debat4)
+function loginStatusAdmin() {
+  const pwd = document.getElementById('statusPassword').value;
+  if (pwd === 'Debat4') {
+    isStatusAdminLoggedIn = true;
+    document.getElementById('statusLoginArea').style.display = 'none';
+    document.getElementById('statusControlArea').style.display = 'block';
+    alert('✅ Login berhasil! Status akan tersimpan ke cloud dan sinkron ke semua perangkat.');
+  } else {
+    alert('❌ Password salah!');
+  }
+}
+
+function logoutStatusAdmin() {
+  isStatusAdminLoggedIn = false;
+  document.getElementById('statusLoginArea').style.display = 'flex';
+  document.getElementById('statusControlArea').style.display = 'none';
+  document.getElementById('statusPassword').value = '';
+  alert('🔒 Logout.');
+}
 
 // ========== INVOICE SYSTEM ==========
 let savedInvoices = JSON.parse(localStorage.getItem('anakRantauInvoices') || '[]');
@@ -753,46 +867,136 @@ function downloadInvoiceAsPDF(index) {
   printWindow.document.close();
 }
 
-// ========== OTHER FUNCTIONS (Forum sudah dihapus) ==========
-function copyAddress() { navigator.clipboard.writeText("Kost Anak Rantau Lubuk Pakam - Koordinat: 3.545927, 98.875764").then(()=>alert("✅ Alamat disalin!")); }
-window.addEventListener('load', function() { 
-  loadStatusKost(); 
-  if(localStorage.getItem('adminLoggedIn')==='true'){ 
-    document.getElementById('loginForm').style.display='none'; 
-    document.getElementById('adminPanel').style.display='block'; 
-    loadSavedInvoicesList(); 
-    const today=new Date().toISOString().split('T')[0]; 
-    document.getElementById('adminInvoiceTanggal').value=today; 
+// ========== TESTIMONI (TETAP MENGGUNAKAN SPREADSHEET TERPISAH) ==========
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycby4SfrF6QKzx0WuY-Qj0t-MNGVaq7lWuss1cLw7f1D0mqbtkXK80mR0yPeG_QKlq-Bh/exec";
+
+async function loadTestimoni() { 
+  let container = document.getElementById("listTestimoni"); 
+  container.innerHTML = '<div class="loading">⏳ Memuat testimoni...</div>'; 
+  try { 
+    const response = await fetch(GOOGLE_SHEETS_URL); 
+    const data = await response.json(); 
+    if(data.length === 0){ 
+      container.innerHTML = '<div class="testimoni-kosong">✨ Belum ada testimoni. Jadilah yang pertama! ✨</div>'; 
+      return; 
+    } 
+    let html = ''; 
+    for(let i = data.length - 1; i >= 0; i--){ 
+      let t = data[i]; 
+      let bintang = ''; 
+      for(let s = 1; s <= 5; s++) bintang += s <= (parseInt(t.rating) || 0) ? '★' : '☆'; 
+      html += `<div class="testimoni-item"><div class="testimoni-header"><span class="testimoni-nama">👤 ${escapeHtml(t.nama || 'Anonim')}</span><span class="testimoni-rating">${bintang}</span><span class="testimoni-tanggal">📅 ${t.tanggal || '-'}</span></div><div class="testimoni-pesan">💬 ${escapeHtml(t.pesan || '')}</div></div>`; 
+    } 
+    container.innerHTML = html; 
+  } catch(e){ 
+    container.innerHTML = '<div class="testimoni-kosong">⚠️ Gagal memuat testimoni.</div>'; 
   } 
+}
+
+async function tambahTestimoni() { 
+  let nama = document.getElementById("namaPelanggan").value.trim(); 
+  let rating = document.querySelector('input[name="rating"]:checked'); 
+  let pesan = document.getElementById("pesanTestimoni").value.trim(); 
+  if(!nama || !rating || !pesan) return alert("Isi semua field!"); 
+  let btn = document.getElementById("btnKirim"); 
+  btn.disabled = true; 
+  btn.textContent = "Mengirim..."; 
+  try { 
+    await fetch(GOOGLE_SHEETS_URL, {method:"POST", mode:"no-cors", body:JSON.stringify({nama, rating:parseInt(rating.value), pesan})}); 
+    alert("✅ Testimoni terkirim!"); 
+    document.getElementById("namaPelanggan").value = ""; 
+    document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false); 
+    document.getElementById("pesanTestimoni").value = ""; 
+    setTimeout(loadTestimoni, 1500); 
+  } catch(e){ 
+    alert("❌ Gagal kirim."); 
+  } finally { 
+    btn.disabled = false; 
+    btn.textContent = "Kirim Testimoni"; 
+  } 
+}
+
+function escapeHtml(text) { 
+  if(!text) return ''; 
+  return text.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); 
+}
+
+// ========== FUNGSI LAINNYA ==========
+function copyAddress() { 
+  navigator.clipboard.writeText("Kost Anak Rantau Lubuk Pakam - Koordinat: 3.545927, 98.875764").then(() => alert("✅ Alamat disalin!")); 
+}
+
+window.addEventListener('load', function() { 
+  // Load status kost dari spreadsheet
+  loadStatusFromSpreadsheet();
+  
+  // Load invoice admin if logged in
+  if(localStorage.getItem('adminLoggedIn') === 'true') { 
+    document.getElementById('loginForm').style.display = 'none'; 
+    document.getElementById('adminPanel').style.display = 'block'; 
+    loadSavedInvoicesList(); 
+    const today = new Date().toISOString().split('T')[0]; 
+    document.getElementById('adminInvoiceTanggal').value = today; 
+  } 
+  
   loadInvoiceLunas(); 
   loadTestimoni();
-  let firstBtn=document.querySelector('.music-list button'); 
-  if(firstBtn) setTimeout(()=>playLagu('musik1.mp3', firstBtn),500); 
+  
+  let firstBtn = document.querySelector('.music-list button'); 
+  if(firstBtn) setTimeout(() => playLagu('musik1.mp3', firstBtn), 500); 
+  
+  // Sinkronisasi berkala setiap 30 detik
+  setInterval(() => {
+    loadStatusFromSpreadsheet();
+  }, 30000);
 });
 
 let deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; if(!localStorage.getItem('pwaBannerClosed')) document.getElementById('pwaBanner').style.display='flex'; });
-document.getElementById('installPwaBtn')?.addEventListener('click', async()=>{ if(deferredPrompt){ deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; document.getElementById('pwaBanner').style.display='none'; } });
-document.getElementById('closeBannerBtn')?.addEventListener('click',()=>{ document.getElementById('pwaBanner').style.display='none'; localStorage.setItem('pwaBannerClosed','true'); });
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; if(!localStorage.getItem('pwaBannerClosed')) document.getElementById('pwaBanner').style.display = 'flex'; });
+document.getElementById('installPwaBtn')?.addEventListener('click', async() => { if(deferredPrompt){ deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; document.getElementById('pwaBanner').style.display = 'none'; } });
+document.getElementById('closeBannerBtn')?.addEventListener('click', () => { document.getElementById('pwaBanner').style.display = 'none'; localStorage.setItem('pwaBannerClosed', 'true'); });
 
 function gabungAgenMMBC() { window.open('https://wa.me/6282162115149?text=Halo%20Admin%2C%20saya%20tertarik%20jadi%20agen%20MMBC', '_blank'); }
 function waPesanTiketPesawat() { window.open('https://wa.me/6282162115149?text=Pesan%20Tiket%20Pesawat', '_blank'); }
 
-let paketTerpilih_harga=0, paketTerpilih_nama="";
-function pilihPaket(harga, namaPaket) { paketTerpilih_harga=harga; paketTerpilih_nama=namaPaket; document.getElementById("paketTerpilihInfo").style.display="block"; document.getElementById("namaPaketTerpilih").innerText=namaPaket; document.getElementById("hargaPaketTerpilih").innerText=harga.toLocaleString(); if(namaPaket==='Langganan 1 Bulan') document.getElementById('adminInvoiceLayanan').value='Hotspot Langganan'; else document.getElementById('adminInvoiceLayanan').value='Hotspot'; document.getElementById('adminInvoiceJumlah').value=harga; document.getElementById('adminInvoiceKeterangan').value=`Paket Hotspot ${namaPaket}`; const today=new Date().toISOString().split('T')[0]; document.getElementById('adminInvoiceTanggal').value=today; alert(`✅ Paket ${namaPaket} (Rp${harga.toLocaleString()}) dipilih!`); }
-function tampilkanQRIS() { if(paketTerpilih_harga===0) alert("Pilih paket dulu!"); else { document.getElementById("qrisSection").style.display="block"; document.getElementById("qrisSection").scrollIntoView({ behavior:"smooth" }); } }
-function tutupQRIS() { document.getElementById("qrisSection").style.display="none"; }
+let paketTerpilih_harga = 0, paketTerpilih_nama = "";
+function pilihPaket(harga, namaPaket) { 
+  paketTerpilih_harga = harga; 
+  paketTerpilih_nama = namaPaket; 
+  document.getElementById("paketTerpilihInfo").style.display = "block"; 
+  document.getElementById("namaPaketTerpilih").innerText = namaPaket; 
+  document.getElementById("hargaPaketTerpilih").innerText = harga.toLocaleString(); 
+  if(namaPaket === 'Langganan 1 Bulan') document.getElementById('adminInvoiceLayanan').value = 'Hotspot Langganan'; 
+  else document.getElementById('adminInvoiceLayanan').value = 'Hotspot'; 
+  document.getElementById('adminInvoiceJumlah').value = harga; 
+  document.getElementById('adminInvoiceKeterangan').value = `Paket Hotspot ${namaPaket}`; 
+  const today = new Date().toISOString().split('T')[0]; 
+  document.getElementById('adminInvoiceTanggal').value = today; 
+  alert(`✅ Paket ${namaPaket} (Rp${harga.toLocaleString()}) dipilih!`); 
+}
+
+function tampilkanQRIS() { 
+  if(paketTerpilih_harga === 0) alert("Pilih paket dulu!"); 
+  else { 
+    document.getElementById("qrisSection").style.display = "block"; 
+    document.getElementById("qrisSection").scrollIntoView({ behavior:"smooth" }); 
+  } 
+}
+
+function tutupQRIS() { document.getElementById("qrisSection").style.display = "none"; }
 
 let audioPlayer = document.getElementById('audioPlayer');
-function playLagu(file, btnElement) { audioPlayer.src=file; document.querySelectorAll('.music-list button').forEach(btn=>btn.classList.remove('active')); btnElement.classList.add('active'); document.getElementById('nowPlaying').innerHTML=`🎤 Sedang diputar: ${file.replace('.mp3','')}`; audioPlayer.play(); }
-function zoom(img) { document.getElementById("modal").style.display="block"; document.getElementById("modalImg").src=img.src; }
-function closeZoom() { document.getElementById("modal").style.display="none"; }
-function toggleMenu() { var menu=document.getElementById("menu"); menu.style.display=menu.style.display==="flex"?"none":"flex"; }
+function playLagu(file, btnElement) { 
+  audioPlayer.src = file; 
+  document.querySelectorAll('.music-list button').forEach(btn => btn.classList.remove('active')); 
+  btnElement.classList.add('active'); 
+  document.getElementById('nowPlaying').innerHTML = `🎤 Sedang diputar: ${file.replace('.mp3','')}`; 
+  audioPlayer.play(); 
+}
 
-const GOOGLE_SHEETS_URL="https://script.google.com/macros/s/AKfycby4SfrF6QKzx0WuY-Qj0t-MNGVaq7lWuss1cLw7f1D0mqbtkXK80mR0yPeG_QKlq-Bh/exec";
-async function loadTestimoni() { let container=document.getElementById("listTestimoni"); container.innerHTML='<div class="loading">⏳ Memuat testimoni...</div>'; try{ const response=await fetch(GOOGLE_SHEETS_URL); const data=await response.json(); if(data.length===0){ container.innerHTML='<div class="testimoni-kosong">✨ Belum ada testimoni. Jadilah yang pertama! ✨</div>'; return; } let html=''; for(let i=data.length-1;i>=0;i--){ let t=data[i]; let bintang=''; for(let s=1;s<=5;s++) bintang+=s<=(parseInt(t.rating)||0)?'★':'☆'; html+=`<div class="testimoni-item"><div class="testimoni-header"><span class="testimoni-nama">👤 ${escapeHtml(t.nama||'Anonim')}</span><span class="testimoni-rating">${bintang}</span><span class="testimoni-tanggal">📅 ${t.tanggal||'-'}</span></div><div class="testimoni-pesan">💬 ${escapeHtml(t.pesan||'')}</div></div>`; } container.innerHTML=html; } catch(e){ container.innerHTML='<div class="testimoni-kosong">⚠️ Gagal memuat testimoni.</div>'; } }
-async function tambahTestimoni() { let nama=document.getElementById("namaPelanggan").value.trim(); let rating=document.querySelector('input[name="rating"]:checked'); let pesan=document.getElementById("pesanTestimoni").value.trim(); if(!nama||!rating||!pesan) return alert("Isi semua field!"); let btn=document.getElementById("btnKirim"); btn.disabled=true; btn.textContent="Mengirim..."; try{ await fetch(GOOGLE_SHEETS_URL,{method:"POST",mode:"no-cors",body:JSON.stringify({nama,rating:parseInt(rating.value),pesan})}); alert("✅ Testimoni terkirim!"); document.getElementById("namaPelanggan").value=""; document.querySelectorAll('input[name="rating"]').forEach(r=>r.checked=false); document.getElementById("pesanTestimoni").value=""; setTimeout(loadTestimoni,1500); } catch(e){ alert("❌ Gagal kirim."); } finally{ btn.disabled=false; btn.textContent="Kirim Testimoni"; } }
-function escapeHtml(text) { if(!text) return ''; return text.replace(/[&<>]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+function zoom(img) { document.getElementById("modal").style.display = "block"; document.getElementById("modalImg").src = img.src; }
+function closeZoom() { document.getElementById("modal").style.display = "none"; }
+function toggleMenu() { var menu = document.getElementById("menu"); menu.style.display = menu.style.display === "flex" ? "none" : "flex"; }
 </script>
 </body>
 </html>
