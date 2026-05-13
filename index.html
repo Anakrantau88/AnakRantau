@@ -392,11 +392,16 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
 
 <script>
 // ========== STATUS KOST - TERINTEGRASI GOOGLE SPREADSHEET ==========
-// GANTI DENGAN URL APPS SCRIPT ANDA
-const STATUS_API_URL = "https://script.google.com/macros/s/AKfycbxRU7h41wBjOfwRJY_avXzFzhMhWQEXEI2FjAeE25JrNhAAuoL-ztQJsJ4YRJ4H2N3x/exec";
+const STATUS_API_URL = "https://script.google.com/macros/s/URL_BARU_ANDA/exec";
 
-let statusKost = { 'nonac-1': 'tersedia', 'nonac-2': 'tersedia', 'ac-1': 'tersedia', 'ac-2': 'tersedia' };
+let statusKost = { 
+  'nonac-1': 'tersedia', 
+  'nonac-2': 'tersedia', 
+  'ac-1': 'tersedia', 
+  'ac-2': 'tersedia' 
+};
 let isStatusAdminLoggedIn = false;
+let syncInterval = null;
 
 // Muat status dari Spreadsheet
 async function loadStatusFromSpreadsheet() {
@@ -406,9 +411,20 @@ async function loadStatusFromSpreadsheet() {
     const data = await response.json();
     
     if (data && !data.error) {
-      statusKost = { ...statusKost, ...data };
-      updateAllStatusDisplay();
-      console.log('✅ Status kost dimuat dari spreadsheet:', statusKost);
+      let changed = false;
+      for (const [key, value] of Object.entries(data)) {
+        if (statusKost[key] !== value) {
+          statusKost[key] = value;
+          changed = true;
+        }
+      }
+      
+      if (changed) {
+        updateAllStatusDisplay();
+        // Simpan ke localStorage sebagai cache
+        localStorage.setItem('anakRantauStatusKost', JSON.stringify(statusKost));
+        console.log('✅ Status kost diupdate dari spreadsheet:', statusKost);
+      }
       return true;
     }
   } catch (error) {
@@ -418,9 +434,18 @@ async function loadStatusFromSpreadsheet() {
   // Fallback ke localStorage jika gagal
   const saved = localStorage.getItem('anakRantauStatusKost');
   if (saved) {
-    statusKost = JSON.parse(saved);
-    updateAllStatusDisplay();
-    console.log('📦 Status kost dimuat dari localStorage (fallback)');
+    const parsed = JSON.parse(saved);
+    let changed = false;
+    for (const [key, value] of Object.entries(parsed)) {
+      if (statusKost[key] !== value) {
+        statusKost[key] = value;
+        changed = true;
+      }
+    }
+    if (changed) {
+      updateAllStatusDisplay();
+      console.log('📦 Status kost dimuat dari localStorage (fallback)');
+    }
   }
   return false;
 }
@@ -428,9 +453,9 @@ async function loadStatusFromSpreadsheet() {
 // Simpan status ke Spreadsheet
 async function saveStatusToSpreadsheet(key, newStatus) {
   try {
+    console.log(`📤 Mengirim update ke spreadsheet: ${key} -> ${newStatus}`);
     const response = await fetch(STATUS_API_URL, {
       method: 'POST',
-      mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -444,6 +469,14 @@ async function saveStatusToSpreadsheet(key, newStatus) {
     const result = await response.json();
     if (result.success) {
       console.log(`✅ Status ${key} berhasil disimpan ke spreadsheet`);
+      // Update dengan data terbaru dari server
+      if (result.data) {
+        for (const [k, v] of Object.entries(result.data)) {
+          statusKost[k] = v;
+        }
+        updateAllStatusDisplay();
+        localStorage.setItem('anakRantauStatusKost', JSON.stringify(statusKost));
+      }
       return true;
     } else {
       console.error('Gagal simpan ke spreadsheet:', result);
@@ -457,6 +490,7 @@ async function saveStatusToSpreadsheet(key, newStatus) {
 
 // Update tampilan status di HTML
 function updateAllStatusDisplay() {
+  console.log('🔄 Update tampilan status:', statusKost);
   for (const [id, status] of Object.entries(statusKost)) {
     const badge = document.getElementById(`status-${id}`);
     if (badge) {
@@ -473,24 +507,29 @@ function updateAllStatusDisplay() {
 
 // Update status (panggil dari admin panel)
 async function updateStatus(kamarId, newStatus) {
-  // Update tampilan dulu
+  if (!isStatusAdminLoggedIn) {
+    alert('❌ Anda harus login sebagai admin terlebih dahulu!');
+    return;
+  }
+  
+  // Tampilkan loading
+  const oldStatus = statusKost[kamarId];
   statusKost[kamarId] = newStatus;
   updateAllStatusDisplay();
-  
-  // Simpan ke localStorage sebagai backup
-  localStorage.setItem('anakRantauStatusKost', JSON.stringify(statusKost));
   
   // Kirim ke spreadsheet
   const success = await saveStatusToSpreadsheet(kamarId, newStatus);
   
   if (success) {
     alert(`✅ Status kamar berhasil diubah menjadi ${newStatus === 'tersedia' ? 'TERSEDIA' : 'HABIS'} (tersimpan di cloud)`);
+    // Force reload dari server
+    await loadStatusFromSpreadsheet();
   } else {
-    alert(`⚠️ Status berubah tapi GAGAL tersimpan ke cloud. Periksa koneksi internet.`);
+    // Rollback jika gagal
+    statusKost[kamarId] = oldStatus;
+    updateAllStatusDisplay();
+    alert(`❌ Gagal menyimpan ke cloud! Periksa koneksi internet. Status dikembalikan ke ${oldStatus === 'tersedia' ? 'TERSEDIA' : 'HABIS'}`);
   }
-  
-  // Refresh data dari spreadsheet untuk memastikan sinkron
-  setTimeout(() => loadStatusFromSpreadsheet(), 1000);
 }
 
 // Login admin status (Password: Debat4)
@@ -512,6 +551,23 @@ function logoutStatusAdmin() {
   document.getElementById('statusControlArea').style.display = 'none';
   document.getElementById('statusPassword').value = '';
   alert('🔒 Logout.');
+}
+
+// Mulai sinkronisasi berkala
+function startAutoSync() {
+  if (syncInterval) clearInterval(syncInterval);
+  syncInterval = setInterval(() => {
+    loadStatusFromSpreadsheet();
+  }, 10000); // Sinkron setiap 10 detik
+}
+
+// Hentikan sinkronisasi
+function stopAutoSync() {
+  if (syncInterval) {
+    clearInterval(syncInterval);
+    syncInterval = null;
+  }
+}
 }
 
 // ========== INVOICE SYSTEM ==========
