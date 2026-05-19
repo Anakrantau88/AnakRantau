@@ -35,7 +35,7 @@
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
 <style>
-/* ========== SEMUA STYLE ========== */
+/* ========== SEMUA STYLE (sama seperti sebelumnya) ========== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 .hamburger { display: none; font-size: 25px; cursor: pointer; }
 @media (max-width: 768px) {
@@ -424,7 +424,8 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
 
 <script>
 // ========== KONFIGURASI ==========
-const STATUS_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxXE5fDKjAGOp4Zu6vrip5TjSOTg6-D5AERBtOXWJy8L599Cwq5QllLWzRsnwRz0fr9/exec";
+// GANTI URL INI DENGAN URL DEPLOYMENT BARU ANDA!
+const STATUS_SHEETS_URL = "https://script.google.com/macros/s/YOUR_NEW_URL_HERE/exec";
 const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycby4SfrF6QKzx0WuY-Qj0t-MNGVaq7lWuss1cLw7f1D0mqbtkXK80mR0yPeG_QKlq-Bh/exec";
 
 // ========== STATUS KOST ONLINE (GOOGLE SHEETS) ==========
@@ -460,7 +461,7 @@ async function loadStatusFromSheets() {
         
         const data = await response.json();
         
-        if (data && data.status) {
+        if (data && data.success && data.status) {
             // Update status lokal dari server
             for (const [namaKamar, statusValue] of Object.entries(data.status)) {
                 const idKamar = reverseKamarMapping[namaKamar];
@@ -478,6 +479,13 @@ async function loadStatusFromSheets() {
                 document.getElementById('lastUpdateStatus').innerHTML = `📅 Terakhir sinkron: ${now.toLocaleTimeString('id-ID')}`;
             }
             return true;
+        } else if (data && data.error) {
+            console.error('Server error:', data.error);
+            if (syncDiv) {
+                syncDiv.textContent = `⚠️ ${data.error}`;
+                syncDiv.className = "sync-status sync-error";
+            }
+            return false;
         } else {
             if (syncDiv) {
                 syncDiv.textContent = "⚠️ Menggunakan data lokal (sinkronisasi online gagal)";
@@ -501,19 +509,25 @@ async function saveStatusToSheets(kamarId, newStatus) {
     if (!namaKamar) return false;
     
     try {
-        await fetch(`${STATUS_SHEETS_URL}?action=updateStatus`, {
+        // Menggunakan mode 'cors' dengan method POST
+        const response = await fetch(`${STATUS_SHEETS_URL}`, {
             method: 'POST',
-            mode: 'no-cors',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: JSON.stringify({
+            body: `action=updateStatus&data=${encodeURIComponent(JSON.stringify({
                 kamarId: namaKamar,
                 status: newStatus,
                 timestamp: new Date().toISOString()
-            })
+            }))}`
         });
-        return true;
+        
+        // Karena Apps Script mengembalikan response, kita coba parse
+        if (response.ok) {
+            const result = await response.json();
+            return result.success === true;
+        }
+        return false;
     } catch (error) {
         console.error('Error saving status to sheets:', error);
         return false;
@@ -611,7 +625,7 @@ function logoutStatusAdmin() {
     alert('🔒 Logout.');
 }
 
-// ========== INVOICE SYSTEM ==========
+// ========== INVOICE SYSTEM (sama seperti sebelumnya) ==========
 let savedInvoices = JSON.parse(localStorage.getItem('anakRantauInvoices') || '[]');
 let currentAdminInvoiceData = null;
 let isPasswordVerified = false;
@@ -861,7 +875,7 @@ function sendInvoiceToGroup() {
   window.open(`https://wa.me/6282162115149?text=${pesan}`, '_blank');
 }
 
-// ========== INVOICE LUNAS UNTUK PENGUNJUNG (PDF DOWNLOAD dengan PRINT) ==========
+// ========== INVOICE LUNAS UNTUK PENGUNJUNG ==========
 function loadInvoiceLunas() {
   const container = document.getElementById('invoiceLunasList');
   const invoicesLunas = savedInvoices.filter(inv => inv.status === 'Sudah Dibayar');
