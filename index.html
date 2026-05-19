@@ -134,6 +134,10 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
 .status-login-area { display: flex; gap: 10px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
 .status-login-area input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px; }
 .kost-extra { background: #e8f4fd; border-radius: 10px; padding: 15px; margin-top: 15px; text-align: center; }
+.sync-status { font-size: 11px; margin-top: 10px; padding: 5px; text-align: center; border-radius: 5px; display: inline-block; width: auto; }
+.sync-success { background: #d4edda; color: #155724; }
+.sync-error { background: #f8d7da; color: #721c24; }
+.sync-loading { background: #fff3cd; color: #856404; }
 
 /* INVOICE ADMIN STYLES */
 .invoice-admin-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
@@ -262,13 +266,33 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
     <div class="kost-item ac" id="kamar-ac-1"><div class="status-badge" id="status-ac-1">✓ Tersedia</div><div class="kost-item-header"><div class="kost-icon">❄️</div><div class="kost-type">Kamar AC</div><div class="kost-badge">⭐ Premium + Sejuk</div></div><div class="kost-item-body"><div class="kost-price"><div class="price-value">Rp700<small>.000</small></div><div class="price-period">/ bulan</div></div><div class="kost-features"><p>1 orang per kamar</p><p>AC + Kasur + Bantal + Lemari</p><p>Kamar mandi dalam</p><p>Listrik + WiFi cepat</p></div><a href="https://wa.me/6282162115149?text=Halo%20Admin%2C%20saya%20mau%20tanya%20kost%20AC%201%20orang" class="btn-kost">💬 Tanya Ketersediaan →</a></div></div>
     <div class="kost-item ac dua" id="kamar-ac-2"><div class="status-badge" id="status-ac-2">✓ Tersedia</div><div class="kost-item-header"><div class="kost-icon">👥❄️</div><div class="kost-type">Kamar AC (Double)</div><div class="kost-badge">⭐ Premium + Sejuk</div></div><div class="kost-item-body"><div class="kost-price"><div class="price-value">Rp800<small>.000</small></div><div class="price-period">/ bulan</div></div><div class="kost-features"><p>2 orang per kamar</p><p>AC + 2 Kasur + Bantal + Lemari</p><p>Kamar mandi dalam</p><p>Listrik + WiFi cepat</p></div><a href="https://wa.me/6282162115149?text=Halo%20Admin%2C%20saya%20mau%20tanya%20kost%20AC%202%20orang" class="btn-kost">💬 Tanya Ketersediaan →</a></div></div>
   </div>
+  
+  <!-- Status Sinkronisasi Online -->
+  <div id="syncStatusKost" class="sync-status sync-loading" style="text-align: center; margin-top: 10px;">🔄 Menyinkronkan status kamar online...</div>
+  
   <div class="admin-status-panel" id="adminStatusPanel">
-    <h4>🔧 Panel Admin - Update Status Ketersediaan Kamar</h4>
+    <h4>🔧 Panel Admin - Update Status Ketersediaan Kamar (Online)</h4>
     <div id="statusLoginArea" class="status-login-area">
       <input type="password" id="statusPassword" placeholder="Password Admin" autocomplete="off">
       <button onclick="loginStatusAdmin()">Login Admin Status</button>
     </div>
-    <div id="statusControlArea" style="display: none;"><div class="admin-status-buttons"><button class="admin-status-btn" onclick="updateStatus('nonac-1', 'tersedia')">🟢 Non AC (1) - Tersedia</button><button class="admin-status-btn" onclick="updateStatus('nonac-1', 'habis')">🔴 Non AC (1) - Habis</button><button class="admin-status-btn" onclick="updateStatus('nonac-2', 'tersedia')">🟢 Non AC Double - Tersedia</button><button class="admin-status-btn" onclick="updateStatus('nonac-2', 'habis')">🔴 Non AC Double - Habis</button><button class="admin-status-btn" onclick="updateStatus('ac-1', 'tersedia')">🟢 AC (1) - Tersedia</button><button class="admin-status-btn" onclick="updateStatus('ac-1', 'habis')">🔴 AC (1) - Habis</button><button class="admin-status-btn" onclick="updateStatus('ac-2', 'tersedia')">🟢 AC Double - Tersedia</button><button class="admin-status-btn" onclick="updateStatus('ac-2', 'habis')">🔴 AC Double - Habis</button></div><button onclick="logoutStatusAdmin()" style="margin-top:10px; background:#e53e3e; color:white; border:none; padding:5px 15px; border-radius:5px; cursor:pointer;">🚪 Logout Panel Status</button></div>
+    <div id="statusControlArea" style="display: none;">
+      <div class="admin-status-buttons">
+        <button class="admin-status-btn" onclick="updateStatusOnline('nonac-1', 'tersedia')">🟢 Non AC (1) - Tersedia</button>
+        <button class="admin-status-btn" onclick="updateStatusOnline('nonac-1', 'habis')">🔴 Non AC (1) - Habis</button>
+        <button class="admin-status-btn" onclick="updateStatusOnline('nonac-2', 'tersedia')">🟢 Non AC Double - Tersedia</button>
+        <button class="admin-status-btn" onclick="updateStatusOnline('nonac-2', 'habis')">🔴 Non AC Double - Habis</button>
+        <button class="admin-status-btn" onclick="updateStatusOnline('ac-1', 'tersedia')">🟢 AC (1) - Tersedia</button>
+        <button class="admin-status-btn" onclick="updateStatusOnline('ac-1', 'habis')">🔴 AC (1) - Habis</button>
+        <button class="admin-status-btn" onclick="updateStatusOnline('ac-2', 'tersedia')">🟢 AC Double - Tersedia</button>
+        <button class="admin-status-btn" onclick="updateStatusOnline('ac-2', 'habis')">🔴 AC Double - Habis</button>
+      </div>
+      <div style="margin-top: 10px; display: flex; gap: 10px; justify-content: center;">
+        <button onclick="refreshStatusOnline()" style="background:#0077cc; color:white; border:none; padding:5px 15px; border-radius:5px; cursor:pointer;">🔄 Refresh Data</button>
+        <button onclick="logoutStatusAdmin()" style="background:#e53e3e; color:white; border:none; padding:5px 15px; border-radius:5px; cursor:pointer;">🚪 Logout Panel Status</button>
+      </div>
+      <div id="lastUpdateStatus" style="font-size: 11px; text-align: center; margin-top: 8px; color: #666;"></div>
+    </div>
   </div>
   <div class="kost-extra"><p>🏆 Fasilitas Unggulan:</p><p>✅ WiFi Cepat | ✅ Listrik Termasuk | ✅ Air Bersih 24 Jam | ✅ Keamanan 24 Jam</p></div>
 </div>
@@ -399,14 +423,193 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
 <div id="modal" class="modal" onclick="closeZoom()"><img id="modalImg"></div>
 
 <script>
-// ========== STATUS KOST ==========
+// ========== KONFIGURASI ==========
+const STATUS_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxXE5fDKjAGOp4Zu6vrip5TjSOTg6-D5AERBtOXWJy8L599Cwq5QllLWzRsnwRz0fr9/exec";
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycby4SfrF6QKzx0WuY-Qj0t-MNGVaq7lWuss1cLw7f1D0mqbtkXK80mR0yPeG_QKlq-Bh/exec";
+
+// ========== STATUS KOST ONLINE (GOOGLE SHEETS) ==========
 let statusKost = { 'nonac-1': 'tersedia', 'nonac-2': 'tersedia', 'ac-1': 'tersedia', 'ac-2': 'tersedia' };
-function loadStatusKost() { const saved = localStorage.getItem('anakRantauStatusKost'); if (saved) { statusKost = JSON.parse(saved); } updateAllStatusDisplay(); }
-function saveStatusKost() { localStorage.setItem('anakRantauStatusKost', JSON.stringify(statusKost)); }
-function updateAllStatusDisplay() { for (const [id, status] of Object.entries(statusKost)) { const badge = document.getElementById(`status-${id}`); if (badge) { if (status === 'tersedia') { badge.textContent = '✓ Tersedia'; badge.className = 'status-badge status-tersedia'; } else { badge.textContent = '✗ Habis'; badge.className = 'status-badge status-habis'; } } } }
-function updateStatus(kamarId, newStatus) { statusKost[kamarId] = newStatus; saveStatusKost(); updateAllStatusDisplay(); alert(`✅ Status kamar berhasil diubah menjadi ${newStatus === 'tersedia' ? 'TERSEDIA' : 'HABIS'}`); }
-function loginStatusAdmin() { const pwd = document.getElementById('statusPassword').value; if (pwd === 'Debat4') { document.getElementById('statusLoginArea').style.display = 'none'; document.getElementById('statusControlArea').style.display = 'block'; alert('✅ Login berhasil!'); } else { alert('❌ Password salah!'); } }
-function logoutStatusAdmin() { document.getElementById('statusLoginArea').style.display = 'flex'; document.getElementById('statusControlArea').style.display = 'none'; document.getElementById('statusPassword').value = ''; alert('🔒 Logout.'); }
+
+// Mapping antara ID HTML dan Nama Kamar di Sheet
+const kamarMapping = {
+    'nonac-1': 'Non AC (1)',
+    'nonac-2': 'Non AC Double',
+    'ac-1': 'AC (1)',
+    'ac-2': 'AC Double'
+};
+
+// Reverse mapping
+const reverseKamarMapping = {
+    'Non AC (1)': 'nonac-1',
+    'Non AC Double': 'nonac-2',
+    'AC (1)': 'ac-1',
+    'AC Double': 'ac-2'
+};
+
+// Fungsi untuk memuat status dari Google Sheets
+async function loadStatusFromSheets() {
+    const syncDiv = document.getElementById('syncStatusKost');
+    if (syncDiv) {
+        syncDiv.textContent = "🔄 Menyinkronkan status kamar online...";
+        syncDiv.className = "sync-status sync-loading";
+    }
+    
+    try {
+        const response = await fetch(`${STATUS_SHEETS_URL}?action=getStatus`);
+        if (!response.ok) throw new Error('Gagal mengambil data');
+        
+        const data = await response.json();
+        
+        if (data && data.status) {
+            // Update status lokal dari server
+            for (const [namaKamar, statusValue] of Object.entries(data.status)) {
+                const idKamar = reverseKamarMapping[namaKamar];
+                if (idKamar && statusKost.hasOwnProperty(idKamar)) {
+                    statusKost[idKamar] = statusValue;
+                }
+            }
+            updateAllStatusDisplay();
+            if (syncDiv) {
+                syncDiv.textContent = "✅ Status kamar tersinkronasi online";
+                syncDiv.className = "sync-status sync-success";
+            }
+            if (document.getElementById('lastUpdateStatus')) {
+                const now = new Date();
+                document.getElementById('lastUpdateStatus').innerHTML = `📅 Terakhir sinkron: ${now.toLocaleTimeString('id-ID')}`;
+            }
+            return true;
+        } else {
+            if (syncDiv) {
+                syncDiv.textContent = "⚠️ Menggunakan data lokal (sinkronisasi online gagal)";
+                syncDiv.className = "sync-status sync-error";
+            }
+            return false;
+        }
+    } catch (error) {
+        console.error('Error loading status from sheets:', error);
+        if (syncDiv) {
+            syncDiv.textContent = "⚠️ Gagal sinkron online - menggunakan data lokal";
+            syncDiv.className = "sync-status sync-error";
+        }
+        return false;
+    }
+}
+
+// Fungsi untuk menyimpan status ke Google Sheets
+async function saveStatusToSheets(kamarId, newStatus) {
+    const namaKamar = kamarMapping[kamarId];
+    if (!namaKamar) return false;
+    
+    try {
+        await fetch(`${STATUS_SHEETS_URL}?action=updateStatus`, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                kamarId: namaKamar,
+                status: newStatus,
+                timestamp: new Date().toISOString()
+            })
+        });
+        return true;
+    } catch (error) {
+        console.error('Error saving status to sheets:', error);
+        return false;
+    }
+}
+
+// Fungsi untuk refresh status dari server
+async function refreshStatusOnline() {
+    const syncDiv = document.getElementById('syncStatusKost');
+    if (syncDiv) {
+        syncDiv.textContent = "🔄 Memuat ulang status online...";
+        syncDiv.className = "sync-status sync-loading";
+    }
+    await loadStatusFromSheets();
+}
+
+// Fungsi update status online (dengan sinkronisasi)
+async function updateStatusOnline(kamarId, newStatus) {
+    // Update tampilan lokal terlebih dahulu
+    statusKost[kamarId] = newStatus;
+    updateAllStatusDisplay();
+    
+    // Simpan ke Google Sheets
+    const success = await saveStatusToSheets(kamarId, newStatus);
+    
+    // Tampilkan notifikasi
+    if (success) {
+        alert(`✅ Status kamar berhasil diubah menjadi ${newStatus === 'tersedia' ? 'TERSEDIA' : 'HABIS'} (tersinkronasi online)`);
+        const syncDiv = document.getElementById('syncStatusKost');
+        if (syncDiv) {
+            syncDiv.textContent = "✅ Status berhasil disinkronasi online";
+            syncDiv.className = "sync-status sync-success";
+            setTimeout(() => {
+                if (syncDiv) syncDiv.textContent = "✅ Status kamar tersinkronasi online";
+            }, 3000);
+        }
+    } else {
+        alert(`⚠️ Status berubah menjadi ${newStatus === 'tersedia' ? 'TERSEDIA' : 'HABIS'} (hanya tersimpan lokal, coba refresh nanti)`);
+        const syncDiv = document.getElementById('syncStatusKost');
+        if (syncDiv) {
+            syncDiv.textContent = "⚠️ Gagal sinkron online - tersimpan lokal";
+            syncDiv.className = "sync-status sync-error";
+            setTimeout(() => {
+                if (syncDiv) syncDiv.textContent = "⚠️ Gagal sinkron online - menggunakan data lokal";
+            }, 3000);
+        }
+    }
+    
+    // Update waktu terakhir
+    if (document.getElementById('lastUpdateStatus')) {
+        const now = new Date();
+        document.getElementById('lastUpdateStatus').innerHTML = `📅 Status diubah: ${now.toLocaleTimeString('id-ID')}`;
+    }
+}
+
+// Fungsi untuk update tampilan status
+function updateAllStatusDisplay() {
+    const badgeMap = {
+        'nonac-1': 'status-nonac-1',
+        'nonac-2': 'status-nonac-2',
+        'ac-1': 'status-ac-1',
+        'ac-2': 'status-ac-2'
+    };
+    
+    for (const [id, elementId] of Object.entries(badgeMap)) {
+        const badge = document.getElementById(elementId);
+        if (badge) {
+            if (statusKost[id] === 'tersedia') {
+                badge.textContent = '✓ Tersedia';
+                badge.className = 'status-badge status-tersedia';
+            } else {
+                badge.textContent = '✗ Habis';
+                badge.className = 'status-badge status-habis';
+            }
+        }
+    }
+}
+
+// Login untuk panel admin status
+function loginStatusAdmin() {
+    const pwd = document.getElementById('statusPassword').value;
+    if (pwd === 'Debat4') {
+        document.getElementById('statusLoginArea').style.display = 'none';
+        document.getElementById('statusControlArea').style.display = 'block';
+        alert('✅ Login berhasil! Status kamar sudah tersinkronasi online.');
+    } else {
+        alert('❌ Password salah!');
+    }
+}
+
+function logoutStatusAdmin() {
+    document.getElementById('statusLoginArea').style.display = 'flex';
+    document.getElementById('statusControlArea').style.display = 'none';
+    document.getElementById('statusPassword').value = '';
+    alert('🔒 Logout.');
+}
 
 // ========== INVOICE SYSTEM ==========
 let savedInvoices = JSON.parse(localStorage.getItem('anakRantauInvoices') || '[]');
@@ -428,21 +631,15 @@ function adminLogin() {
 
 function adminLogout() { localStorage.removeItem('adminLoggedIn'); document.getElementById('loginForm').style.display = 'block'; document.getElementById('adminPanel').style.display = 'none'; document.getElementById('adminInvoicePreview').style.display = 'none'; }
 
-// Fungsi untuk mendapatkan nilai nama pelanggan (prioritas: manual > select)
 function getNamaPelangganValue() {
   const manualNama = document.getElementById('adminInvoiceNamaManual').value.trim();
-  if (manualNama !== "") {
-    return manualNama;
-  }
+  if (manualNama !== "") return manualNama;
   const selectedKamar = document.getElementById('adminInvoiceNamaSelect').value;
-  if (selectedKamar !== "") {
-    return selectedKamar;
-  }
+  if (selectedKamar !== "") return selectedKamar;
   return "";
 }
 
 function setNamaPelangganValue(nama) {
-  // Cek apakah nama tersebut ada di dropdown kamar
   const selectElement = document.getElementById('adminInvoiceNamaSelect');
   const manualElement = document.getElementById('adminInvoiceNamaManual');
   let found = false;
@@ -704,103 +901,61 @@ function downloadInvoiceAsPDF(index) {
     return;
   }
   const inv = window.lunasInvoices[index];
-  
-  const printContent = `
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Invoice ${inv.no}</title>
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"><\/script>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Arial', sans-serif; padding: 40px; background: white; }
-  .invoice-container { max-width: 800px; margin: 0 auto; background: white; }
-  .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #667eea; padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; }
-  .logo-area { display: flex; align-items: center; gap: 15px; }
-  .logo-img { width: 60px; height: auto; }
-  .title-area { text-align: center; flex: 1; }
-  .title-area h2 { color: #667eea; margin: 0; }
-  .contact-area { text-align: right; }
-  .status-badge { text-align: center; margin: 20px 0; }
-  .status-badge span { background: #48bb78; color: white; padding: 8px 25px; border-radius: 25px; display: inline-block; font-weight: bold; }
-  .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #ddd; font-size: 14px; }
-  .detail-row.total { border-top: 3px solid #667eea; border-bottom: none; margin-top: 10px; padding-top: 15px; font-weight: bold; font-size: 18px; color: #667eea; }
-  .footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 11px; color: #666; }
-  .bank-info { background: #f0f8ff; padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center; font-size: 13px; }
-  .bank-info strong { color: #0077cc; }
-  .qr-bottom { display: flex; justify-content: flex-end; margin-top: 20px; }
-  @media print {
-    body { padding: 0; margin: 0; }
-  }
-</style>
-</head>
-<body>
-<div class="invoice-container">
-  <div class="header">
-    <div class="logo-area">
-      <img src="logo.png" class="logo-img" onerror="this.src='https://via.placeholder.com/60'">
-    </div>
-    <div class="title-area">
-      <h2>ANAK RANTAU LUBUK PAKAM</h2>
-      <p>Kost, Hotspot & Travel</p>
-    </div>
-    <div class="contact-area">
-      <p>📞 082162115149</p>
-      <p>✉️ anakrantaulubukpakam@gmail.com</p>
-    </div>
-  </div>
-  <div class="status-badge">
-    <span>✅ SUDAH DIBAYAR LUNAS</span>
-  </div>
-  <div class="detail-row"><strong>No. Invoice:</strong> <span>${inv.no}</span></div>
-  <div class="detail-row"><strong>Tanggal Transaksi:</strong> <span>${inv.tanggal}</span></div>
-  <div class="detail-row"><strong>Layanan:</strong> <span>${inv.layanan}</span></div>
-  <div class="detail-row"><strong>Pelanggan:</strong> <span>${inv.nama}</span></div>
-  <div class="detail-row"><strong>Detail Transaksi:</strong> <span>${inv.keterangan}</span></div>
-  <div class="detail-row total"><strong>Total Pembayaran:</strong> <span>Rp ${inv.jumlahFormatted}</span></div>
-  <div class="bank-info">
-    <strong>⚠️ Peringatan Penting</strong><br>
-    Pembayaran resmi hanya melalui rekening Bank Mandiri<br>
-    <strong>1050014328318</strong> a.n. <strong>Erikson Sibagariang</strong>
-  </div>
-  <div class="qr-bottom">
-    <div style="text-align: center;">
-      <div id="qrcode-pdf"></div>
-      <p style="font-size: 10px;">Scan untuk website</p>
-    </div>
-  </div>
-  <div class="footer">
-    <p>Terima kasih telah menggunakan layanan kami 🙏</p>
-    <p style="margin-top:10px;">Dicetak pada: ${new Date().toLocaleString('id-ID')}</p>
-  </div>
-</div>
-<script>
-  new QRCode(document.getElementById("qrcode-pdf"), {
-    text: "https://anakrantau88.my.id",
-    width: 100,
-    height: 100,
-    colorDark: "#000000",
-    colorLight: "#ffffff",
-    correctLevel: QRCode.CorrectLevel.H
-  });
-  window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 500); };
-<\/script>
-</body>
-</html>`;
-
   const printWindow = window.open('', '_blank');
-  printWindow.document.write(printContent);
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="UTF-8"><title>Invoice ${inv.no}</title>
+    <style>
+      *{margin:0;padding:0;box-sizing:border-box;}
+      body{font-family:Arial,sans-serif;padding:40px;background:white;}
+      .invoice-container{max-width:800px;margin:0 auto;}
+      .header{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #667eea;padding-bottom:15px;margin-bottom:20px;flex-wrap:wrap;}
+      .logo-area{display:flex;align-items:center;gap:15px;}
+      .logo-img{width:60px;}
+      .title-area{text-align:center;flex:1;}
+      .title-area h2{color:#667eea;}
+      .contact-area{text-align:right;}
+      .status-badge{text-align:center;margin:20px 0;}
+      .status-badge span{background:#48bb78;color:white;padding:8px 25px;border-radius:25px;display:inline-block;font-weight:bold;}
+      .detail-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px dashed #ddd;}
+      .detail-row.total{border-top:3px solid #667eea;border-bottom:none;margin-top:10px;padding-top:15px;font-weight:bold;font-size:18px;color:#667eea;}
+      .footer{text-align:center;margin-top:30px;padding-top:20px;border-top:1px solid #ddd;font-size:11px;color:#666;}
+      .bank-info{background:#f0f8ff;padding:15px;border-radius:8px;margin:20px 0;text-align:center;}
+      .bank-info strong{color:#0077cc;}
+    </style>
+    </head>
+    <body>
+    <div class="invoice-container">
+      <div class="header">
+        <div class="logo-area"><img src="logo.png" class="logo-img" onerror="this.src='https://via.placeholder.com/60'"></div>
+        <div class="title-area"><h2>ANAK RANTAU LUBUK PAKAM</h2><p>Kost, Hotspot & Travel</p></div>
+        <div class="contact-area"><p>📞 082162115149</p><p>✉️ anakrantaulubukpakam@gmail.com</p></div>
+      </div>
+      <div class="status-badge"><span>✅ SUDAH DIBAYAR LUNAS</span></div>
+      <div class="detail-row"><strong>No. Invoice:</strong> <span>${inv.no}</span></div>
+      <div class="detail-row"><strong>Tanggal Transaksi:</strong> <span>${inv.tanggal}</span></div>
+      <div class="detail-row"><strong>Layanan:</strong> <span>${inv.layanan}</span></div>
+      <div class="detail-row"><strong>Pelanggan:</strong> <span>${inv.nama}</span></div>
+      <div class="detail-row"><strong>Detail Transaksi:</strong> <span>${inv.keterangan}</span></div>
+      <div class="detail-row total"><strong>Total Pembayaran:</strong> <span>Rp ${inv.jumlahFormatted}</span></div>
+      <div class="bank-info"><strong>⚠️ Peringatan Penting</strong><br>Pembayaran resmi hanya melalui rekening Bank Mandiri<br><strong>1050014328318</strong> a.n. <strong>Erikson Sibagariang</strong></div>
+      <div class="footer"><p>Terima kasih telah menggunakan layanan kami 🙏</p><p>Dicetak pada: ${new Date().toLocaleString('id-ID')}</p></div>
+    </div>
+    <script>window.onload=function(){window.print();setTimeout(function(){window.close();},500);};<\/script>
+    </body>
+    </html>
+  `);
   printWindow.document.close();
 }
-
 
 // ========== OTHER FUNCTIONS ==========
 function copyAddress() { 
   navigator.clipboard.writeText("Kost Anak Rantau Lubuk Pakam - Koordinat: 3.546055, 98.875676").then(()=>alert("✅ Alamat disalin!")); 
 }
-window.addEventListener('load', function() { 
-  loadStatusKost(); 
+
+window.addEventListener('load', async function() { 
+  await loadStatusFromSheets(); 
   if(localStorage.getItem('adminLoggedIn')==='true'){ 
     document.getElementById('loginForm').style.display='none'; 
     document.getElementById('adminPanel').style.display='block'; 
@@ -833,7 +988,6 @@ function zoom(img) { document.getElementById("modal").style.display="block"; doc
 function closeZoom() { document.getElementById("modal").style.display="none"; }
 function toggleMenu() { var menu=document.getElementById("menu"); menu.style.display=menu.style.display==="flex"?"none":"flex"; }
 
-const GOOGLE_SHEETS_URL="https://script.google.com/macros/s/AKfycby4SfrF6QKzx0WuY-Qj0t-MNGVaq7lWuss1cLw7f1D0mqbtkXK80mR0yPeG_QKlq-Bh/exec";
 async function loadTestimoni() { let container=document.getElementById("listTestimoni"); container.innerHTML='<div class="loading">⏳ Memuat testimoni...</div>'; try{ const response=await fetch(GOOGLE_SHEETS_URL); const data=await response.json(); if(data.length===0){ container.innerHTML='<div class="testimoni-kosong">✨ Belum ada testimoni. Jadilah yang pertama! ✨</div>'; return; } let html=''; for(let i=data.length-1;i>=0;i--){ let t=data[i]; let bintang=''; for(let s=1;s<=5;s++) bintang+=s<=(parseInt(t.rating)||0)?'★':'☆'; html+=`<div class="testimoni-item"><div class="testimoni-header"><span class="testimoni-nama">👤 ${escapeHtml(t.nama||'Anonim')}</span><span class="testimoni-rating">${bintang}</span><span class="testimoni-tanggal">📅 ${t.tanggal||'-'}</span></div><div class="testimoni-pesan">💬 ${escapeHtml(t.pesan||'')}</div></div>`; } container.innerHTML=html; } catch(e){ container.innerHTML='<div class="testimoni-kosong">⚠️ Gagal memuat testimoni.</div>'; } }
 async function tambahTestimoni() { let nama=document.getElementById("namaPelanggan").value.trim(); let rating=document.querySelector('input[name="rating"]:checked'); let pesan=document.getElementById("pesanTestimoni").value.trim(); if(!nama||!rating||!pesan) return alert("Isi semua field!"); let btn=document.getElementById("btnKirim"); btn.disabled=true; btn.textContent="Mengirim..."; try{ await fetch(GOOGLE_SHEETS_URL,{method:"POST",mode:"no-cors",body:JSON.stringify({nama,rating:parseInt(rating.value),pesan})}); alert("✅ Testimoni terkirim!"); document.getElementById("namaPelanggan").value=""; document.querySelectorAll('input[name="rating"]').forEach(r=>r.checked=false); document.getElementById("pesanTestimoni").value=""; setTimeout(loadTestimoni,1500); } catch(e){ alert("❌ Gagal kirim."); } finally{ btn.disabled=false; btn.textContent="Kirim Testimoni"; } }
 function escapeHtml(text) { if(!text) return ''; return text.replace(/[&<>]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
