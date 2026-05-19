@@ -676,6 +676,14 @@ body {
   background: linear-gradient(135deg, #9c27b0, #7b1fa2);
 }
 
+/* Map Container */
+.map-container {
+  margin-top: 15px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
 /* INVOICE ADMIN */
 .invoice-admin-card {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -1070,14 +1078,6 @@ body {
   border-radius: 20px;
   font-size: 11px;
 }
-
-/* Map Container */
-.map-container {
-  margin-top: 15px;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
 </style>
 </head>
 
@@ -1098,6 +1098,7 @@ body {
     <a href="#galeri">Galeri</a>
     <a href="#testimoni">Testimoni</a>
     <a href="#kontak">Kontak</a>
+    <a href="#youtube">YouTube</a>
     <a href="#mauGabung" style="background:#FFA500; padding:5px 12px; border-radius:20px;">✨ Mau Gabung</a>
   </div>
   <div class="hamburger" onclick="toggleMenu()">☰</div>
@@ -1238,13 +1239,13 @@ body {
     </div>
   </div>
   
-  <!-- MAP LOKASI KOST -->
   <div class="kost-extra">
     <p>🏆 Fasilitas Unggulan:</p>
     <p>✅ WiFi Cepat | ✅ Listrik Termasuk | ✅ Air Bersih 24 Jam | ✅ Keamanan 24 Jam | ✅ Lokasi Strategis</p>
     <p>📍 Dekat Kampus, Pasar, dan Pusat Kota Lubuk Pakam</p>
   </div>
-  
+
+  <!-- MAP LOKASI KOST (Koordinat baru: 3.546045,98.875680) -->
   <div class="map-container">
     <iframe 
       src="https://maps.google.com/maps?q=3.546045,98.875680&z=16&output=embed" 
@@ -1493,6 +1494,21 @@ body {
     <img src="Lemari.jpg" onclick="zoom(this)">
     <img src="Kasur.jpg" onclick="zoom(this)">
   </div>
+</div>
+
+<!-- ============ CHANNEL YOUTUBE (DIKEMBALIKAN) ============ -->
+<div class="card" id="youtube">
+  <h2>📺 Channel YouTube Kami</h2>
+  <p>Jangan lupa subscribe untuk update video terbaru seputar kost, traveling, dan promo menarik!</p>
+  <div style="display: flex; justify-content: center; margin: 15px 0;">
+    <a href="https://www.youtube.com/@anakrantaulubukpakam?sub_confirmation=1" target="_blank" style="background: #FF0000; color: white; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 8px;">
+      🔴 SUBSCRIBE SEKARANG
+    </a>
+  </div>
+  <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px;">
+    <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://www.youtube.com/embed/?list=UUexample" title="YouTube Channel" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
+  <p style="text-align: center; margin-top: 10px;">✨ Klik Subscribe agar tidak ketinggalan info terbaru ✨</p>
 </div>
 
 <!-- TESTIMONI -->
