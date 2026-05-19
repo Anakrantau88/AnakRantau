@@ -145,6 +145,10 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
 .invoice-form-admin { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; color: #333; }
 .invoice-form-admin input, .invoice-form-admin select, .invoice-form-admin textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; }
 .invoice-form-admin label { font-weight: bold; color: #667eea; display: block; margin-top: 10px; }
+.pelanggan-wrapper { display: flex; gap: 15px; align-items: flex-start; flex-wrap: wrap; margin: 8px 0; }
+.pelanggan-wrapper .select-kamar { flex: 1; min-width: 150px; }
+.pelanggan-wrapper .input-manual { flex: 2; min-width: 200px; }
+.pelanggan-wrapper .input-manual input { width: 100%; margin: 0; }
 .btn-invoice { background: #667eea; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; margin: 10px 5px; }
 .btn-invoice-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
 .btn-send-wa { background: #25D366; }
@@ -293,20 +297,29 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
         <option value="Sewa Mobil">🚙 Sewa Mobil</option>
         <option value="Antar Jemput Bandara">🚐 Antar Jemput Bandara</option>
       </select>
-      <label>👤 Nama Pelanggan / Pilih Kamar (khusus Kost)</label>
-      <select id="adminInvoiceNama">
-        <option value="">-- Pilih Kamar --</option>
-        <option value="Kamar 01">Kamar 01</option>
-        <option value="Kamar 02">Kamar 02</option>
-        <option value="Kamar 03">Kamar 03</option>
-        <option value="Kamar 04">Kamar 04</option>
-        <option value="Kamar 05">Kamar 05</option>
-        <option value="Kamar 06">Kamar 06</option>
-        <option value="Kamar 07">Kamar 07</option>
-        <option value="Kamar 08">Kamar 08</option>
-        <option value="Kamar 09">Kamar 09</option>
-        <option value="Kamar 10">Kamar 10</option>
-      </select>
+      
+      <label>👤 Nama Pelanggan</label>
+      <div class="pelanggan-wrapper">
+        <div class="select-kamar">
+          <select id="adminInvoiceNamaSelect">
+            <option value="">-- Pilih Kamar (Kost) --</option>
+            <option value="Kamar 01">Kamar 01</option>
+            <option value="Kamar 02">Kamar 02</option>
+            <option value="Kamar 03">Kamar 03</option>
+            <option value="Kamar 04">Kamar 04</option>
+            <option value="Kamar 05">Kamar 05</option>
+            <option value="Kamar 06">Kamar 06</option>
+            <option value="Kamar 07">Kamar 07</option>
+            <option value="Kamar 08">Kamar 08</option>
+            <option value="Kamar 09">Kamar 09</option>
+            <option value="Kamar 10">Kamar 10</option>
+          </select>
+        </div>
+        <div class="input-manual">
+          <input type="text" id="adminInvoiceNamaManual" placeholder="Atau isi nama pelanggan manual (bebas)" autocomplete="off">
+        </div>
+      </div>
+      
       <label>📞 Nomor WhatsApp Pelanggan (Opsional)</label>
       <input type="tel" id="adminInvoiceNoWA" placeholder="Contoh: 081234567890">
       <label>💰 Jumlah Pembayaran (Rp)</label>
@@ -415,9 +428,44 @@ function adminLogin() {
 
 function adminLogout() { localStorage.removeItem('adminLoggedIn'); document.getElementById('loginForm').style.display = 'block'; document.getElementById('adminPanel').style.display = 'none'; document.getElementById('adminInvoicePreview').style.display = 'none'; }
 
+// Fungsi untuk mendapatkan nilai nama pelanggan (prioritas: manual > select)
+function getNamaPelangganValue() {
+  const manualNama = document.getElementById('adminInvoiceNamaManual').value.trim();
+  if (manualNama !== "") {
+    return manualNama;
+  }
+  const selectedKamar = document.getElementById('adminInvoiceNamaSelect').value;
+  if (selectedKamar !== "") {
+    return selectedKamar;
+  }
+  return "";
+}
+
+function setNamaPelangganValue(nama) {
+  // Cek apakah nama tersebut ada di dropdown kamar
+  const selectElement = document.getElementById('adminInvoiceNamaSelect');
+  const manualElement = document.getElementById('adminInvoiceNamaManual');
+  let found = false;
+  for (let i = 0; i < selectElement.options.length; i++) {
+    if (selectElement.options[i].value === nama) {
+      selectElement.value = nama;
+      manualElement.value = "";
+      found = true;
+      break;
+    }
+  }
+  if (!found && nama !== "") {
+    selectElement.value = "";
+    manualElement.value = nama;
+  } else if (nama === "") {
+    selectElement.value = "";
+    manualElement.value = "";
+  }
+}
+
 function simpanInvoice() {
   const editIndex = parseInt(document.getElementById('editInvoiceIndex').value);
-  const nama = document.getElementById('adminInvoiceNama').value;
+  const nama = getNamaPelangganValue();
   const nowa = document.getElementById('adminInvoiceNoWA').value.trim();
   const jumlah = document.getElementById('adminInvoiceJumlah').value;
   const layanan = document.getElementById('adminInvoiceLayanan').value;
@@ -425,7 +473,7 @@ function simpanInvoice() {
   const tanggal = document.getElementById('adminInvoiceTanggal').value;
   const status = document.getElementById('adminInvoiceStatus').value;
   
-  if (!nama || !jumlah || !tanggal) { alert('⚠️ Mohon isi Nama/Kamar, Jumlah, dan Tanggal!'); return; }
+  if (!nama || !jumlah || !tanggal) { alert('⚠️ Mohon isi Nama Pelanggan, Jumlah, dan Tanggal!'); return; }
   
   const jumlahFormatted = new Intl.NumberFormat('id-ID').format(jumlah);
   
@@ -457,7 +505,7 @@ function editInvoice(index) {
   document.getElementById('editInvoiceIndex').value = index;
   document.getElementById('formTitle').innerHTML = '✏️ Edit Invoice';
   document.getElementById('adminInvoiceLayanan').value = inv.layanan;
-  document.getElementById('adminInvoiceNama').value = inv.nama;
+  setNamaPelangganValue(inv.nama);
   document.getElementById('adminInvoiceNoWA').value = inv.nowa || '';
   document.getElementById('adminInvoiceJumlah').value = inv.jumlah;
   document.getElementById('adminInvoiceKeterangan').value = inv.keterangan;
@@ -480,7 +528,7 @@ function cancelEdit() {
 }
 
 function clearForm() {
-  document.getElementById('adminInvoiceNama').value = '';
+  setNamaPelangganValue('');
   document.getElementById('adminInvoiceNoWA').value = '';
   document.getElementById('adminInvoiceJumlah').value = '';
   document.getElementById('adminInvoiceKeterangan').value = '';
@@ -708,7 +756,7 @@ function downloadInvoiceAsPDF(index) {
   <div class="detail-row"><strong>No. Invoice:</strong> <span>${inv.no}</span></div>
   <div class="detail-row"><strong>Tanggal Transaksi:</strong> <span>${inv.tanggal}</span></div>
   <div class="detail-row"><strong>Layanan:</strong> <span>${inv.layanan}</span></div>
-  <div class="detail-row"><strong>Pelanggan / Kamar:</strong> <span>${inv.nama}</span></div>
+  <div class="detail-row"><strong>Pelanggan:</strong> <span>${inv.nama}</span></div>
   <div class="detail-row"><strong>Detail Transaksi:</strong> <span>${inv.keterangan}</span></div>
   <div class="detail-row total"><strong>Total Pembayaran:</strong> <span>Rp ${inv.jumlahFormatted}</span></div>
   <div class="bank-info">
