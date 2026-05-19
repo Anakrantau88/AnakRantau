@@ -181,8 +181,6 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
 .youtube-video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 20px 0; border-radius: 15px; }
 .youtube-video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 15px; }
 .youtube-caption { text-align: center; font-weight: bold; margin-top: 8px; color: #0077cc; }
-.password-wrapper { position: relative; }
-.toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; user-select: none; color: #667eea; font-size: 14px; background: white; padding: 0 5px; }
 
 /* Print Style untuk PDF */
 @media print {
@@ -263,7 +261,7 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
   <div class="admin-status-panel" id="adminStatusPanel">
     <h4>🔧 Panel Admin - Update Status Ketersediaan Kamar</h4>
     <div id="statusLoginArea" class="status-login-area">
-      <input type="password" id="statusPassword" placeholder="Password Admin">
+      <input type="password" id="statusPassword" placeholder="Password Admin" autocomplete="off">
       <button onclick="loginStatusAdmin()">Login Admin Status</button>
     </div>
     <div id="statusControlArea" style="display: none;"><div class="admin-status-buttons"><button class="admin-status-btn" onclick="updateStatus('nonac-1', 'tersedia')">🟢 Non AC (1) - Tersedia</button><button class="admin-status-btn" onclick="updateStatus('nonac-1', 'habis')">🔴 Non AC (1) - Habis</button><button class="admin-status-btn" onclick="updateStatus('nonac-2', 'tersedia')">🟢 Non AC Double - Tersedia</button><button class="admin-status-btn" onclick="updateStatus('nonac-2', 'habis')">🔴 Non AC Double - Habis</button><button class="admin-status-btn" onclick="updateStatus('ac-1', 'tersedia')">🟢 AC (1) - Tersedia</button><button class="admin-status-btn" onclick="updateStatus('ac-1', 'habis')">🔴 AC (1) - Habis</button><button class="admin-status-btn" onclick="updateStatus('ac-2', 'tersedia')">🟢 AC Double - Tersedia</button><button class="admin-status-btn" onclick="updateStatus('ac-2', 'habis')">🔴 AC Double - Habis</button></div><button onclick="logoutStatusAdmin()" style="margin-top:10px; background:#e53e3e; color:white; border:none; padding:5px 15px; border-radius:5px; cursor:pointer;">🚪 Logout Panel Status</button></div>
@@ -275,8 +273,8 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
   <h2 style="text-align: center;">🧾 Panel Invoice Admin</h2>
   <div id="loginForm" class="admin-login-container">
     <h3>🔐 Login Admin</h3>
-    <input type="text" id="loginUsername" placeholder="Username">
-    <input type="password" id="loginPassword" placeholder="Password">
+    <input type="text" id="loginUsername" placeholder="Username" autocomplete="off">
+    <input type="password" id="loginPassword" placeholder="Password" autocomplete="off">
     <button onclick="adminLogin()">Login</button>
   </div>
   <div id="adminPanel" class="invoice-admin-panel">
@@ -361,7 +359,7 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
   <button class="btn-bayar-qris" onclick="tampilkanQRIS()">💳 Bayar dengan QRIS (GoPay Merchant)<span class="badge-gratis">MDR 0%</span></button>
   <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
     <h2 style="text-align: center;">🌐 Akses Internet dengan Voucher</h2>
-    <div class="login-hotspot-container"><div class="login-hotspot-form"><h3>🔑 Login dengan Voucher</h3><form method="post" action="http://40.40.40.1/login"><input type="text" name="username" placeholder="Username Voucher" required><input type="password" name="password" placeholder="Password Voucher" required><input type="hidden" name="dst" value="https://anakrantau88.my.id"><button type="submit">🚀 Login Hotspot</button></form></div></div>
+    <div class="login-hotspot-container"><div class="login-hotspot-form"><h3>🔑 Login dengan Voucher</h3><form method="post" action="http://40.40.40.1/login"><input type="text" name="username" placeholder="Username Voucher" required autocomplete="off"><input type="password" name="password" placeholder="Password Voucher" required autocomplete="off"><input type="hidden" name="dst" value="https://anakrantau88.my.id"><button type="submit">🚀 Login Hotspot</button></form></div></div>
   </div>
 </div>
 
