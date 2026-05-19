@@ -233,10 +233,10 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
 
 <div class="card" id="lokasi">
   <h2 style="text-align: center;">📍 Lokasi Kost Anak Rantau (Tampilan Satelit)</h2>
-  <div class="map-container"><iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=3.545927,98.875764&zoom=18&maptype=satellite" allowfullscreen="" loading="lazy"></iframe><div class="map-control-note">🛰️ Mode Satelit | Zoom untuk melihat lebih detail</div></div>
+  <div class="map-container"><iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=3.543061,98.875676&zoom=18&maptype=satellite" allowfullscreen="" loading="lazy"></iframe><div class="map-control-note">🛰️ Mode Satelit | Zoom untuk melihat lebih detail</div></div>
   <div class="warning-map">📸 Foto/fasad dari Google Maps belum terupdate. Lihat galeri foto atau datang langsung ke lokasi.</div>
-  <div class="location-info"><strong>🏠 Kost Anak Rantau Lubuk Pakam</strong><br>📍 Koordinat: 3.545927, 98.875764<br>🚶 Dekat dengan pusat kota Lubuk Pakam</div>
-  <div class="location-address"><span>📍 Jl. Pendidikan, Lubuk Pakam, Sumatera Utara</span><button class="btn-copy-address" onclick="copyAddress()">📋 Salin Alamat</button><a href="https://www.google.com/maps?q=3.545927,98.875764&layer=s" target="_blank" class="btn-copy-address" style="background:#25D366; text-decoration:none;">🗺️ Buka di Google Maps</a></div>
+  <div class="location-info"><strong>🏠 Kost Anak Rantau Lubuk Pakam</strong><br>📍 Koordinat: 3.543061, 98.875676<br>🚶 Dekat dengan pusat kota Lubuk Pakam</div>
+  <div class="location-address"><span>📍 Jl. Pendidikan, Lubuk Pakam, Sumatera Utara</span><button class="btn-copy-address" onclick="copyAddress()">📋 Salin Alamat</button><a href="https://www.google.com/maps?q=3.543061,98.875676&layer=s" target="_blank" class="btn-copy-address" style="background:#25D366; text-decoration:none;">🗺️ Buka di Google Maps</a></div>
 </div>
 
 <div class="card invoice-lunas-card" id="invoiceLunas">
@@ -748,7 +748,9 @@ function downloadInvoiceAsPDF(index) {
 
 
 // ========== OTHER FUNCTIONS ==========
-function copyAddress() { navigator.clipboard.writeText("Kost Anak Rantau Lubuk Pakam - Koordinat: 3.546065, 98.875676").then(()=>alert("✅ Alamat disalin!")); }
+function copyAddress() { 
+  navigator.clipboard.writeText("Kost Anak Rantau Lubuk Pakam - Koordinat: 3.543061, 98.875676").then(()=>alert("✅ Alamat disalin!")); 
+}
 window.addEventListener('load', function() { 
   loadStatusKost(); 
   if(localStorage.getItem('adminLoggedIn')==='true'){ 
