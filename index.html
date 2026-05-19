@@ -132,8 +132,7 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
 .admin-status-buttons { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
 .admin-status-btn { background: #0077cc; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 12px; }
 .status-login-area { display: flex; gap: 10px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
-.status-login-area input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px; background: #f5f5f5; color: #999; }
-.status-login-area input::placeholder { color: #ccc; }
+.status-login-area input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px; }
 .kost-extra { background: #e8f4fd; border-radius: 10px; padding: 15px; margin-top: 15px; text-align: center; }
 
 /* INVOICE ADMIN STYLES */
@@ -264,7 +263,7 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
   <div class="admin-status-panel" id="adminStatusPanel">
     <h4>🔧 Panel Admin - Update Status Ketersediaan Kamar</h4>
     <div id="statusLoginArea" class="status-login-area">
-      <input type="text" id="statusPassword" placeholder="Kode Admin" value="">
+      <input type="password" id="statusPassword" placeholder="Password Admin">
       <button onclick="loginStatusAdmin()">Login Admin Status</button>
     </div>
     <div id="statusControlArea" style="display: none;"><div class="admin-status-buttons"><button class="admin-status-btn" onclick="updateStatus('nonac-1', 'tersedia')">🟢 Non AC (1) - Tersedia</button><button class="admin-status-btn" onclick="updateStatus('nonac-1', 'habis')">🔴 Non AC (1) - Habis</button><button class="admin-status-btn" onclick="updateStatus('nonac-2', 'tersedia')">🟢 Non AC Double - Tersedia</button><button class="admin-status-btn" onclick="updateStatus('nonac-2', 'habis')">🔴 Non AC Double - Habis</button><button class="admin-status-btn" onclick="updateStatus('ac-1', 'tersedia')">🟢 AC (1) - Tersedia</button><button class="admin-status-btn" onclick="updateStatus('ac-1', 'habis')">🔴 AC (1) - Habis</button><button class="admin-status-btn" onclick="updateStatus('ac-2', 'tersedia')">🟢 AC Double - Tersedia</button><button class="admin-status-btn" onclick="updateStatus('ac-2', 'habis')">🔴 AC Double - Habis</button></div><button onclick="logoutStatusAdmin()" style="margin-top:10px; background:#e53e3e; color:white; border:none; padding:5px 15px; border-radius:5px; cursor:pointer;">🚪 Logout Panel Status</button></div>
@@ -277,7 +276,7 @@ body { margin: 0; font-family: Arial, sans-serif; background: #e6f7ff; }
   <div id="loginForm" class="admin-login-container">
     <h3>🔐 Login Admin</h3>
     <input type="text" id="loginUsername" placeholder="Username">
-    <div class="password-wrapper"><input type="password" id="loginPassword" placeholder="Password"><span class="toggle-password" onclick="togglePassword()">👁️</span></div>
+    <input type="password" id="loginPassword" placeholder="Password">
     <button onclick="adminLogin()">Login</button>
   </div>
   <div id="adminPanel" class="invoice-admin-panel">
@@ -395,15 +394,13 @@ function loadStatusKost() { const saved = localStorage.getItem('anakRantauStatus
 function saveStatusKost() { localStorage.setItem('anakRantauStatusKost', JSON.stringify(statusKost)); }
 function updateAllStatusDisplay() { for (const [id, status] of Object.entries(statusKost)) { const badge = document.getElementById(`status-${id}`); if (badge) { if (status === 'tersedia') { badge.textContent = '✓ Tersedia'; badge.className = 'status-badge status-tersedia'; } else { badge.textContent = '✗ Habis'; badge.className = 'status-badge status-habis'; } } } }
 function updateStatus(kamarId, newStatus) { statusKost[kamarId] = newStatus; saveStatusKost(); updateAllStatusDisplay(); alert(`✅ Status kamar berhasil diubah menjadi ${newStatus === 'tersedia' ? 'TERSEDIA' : 'HABIS'}`); }
-function loginStatusAdmin() { const pwd = document.getElementById('statusPassword').value; if (pwd === 'Debat4') { document.getElementById('statusLoginArea').style.display = 'none'; document.getElementById('statusControlArea').style.display = 'block'; alert('✅ Login berhasil!'); } else { alert('❌ Kode Admin salah!'); } }
+function loginStatusAdmin() { const pwd = document.getElementById('statusPassword').value; if (pwd === 'Debat4') { document.getElementById('statusLoginArea').style.display = 'none'; document.getElementById('statusControlArea').style.display = 'block'; alert('✅ Login berhasil!'); } else { alert('❌ Password salah!'); } }
 function logoutStatusAdmin() { document.getElementById('statusLoginArea').style.display = 'flex'; document.getElementById('statusControlArea').style.display = 'none'; document.getElementById('statusPassword').value = ''; alert('🔒 Logout.'); }
 
 // ========== INVOICE SYSTEM ==========
 let savedInvoices = JSON.parse(localStorage.getItem('anakRantauInvoices') || '[]');
 let currentAdminInvoiceData = null;
 let isPasswordVerified = false;
-
-function togglePassword() { const pwd = document.getElementById('loginPassword'); const btn = document.querySelector('.toggle-password'); if (pwd.type === 'password') { pwd.type = 'text'; btn.textContent = '🙈'; } else { pwd.type = 'password'; btn.textContent = '👁️'; } }
 
 function adminLogin() {
   const user = document.getElementById('loginUsername').value.trim();
